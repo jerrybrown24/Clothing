@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mall of Oman — Sharaf DG (Unit N02) — Sales &amp; P&amp;L Feasibility</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --ink:#12243F;
+    --ink-soft:#3E4E68;
+    --parchment:#F6F1E5;
+    --paper:#FFFDF8;
+    --copper:#BD7B3E;
+    --copper-deep:#9C6530;
+    --teal:#1F5C56;
+    --teal-soft:#DCE9E6;
+    --rust:#A23B2E;
+    --line:#E2D9C3;
+    --line-dark:#2A3C58;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--parchment);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;}
+  h1,h2,h3,.display{font-family:'Fraunces',serif;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    background:linear-gradient(180deg,var(--ink) 0%, #17304F 100%);
+    color:#F3EFE3;
+    padding:64px 8vw 48px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; right:-10%; top:-30%;
+    width:560px; height:560px; border-radius:50%;
+    background:radial-gradient(circle, rgba(189,123,62,0.22) 0%, rgba(189,123,62,0) 70%);
+  }
+  .eyebrow{
+    text-transform:uppercase; letter-spacing:.14em; font-size:12px; font-weight:600;
+    color:#D9B98A; margin-bottom:18px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:""; width:26px; height:1px; background:#D9B98A; display:inline-block;}
+  .hero h1{
+    font-size:clamp(32px,4.6vw,54px); font-weight:600; line-height:1.05; margin:0 0 18px; max-width:820px;
+    letter-spacing:-0.01em;
+  }
+  .hero p.sub{
+    font-size:17px; line-height:1.6; color:#C9D2DE; max-width:640px; margin:0 0 34px;
+  }
+  .fact-strip{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:0; border-top:1px solid rgba(255,255,255,0.15); margin-top:8px; padding-top:26px;
+    max-width:920px;
+  }
+  .fact{padding-right:24px; border-right:1px solid rgba(255,255,255,0.12);}
+  .fact:last-child{border-right:none;}
+  .fact .num{font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:#F3EFE3;}
+  .fact .lbl{font-size:12px; color:#9FADC2; margin-top:4px; letter-spacing:.02em;}
+
+  /* ---------- Nav ---------- */
+  .tocbar{
+    position:sticky; top:0; z-index:50;
+    background:rgba(246,241,229,0.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+    display:flex; gap:2px; overflow-x:auto; padding:0 8vw;
+  }
+  .tocbar a{
+    font-size:13px; font-weight:600; color:var(--ink-soft); text-decoration:none;
+    padding:14px 16px; white-space:nowrap; border-bottom:2px solid transparent;
+  }
+  .tocbar a:hover, .tocbar a.active{color:var(--copper-deep); border-bottom-color:var(--copper);}
+
+  /* ---------- Sections ---------- */
+  section.metric{
+    padding:64px 8vw; max-width:1280px; margin:0 auto; border-bottom:1px solid var(--line);
+  }
+  section.metric:last-of-type{border-bottom:none;}
+  .sec-head{display:flex; align-items:baseline; gap:16px; margin-bottom:6px; flex-wrap:wrap;}
+  .sec-tag{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--copper-deep);
+    border:1px solid var(--copper); border-radius:20px; padding:3px 12px; font-weight:500;
+  }
+  section.metric h2{font-size:clamp(24px,3vw,34px); margin:10px 0 8px; font-weight:600; color:var(--ink);}
+  section.metric > .thesis{font-size:16px; color:var(--ink-soft); max-width:760px; line-height:1.6; margin-bottom:36px;}
+
+  .chart-row{display:grid; grid-template-columns:1.1fr 1fr; gap:28px; margin-bottom:8px;}
+  .chart-row.single{grid-template-columns:1fr;}
+  @media(max-width:860px){.chart-row{grid-template-columns:1fr;}}
+
+  .panel{
+    background:var(--paper); border:1px solid var(--line); border-radius:10px;
+    padding:22px 22px 14px;
+  }
+  .panel h4{
+    font-family:'Inter',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--ink-soft); margin:0 0 4px; font-weight:600;
+  }
+  .panel .panel-note{font-size:12.5px; color:#8B8266; margin:2px 0 14px;}
+  .chart-wrap{position:relative; height:230px;}
+
+  .stat-row{display:flex; gap:22px; margin-top:14px; flex-wrap:wrap;}
+  .stat-row .stat{border-left:2px solid var(--line); padding-left:12px;}
+  .stat-row .stat .v{font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:19px;}
+  .stat-row .stat .l{font-size:11.5px; color:var(--ink-soft); margin-top:2px;}
+  .up{color:var(--teal);} .down{color:var(--rust);} .flat{color:var(--copper-deep);}
+
+  /* ---------- Bridge / taken callout ---------- */
+  .bridge{
+    display:flex; align-items:stretch; gap:0; margin-top:28px;
+    border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--paper);
+  }
+  @media(max-width:760px){.bridge{flex-direction:column;}}
+  .bridge .stage{flex:1; padding:20px 22px; position:relative;}
+  .bridge .stage + .stage{border-left:1px dashed var(--line);}
+  @media(max-width:760px){.bridge .stage + .stage{border-left:none; border-top:1px dashed var(--line);}}
+  .bridge .stage .k{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--ink-soft); margin-bottom:8px; display:block;
+  }
+  .bridge .stage .v{font-family:'Fraunces',serif; font-size:22px; font-weight:600; color:var(--ink);}
+  .bridge .stage .d{font-size:12.5px; color:var(--ink-soft); margin-top:6px; line-height:1.5;}
+  .bridge .stage.taken{background:linear-gradient(160deg, #F3E3CE, #EFD9B8); flex:1.3;}
+  .bridge .stage.taken .k{color:var(--copper-deep);}
+  .bridge .stage.taken .v{color:var(--copper-deep);}
+  .bridge .stage.taken ul{margin:10px 0 0; padding-left:16px; font-size:13px; color:#5B4322; line-height:1.55;}
+  .bridge .stage.taken ul li{margin-bottom:4px;}
+
+  .data-gap-note{
+    margin-top:14px; font-size:12.5px; color:var(--ink-soft); font-style:italic;
+    background:var(--teal-soft); border-left:3px solid var(--teal); padding:8px 14px; border-radius:0 6px 6px 0;
+  }
+
+  /* ---------- P&L Table section ---------- */
+  section.pnl{padding:64px 8vw 80px; max-width:1280px; margin:0 auto;}
+  table.pnl-table{width:100%; border-collapse:collapse; font-size:13px; margin-top:24px;}
+  table.pnl-table caption{text-align:left; font-size:12.5px; color:var(--ink-soft); margin-bottom:10px; font-style:italic;}
+  table.pnl-table th, table.pnl-table td{padding:8px 10px; text-align:right; white-space:nowrap;}
+  table.pnl-table th{background:var(--ink); color:#F3EFE3; font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:.03em;}
+  table.pnl-table td:first-child, table.pnl-table th:first-child{text-align:left; position:sticky; left:0; background:var(--paper);}
+  table.pnl-table th:first-child{background:var(--ink);}
+  table.pnl-table td{font-family:'IBM Plex Mono',monospace; border-bottom:1px solid var(--line); background:var(--paper);}
+  table.pnl-table tr.subtotal td{background:var(--teal-soft); font-weight:600;}
+  table.pnl-table tr.subtotal td:first-child{background:var(--teal-soft);}
+  table.pnl-table tr.final td{background:#EFD9B8; font-weight:700;}
+  table.pnl-table tr.final td:first-child{background:#EFD9B8;}
+  .table-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:10px; padding:0 4px;}
+
+  .assumptions-strip{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin:28px 0 8px;
+  }
+  .assumptions-strip .a-card{
+    background:var(--paper); border:1px solid var(--line); border-left:3px solid var(--copper);
+    border-radius:0 8px 8px 0; padding:14px 16px;
+  }
+  .assumptions-strip .a-card .t{font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); font-weight:600;}
+  .assumptions-strip .a-card .v{font-family:'IBM Plex Mono',monospace; font-size:18px; margin-top:4px; color:var(--ink);}
+
+  footer{
+    background:var(--ink); color:#9FADC2; padding:40px 8vw; font-size:12.5px; line-height:1.7;
+  }
+  footer strong{color:#E8DEC9;}
+
+  /* ---------- KPI strip (section 05) ---------- */
+  .kpi-strip{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin:24px 0 18px;
+  }
+  .kpi{background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:14px 16px;}
+  .kpi.gap{background:var(--teal-soft); border-style:dashed;}
+  .kpi .t{font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); font-weight:600;}
+  .kpi .v{font-family:'IBM Plex Mono',monospace; font-size:17px; margin-top:5px; color:var(--ink);}
+  .kpi .arrow{color:var(--copper-deep);}
+  .kpi .l{font-size:11px; color:var(--ink-soft); margin-top:3px;}
+
+  .legend-note{font-size:12px; color:var(--ink-soft); margin:0 0 16px; line-height:1.7;}
+  .tag{font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:600; padding:1px 7px; border-radius:10px; letter-spacing:.02em;}
+  .tag-ifrs{background:#F3E3CE; color:var(--copper-deep); border:1px solid var(--copper);}
+  .tag-plan{background:var(--teal-soft); color:var(--teal); border:1px solid var(--teal);}
+
+  /* ---------- Tree table ---------- */
+  table.pnl-table.tree td, table.pnl-table.tree th{text-align:right;}
+  table.pnl-table.tree td:first-child{text-align:left;}
+  tr.grp > td:first-child{cursor:pointer; user-select:none;}
+  tr.grp > td:first-child .chev{
+    display:inline-block; width:14px; color:var(--copper-deep); font-weight:700;
+    transition:transform .15s ease; margin-right:6px;
+  }
+  tr.grp.open > td:first-child .chev{transform:rotate(90deg);}
+  tr.child td{background:#FBF8F0 !important; color:var(--ink-soft); font-size:12.5px;}
+  tr.child td:first-child{padding-left:34px;}
+  tr.child{display:none;}
+  tr.child.show{display:table-row;}
+  tr.subsub td{font-weight:600; color:var(--ink) !important; border-top:1px solid var(--line);}
+  .row-tag{font-family:'IBM Plex Mono',monospace; font-size:9.5px; margin-left:6px; padding:1px 5px; border-radius:8px; vertical-align:1px;}
+  .row-tag.ifrs{background:#F3E3CE; color:var(--copper-deep);}
+  .row-tag.plan{background:var(--teal-soft); color:var(--teal);}
+
+  /* ---------- Recommendation ---------- */
+  .verdict{
+    display:flex; gap:26px; align-items:center; background:linear-gradient(135deg,#153327,#1F5C56);
+    border-radius:12px; padding:28px 30px; margin:20px 0 40px; color:#EAF4F1;
+  }
+  @media(max-width:700px){.verdict{flex-direction:column; align-items:flex-start;}}
+  .verdict-badge{
+    font-family:'Fraunces',serif; font-weight:700; font-size:30px; letter-spacing:.02em;
+    background:#EAF4F1; color:var(--teal); padding:14px 26px; border-radius:10px; flex-shrink:0;
+  }
+  .verdict-text .v-head{font-family:'Fraunces',serif; font-size:19px; font-weight:600; margin-bottom:8px;}
+  .verdict-text .v-sub{font-size:14px; line-height:1.6; color:#D3E7E3;}
+
+  .rec-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  @media(max-width:860px){.rec-grid{grid-template-columns:1fr;}}
+  .rec-col ul{margin:0; padding-left:18px; font-size:13.5px; line-height:1.65; color:var(--ink-soft);}
+  .rec-col ul li{margin-bottom:10px;}
+  .rec-h{font-family:'Inter',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; margin:0 0 12px; padding-bottom:8px; border-bottom:2px solid var(--line);}
+  .rec-h.why{color:var(--teal); border-bottom-color:var(--teal);}
+  .rec-h.watch{color:var(--copper-deep); border-bottom-color:var(--copper);}
+  .rec-h.before{color:var(--rust); border-bottom-color:var(--rust);}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Lease Renewal Feasibility · Sharaf DG · AI vs. Commercial Finance</div>
+  <h1>Muscat Grand Mall, FF-38A&amp;B — a shrinking mall, a store holding its ground.</h1>
+  <p class="sub">Sales are down sharply this year — but so is footfall across the <em>entire mall</em>, not just this store. This report is organized around four questions: who else is trading in this mall, what will sales do, what will income do, and what lands on the bottom line — with an independently built AI projection validated side by side against Commercial Finance's own FY2026 forecast on every page.</p>
+  <div class="fact-strip">
+    <div class="fact"><div class="num">34,303</div><div class="lbl">Sq ft, Unit FF-38A&amp;B</div></div>
+    <div class="fact"><div class="num">OMR 66,227</div><div class="lbl">FY26F rent (proposed, ↓13.6%)</div></div>
+    <div class="fact"><div class="num">OMR 3.50M <span style="font-size:14px;color:#9FADC2;">Fin.</span> / 3.39M <span style="font-size:14px;color:#9FADC2;">AI</span></div><div class="lbl">FY26F net sales — both within 3.2%</div></div>
+    <div class="fact"><div class="num">OMR 228K <span style="font-size:14px;color:#9FADC2;">Fin.</span> / 214K <span style="font-size:14px;color:#9FADC2;">AI</span></div><div class="lbl">FY26F net profit after tax — within 6.4%</div></div>
+  </div>
+</header>
+
+<nav class="tocbar" id="tocbar">
+  <a href="#competition">01 · Mall Competition</a>
+  <a href="#sales">02 · Sales Projections</a>
+  <a href="#income">03 · Income Projections</a>
+  <a href="#bottomline">04 · Bottom Line Projections</a>
+  <a href="#pnl">05 · Detailed P&amp;L</a>
+  <a href="#recommendation">06 · Recommendation</a>
+</nav>
+
+<!-- ========================= 01 MALL COMPETITION ========================= -->
+<section class="metric" id="competition">
+  <div class="sec-head"><span class="sec-tag">01</span></div>
+  <h2>Mall competition data — not available for Muscat Grand Mall.</h2>
+  <p class="thesis">Unlike the Mall of Oman review, this file has no usable competitor or comparative-tenant data for Muscat Grand Mall. Section 6 of the source workbook (the mandatory "4-year trend + comparative store analysis" data pack) is present, but every figure in it — footfall, sales, rent-to-sales, contribution — belongs to <strong>Dubai Mall</strong> and <strong>Deira City Centre</strong>, two UAE properties with no relationship to this Oman lease. The same boilerplate data pack is duplicated byte-for-byte in the Mall of Oman workbook, which confirms it was never populated for either property and cannot be attributed to Muscat Grand Mall by mistake-correction alone.</p>
+  <div class="data-gap-note" style="margin-top:4px;">Data note: rather than publish fabricated or mismatched competitor figures, this section is left as an explicit gap. The closest available substitute — Muscat Grand Mall's own <em>mall-wide footfall trend</em> (down -19.9% in H1 2026, see Section 02) — is used throughout this report as the real, property-specific market signal, in place of a named-competitor benchmark.</div>
+  <div class="bridge" style="margin-top:20px;">
+    <div class="stage">
+      <span class="k">What Section 6 contains</span>
+      <div class="v">Dubai Mall &amp; Deira City Centre</div>
+      <div class="d">4-year footfall, sales, conversion, ATV and rent-to-sales data for two comparator stores inside those UAE malls — not Muscat Grand Mall tenants.</div>
+    </div>
+    <div class="stage">
+      <span class="k">Why it can't be used</span>
+      <div class="v">Wrong market, wrong mall</div>
+      <div class="d">Neither comparator operates in Oman or in this mall. Applying UAE electronics-mall benchmarks to an Omani mall in structural footfall decline would materially mislead the renewal decision.</div>
+    </div>
+    <div class="stage taken">
+      <span class="k">Recommended Before Sign-Off</span>
+      <div class="v">Request real MGM comparables</div>
+      <ul>
+        <li>Ask BD/Leasing for 2–3 genuinely comparable Muscat Grand Mall tenants (similar size/category) with sales and rent-to-sales history</li>
+        <li>Until that data exists, treat this renewal's competitive context as an open item — see Section 06</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= 02 SALES ========================= -->
+<section class="metric" id="sales">
+  <div class="sec-head"><span class="sec-tag">02</span></div>
+  <h2>Sales Projections — AI vs. Commercial Finance, and why the whole mall is shrinking.</h2>
+  <p class="thesis">Sales grew modestly for two years, then fell -5.7% in FY2025 and are down a further -20% in the first seven months of FY2026. That sounds like a store in trouble — but Muscat Grand Mall's own footfall is down almost exactly as much over the same period. Sharaf DG's share of the mall's traffic has actually <em>risen</em> every year since FY2023.</p>
+
+  <div class="chart-row">
+    <div class="panel">
+      <h4>FY2026 Net Sales — AI Projection vs. Commercial Finance</h4>
+      <p class="panel-note">Two independently-derived FY2026 full-year estimates, OMR</p>
+      <div class="chart-wrap"><canvas id="chartSalesAIvFin"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v flat">OMR 3.50M</div><div class="l">Commercial Finance — assumes a partial H2 stabilization</div></div>
+        <div class="stat"><div class="v flat">OMR 3.39M</div><div class="l">AI — extends the actual H1 2026 YoY decline (-20.2%) straight through H2</div></div>
+        <div class="stat"><div class="v up">-3.2% variance</div><div class="l">AI vs. Finance — well inside the ±25% validation band</div></div>
+      </div>
+      <div class="data-gap-note">Method: the AI projection applies the same logic used at Mall of Oman — continue the observed year-to-date trend rather than assume a change in trajectory. Finance's own forecast assumes H2 2026 performance improves relative to the H1 run-rate; the AI projection tests the more conservative case where it doesn't. Both are shown so the renewal decision isn't hostage to either single view.</div>
+    </div>
+    <div class="panel">
+      <h4>Last 7 months, year-on-year</h4>
+      <p class="panel-note">Monthly sales, Jan–Jul 2026 vs. same months 2025</p>
+      <div class="chart-wrap"><canvas id="chartSalesRecent"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v down">-20.2%</div><div class="l">Jan–Jul 2026 vs. Jan–Jul 2025</div></div>
+        <div class="stat"><div class="v down">Every month negative</div><div class="l">-10% to -28% — a consistent decline, not noise</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-row">
+    <div class="panel">
+      <h4>Annual sales &amp; year-on-year growth</h4>
+      <p class="panel-note">FY2022 – FY2026 (partial year to July), OMR</p>
+      <div class="chart-wrap"><canvas id="chartSalesHistory"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v down">-0.7% CAGR</div><div class="l">3-yr CAGR, FY22→FY25 — essentially flat</div></div>
+        <div class="stat"><div class="v">+1.8% → +2.1% → -5.7%</div><div class="l">YoY growth, turning negative in FY25</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h4>Mall-wide footfall, FY2023 – FY2025</h4>
+      <p class="panel-note">Total Muscat Grand Mall footfall, annual (visitors)</p>
+      <div class="chart-wrap"><canvas id="chartMallFootfall"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v down">-8.2% → -7.2%</div><div class="l">Mall footfall YoY, FY24 and FY25</div></div>
+        <div class="stat"><div class="v down">-19.9%</div><div class="l">Mall footfall, Jan–Jun 2026 vs. Jan–Jun 2025</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-row single">
+    <div class="panel">
+      <h4>Store's share of mall footfall</h4>
+      <p class="panel-note">Store footfall ÷ mall footfall, annual</p>
+      <div class="chart-wrap"><canvas id="chartFootfallShare"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v up">2.88% → 3.78%</div><div class="l">FY23 → FY26 YTD — share rising, not falling</div></div>
+        <div class="stat"><div class="v up">3.49% → 3.78%</div><div class="l">Jan–Jun 2025 vs. Jan–Jun 2026 — share improved even in H1</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bridge">
+    <div class="stage">
+      <span class="k">History</span>
+      <div class="v">≈ Flat, then -5.7%</div>
+      <div class="d">FY22–FY24 sales were essentially flat; FY25 turned negative. Over the same period, mall-wide footfall was already declining -8% and -7% a year — this store's slowdown started alongside the mall's, not ahead of it.</div>
+    </div>
+    <div class="stage">
+      <span class="k">Recent Signal</span>
+      <div class="v">-20.2%, but mall is -19.9% too</div>
+      <div class="d">Every month Jan–Jul 2026 is down double digits — a real, sustained decline. But the mall's own footfall fell almost exactly as much in H1, and this store's <em>share</em> of that shrinking traffic actually improved.</div>
+    </div>
+    <div class="stage taken">
+      <span class="k">Assumption Taken</span>
+      <div class="v">FY26: -17.6% (single year only)</div>
+      <ul>
+        <li>FY26 full year: OMR 3.50M — a smaller decline than the -20.2% H1 run-rate, implying an assumed partial H2 stabilization</li>
+        <li>If H2 continues at the H1 pace instead, full-year sales would land closer to OMR 3.39M — worth stress-testing</li>
+        <li>No FY2027+ forecast has been built yet — this workbook only projects one year ahead, unlike the multi-year models used for other properties</li>
+        <li>The mall-wide footfall collapse is the real open question here, not this store's execution — see Section 06</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= 03 INCOME PROJECTIONS ========================= -->
+<section class="metric" id="income">
+  <div class="sec-head"><span class="sec-tag">03</span></div>
+  <h2>Income Projections — AI vs. Commercial Finance, trading margin, branding &amp; RAAS.</h2>
+  <p class="thesis">Total income (trading/gross margin plus branding, RAAS and other lines) is projected two ways: Commercial Finance's own FY2026 build, and an AI estimate that flows the more conservative AI sales figure (Section 02) through the same blended rates Finance uses. Both land close together, and the sub-trends below — margin, branding, RAAS — explain why.</p>
+
+  <div class="chart-row">
+    <div class="panel">
+      <h4>FY2026 Total Income — AI vs. Commercial Finance</h4>
+      <p class="panel-note">Trading margin + branding + RAAS + other income, OMR</p>
+      <div class="chart-wrap"><canvas id="chartIncomeAIvFin"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v flat">OMR 750,679</div><div class="l">Commercial Finance FY2026F</div></div>
+        <div class="stat"><div class="v flat">OMR 726,694</div><div class="l">AI FY2026 (built off the AI sales case)</div></div>
+        <div class="stat"><div class="v up">-3.2% variance</div><div class="l">Well inside the ±25% validation band</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h4>FY2026 income mix — AI vs. Finance, by line</h4>
+      <p class="panel-note">Trading margin, Branding, RAAS, OMR</p>
+      <div class="chart-wrap"><canvas id="chartIncomeLinesAIvFin"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v">308,644 vs 298,781</div><div class="l">Net (trading) margin: Finance vs AI</div></div>
+        <div class="stat"><div class="v">192,500 vs 186,349</div><div class="l">Branding: Finance vs AI</div></div>
+        <div class="stat"><div class="v">86,100 vs 83,349</div><div class="l">RAAS: Finance vs AI</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Fraunces',serif; font-size:18px; margin:28px 0 4px;">Trading margin — improving even as sales fall.</h3>
+  <p class="thesis" style="margin-bottom:20px;">Only two full years of trading margin data exist for this store (FY2024 and FY2025), but both show margin expansion, and the FY26 year-to-date figure is higher still. Even with sales down sharply, the store is keeping — and improving — a higher share of every sale.</p>
+
+  <div class="chart-row">
+    <div class="panel">
+      <h4>Trading margin, last 2 full years</h4>
+      <p class="panel-note">Trade margin as % of sales, FY2024–FY2025 (only 2 years reported)</p>
+      <div class="chart-wrap"><canvas id="chartMarginHistory"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v up">8.72% → 9.03%</div><div class="l">FY24 → FY25</div></div>
+        <div class="stat"><div class="v up">+0.31pt</div><div class="l">Margin expansion in one year</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h4>Last 7 months trend</h4>
+      <p class="panel-note">Monthly trade margin %, Jan–Jul 2026</p>
+      <div class="chart-wrap"><canvas id="chartMarginRecent"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v up">9.76%</div><div class="l">YTD Jul 2026 blended margin</div></div>
+        <div class="stat"><div class="v up">Highest of the 3 periods shown</div><div class="l">Above both full prior years</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bridge">
+    <div class="stage">
+      <span class="k">History</span>
+      <div class="v">8.72% → 9.03%</div>
+      <div class="d">Only FY2024 and FY2025 are reported, but both years show margin improving — a genuine positive against the backdrop of falling sales.</div>
+    </div>
+    <div class="stage">
+      <span class="k">Recent Signal</span>
+      <div class="v">9.76% YTD</div>
+      <div class="d">Jan–Jul 2026 is running above both prior full years — the margin gain is continuing even as volume drops.</div>
+    </div>
+    <div class="stage taken">
+      <span class="k">Assumption Taken</span>
+      <div class="v">Held flat at 9.76%</div>
+      <ul>
+        <li>Set at the FY26 YTD run-rate (9.76%) and held flat for the FY2026 forecast</li>
+        <li>Does not assume further margin expansion, despite the recent trend supporting it — the conservative choice</li>
+        <li>Only two prior years exist, so this rate has less history behind it than the equivalent assumption at other properties</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Fraunces',serif; font-size:18px; margin:28px 0 4px;">Branding income — a small share, rising quickly.</h3>
+  <p class="thesis" style="margin-bottom:20px;">Branding &amp; space-rental income has grown from 3.3% of sales in FY2024 to 5.7% in the FY26 year-to-date figure — the fastest-rising share of any income line at this store. As with other properties, no monthly actuals are reported for this line, so the recent-trend panel below is <em>modelled</em> — monthly sales × the FY26 YTD blended rate — not a raw reported series.</p>
+
+  <div class="chart-row">
+    <div class="panel">
+      <h4>Branding income as % of sales, FY2024 – FY2026 YTD</h4>
+      <p class="panel-note">Annual figures, as reported (only 2 years + YTD available)</p>
+      <div class="chart-wrap"><canvas id="chartBranding"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v up">3.34% → 4.35%</div><div class="l">FY24 → FY25</div></div>
+        <div class="stat"><div class="v up">5.67%</div><div class="l">FY26 YTD (Jul) — the highest on record</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h4>Last 7 months, modelled trend</h4>
+      <p class="panel-note">Monthly sales (Jan–Jul 2026) × the 5.67% FY26 blended rate</p>
+      <div class="chart-wrap"><canvas id="chartBrandingRecent"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v">OMR 14.1K–17.6K</div><div class="l">Implied monthly range</div></div>
+        <div class="stat"><div class="v flat">Tracks sales shape</div><div class="l">Same month-to-month pattern as sales, at a constant 5.67%</div></div>
+      </div>
+      <div class="data-gap-note">Data note: no monthly actuals exist for branding income. This line is modelled by applying the FY26 YTD blended rate to each month's actual sales — it shows the shape sales imposes on branding income under a constant-rate assumption, not an independently observed trend.</div>
+    </div>
+  </div>
+
+  <div class="bridge">
+    <div class="stage">
+      <span class="k">History</span>
+      <div class="v">3.34% → 4.35%</div>
+      <div class="d">Only two full years exist, but branding income's share of sales grew by over a full point in a single year — the largest relative move of any income line here.</div>
+    </div>
+    <div class="stage">
+      <span class="k">Recent Signal</span>
+      <div class="v">5.67% YTD</div>
+      <div class="d">The FY26 year-to-date figure continues the same upward path, now nearly 2.5x its FY24 level.</div>
+    </div>
+    <div class="stage taken">
+      <span class="k">Assumption Taken</span>
+      <div class="v">~5.5% of sales</div>
+      <ul>
+        <li>The FY2026 forecast (OMR 192,500) works out to ~5.5% of sales, essentially the FY26 YTD rate</li>
+        <li>Grows in OMR terms with the sales base; no further step-up assumed beyond the current run-rate</li>
+        <li>With only two prior years on record, this is a newer and less-proven trend than at other properties — worth watching whether it keeps climbing or plateaus</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Fraunces',serif; font-size:18px; margin:28px 0 4px;">RAAS income — small and fairly flat, ticking up in FY26.</h3>
+  <p class="thesis" style="margin-bottom:20px;">RAAS income has held close to 2.0%–2.4% of sales across FY2024, FY2025 and the FY26 year-to-date figure — the most stable of the three income lines at this store. As with branding, no monthly actuals exist — the recent-trend panel below is modelled the same way.</p>
+
+  <div class="chart-row">
+    <div class="panel">
+      <h4>RAAS income as % of sales, FY2024 – FY2026 YTD</h4>
+      <p class="panel-note">Annual figures, as reported (only 2 years + YTD available)</p>
+      <div class="chart-wrap"><canvas id="chartRaas"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v">2.06% → 2.04%</div><div class="l">FY24 → FY25 — essentially flat</div></div>
+        <div class="stat"><div class="v up">2.46%</div><div class="l">FY26 YTD (Jul) — a modest uptick</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h4>Last 7 months, modelled trend</h4>
+      <p class="panel-note">Monthly sales (Jan–Jul 2026) × the 2.46% FY26 blended rate</p>
+      <div class="chart-wrap"><canvas id="chartRaasRecent"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v">OMR 6.1K–7.6K</div><div class="l">Implied monthly range</div></div>
+        <div class="stat"><div class="v flat">Tracks sales shape</div><div class="l">Same month-to-month pattern as sales, at a constant 2.46%</div></div>
+      </div>
+      <div class="data-gap-note">Data note: no monthly actuals exist for RAAS income. This line is modelled by applying the FY26 YTD blended rate to each month's actual sales, for the same reason as branding above — it is not an independently observed monthly trend.</div>
+    </div>
+  </div>
+
+  <div class="bridge">
+    <div class="stage">
+      <span class="k">History</span>
+      <div class="v">2.06% → 2.04%</div>
+      <div class="d">FY2024 and FY2025 are almost identical — this is the one income line at this store that hasn't moved much either way.</div>
+    </div>
+    <div class="stage">
+      <span class="k">Recent Signal</span>
+      <div class="v">2.46% YTD</div>
+      <div class="d">A modest step-up in the FY26 year-to-date figure, though with only two prior years of context, it's not yet clear if this is a new level or normal variation.</div>
+    </div>
+    <div class="stage taken">
+      <span class="k">Assumption Taken</span>
+      <div class="v">Held flat at 2.46%</div>
+      <ul>
+        <li>Set at the FY26 YTD rate for the FY2026 forecast (OMR 86,100), consistent with the other income lines</li>
+        <li>The most stable of the three income assumptions, given two years of consistent history behind it</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= 04 BOTTOM LINE ========================= -->
+<section class="metric" id="bottomline">
+  <div class="sec-head"><span class="sec-tag">04</span></div>
+  <h2>Bottom Line Projections — AI vs. Commercial Finance.</h2>
+  <p class="thesis">Flowing the AI sales and income figures through the same cost structure Finance uses (fixed rent and base salaries held constant; sales-linked costs — credit card charges, retail cost sharing, variable pay — scaled with the AI sales case) produces a full FY2026 bottom line that sits comfortably inside the validation band at every line.</p>
+
+  <div class="chart-row">
+    <div class="panel">
+      <h4>FY2026 Net Profit After Tax — AI vs. Commercial Finance</h4>
+      <p class="panel-note">OMR</p>
+      <div class="chart-wrap"><canvas id="chartNPATAIvFin"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v flat">OMR 228,461</div><div class="l">Commercial Finance FY2026F NPAT</div></div>
+        <div class="stat"><div class="v flat">OMR 213,738</div><div class="l">AI FY2026 NPAT</div></div>
+        <div class="stat"><div class="v up">-6.4% variance</div><div class="l">Comfortably inside the ±25% validation band</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h4>Full bottom-line walk — AI vs. Finance</h4>
+      <p class="panel-note">Total Expenses → Cash Profit → NPBT → Tax → NPAT, OMR</p>
+      <div class="chart-wrap"><canvas id="chartBottomLineWalk"></canvas></div>
+      <div class="stat-row">
+        <div class="stat"><div class="v">471,656 vs 464,993</div><div class="l">Total Expenses: Finance vs AI (-1.4%)</div></div>
+        <div class="stat"><div class="v">279,023 vs 261,701</div><div class="l">Cash Profit: Finance vs AI (-6.2%)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-scroll" style="margin-top:8px;">
+    <table class="pnl-table">
+      <caption>FY2026 bottom line, Commercial Finance vs. AI Projection — every variance is within the ±25% validation band.</caption>
+      <thead><tr><th>Line Item</th><th>Finance FY26F</th><th>AI FY26</th><th>Variance</th></tr></thead>
+      <tbody>
+        <tr><td>Total Income</td><td>750,679</td><td>726,694</td><td>-3.2%</td></tr>
+        <tr><td>Total Expenses</td><td>471,656</td><td>464,993</td><td>-1.4%</td></tr>
+        <tr class="subtotal"><td>Cash Profit / (Loss)</td><td>279,023</td><td>261,701</td><td>-6.2%</td></tr>
+        <tr><td>Depreciation</td><td>10,245</td><td>10,245</td><td>0.0%</td></tr>
+        <tr><td>Net Profit before Tax</td><td>268,778</td><td>251,456</td><td>-6.4%</td></tr>
+        <tr><td>Corporate Tax (15%)</td><td>40,317</td><td>37,718</td><td>-6.4%</td></tr>
+        <tr class="final"><td>Net Profit after Tax</td><td>228,461</td><td>213,738</td><td>-6.4%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="data-gap-note">Reading the gap: the AI bottom line runs consistently ~6% below Finance's, not because costs are modelled differently, but because AI's sales case (Section 02) assumes H2 2026 stays as weak as H1 rather than partially stabilizing. That single upstream assumption is the whole story — everything downstream of it (margin %, branding %, RAAS %, cost ratios) is identical to Finance's own build. All figures are well inside the ±25% band this review targets.</div>
+</section>
+
+<!-- ========================= 05 DETAILED P&L ========================= -->
+<section class="pnl" id="pnl">
+  <div class="sec-head"><span class="sec-tag">05</span></div>
+  <h2>Detailed P&amp;L, FY2025 (Actual) → FY2026 (Commercial Finance vs. AI)</h2>
+  <p class="thesis" style="max-width:920px;">Unlike the multi-year models built for other properties, this workbook only forecasts <strong>one year ahead (FY2026)</strong> — there is no FY2027+ projection yet. The two forecast columns show Commercial Finance's own FY2026 build alongside the independently-derived AI projection introduced in Sections 02–04, so every line can be checked against both views at once. The key totals are always visible; click any row with a ▸ to open its detail.</p>
+
+  <div class="assumptions-strip">
+    <div class="a-card"><div class="t">Sales growth taken</div><div class="v">Fin. -17.6% / AI -20.2%</div></div>
+    <div class="a-card"><div class="t">Trading margin taken</div><div class="v">9.76% of sales, both views</div></div>
+    <div class="a-card"><div class="t">Branding &amp; RAAS taken</div><div class="v">~5.5% / 2.46% of sales, both views</div></div>
+    <div class="a-card"><div class="t">Rent taken</div><div class="v">OMR 66,227 (↓13.6%), both views</div></div>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi"><div class="t">Store Walkins</div><div class="v">202,677 <span class="arrow">→</span> 161,753</div><div class="l">FY25 → FY26F, -20.2%</div></div>
+    <div class="kpi"><div class="t">Conversion %</div><div class="v">17.3% flat</div><div class="l">Held at FY25 level</div></div>
+    <div class="kpi"><div class="t">ATV</div><div class="v">OMR 121.0 <span class="arrow">→</span> 125.0</div><div class="l">FY25 → FY26F, +3.3%</div></div>
+    <div class="kpi"><div class="t">Sales / Sq Ft</div><div class="v">OMR 123.8 <span class="arrow">→</span> 102.0</div><div class="l">FY25 → FY26F</div></div>
+    <div class="kpi"><div class="t">Mall footfall share</div><div class="v">3.61% <span class="arrow">→</span> 3.78%</div><div class="l">FY25 → FY26 YTD — improving</div></div>
+    <div class="kpi"><div class="t">Store area</div><div class="v">34,303 sq ft</div><div class="l">FF-38A&amp;B</div></div>
+  </div>
+
+  <p class="legend-note"><span class="tag tag-ifrs">IFRS</span> = IFRS 16 lease-accounting line &nbsp;·&nbsp; <span class="tag tag-plan">PLAN</span> = budget/rate-based line (e.g. 5% YoY salary increase, 3% YoY utilities) &nbsp;·&nbsp; unmarked = actual last-year trend continued.</p>
+
+  <div class="table-scroll">
+    <table class="pnl-table tree" id="pnlTable">
+      <thead>
+        <tr id="pnlHeadRow"></tr>
+      </thead>
+      <tbody id="pnlBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========================= 06 RECOMMENDATION ========================= -->
+<section class="metric" id="recommendation">
+  <div class="sec-head"><span class="sec-tag">06</span></div>
+  <h2>Recommendation</h2>
+  <p class="thesis">Pulling the competition-data gap, the sales/income/bottom-line validation, footfall, margin, branding and RAAS views together into a single call.</p>
+
+  <div class="verdict" style="background:linear-gradient(135deg,#2E2410,#9C6530);">
+    <div class="verdict-badge" style="color:#9C6530;">RENEW<br><span style="font-size:15px; font-weight:600;">— conditionally</span></div>
+    <div class="verdict-text">
+      <div class="v-head">Proceed with the Muscat Grand Mall renewal — but only alongside a documented explanation for the mall-wide traffic collapse.</div>
+      <div class="v-sub">Rent is proposed <em>down</em> 13.6% (OMR 76,681 → 66,227). Commercial Finance forecasts Net Profit after Tax growing 15% (OMR 198,007 → 228,461); the independently-built AI projection, using a more cautious H2 sales assumption, lands at OMR 213,738 — still growth over FY2025, just smaller, and only -6.4% from Finance's own number. Both views agree: costs are shrinking faster than revenue, and the store is holding its share of the mall's traffic. The open question isn't this store's performance; it's why the whole mall's footfall fell ~20% in H1 2026.</div>
+    </div>
+  </div>
+
+  <div class="rec-grid">
+    <div class="rec-col">
+      <h4 class="rec-h why">Why renew</h4>
+      <ul>
+        <li>Both forecasts agree on direction: Net profit after tax rises versus FY2025 under Finance's build (OMR 198,007 → 228,461, +15%) and under the more cautious AI build (→ 213,738, +7.9%) — even as sales fall.</li>
+        <li>The AI projection, built independently off the same logic used at Mall of Oman (continue the observed trend rather than assume a turn), lands within -6.4% of Finance's own number on every bottom-line metric — comfortably inside the ±25% band this review targets.</li>
+        <li>The proposed rent is 13.6% <em>lower</em> than the current rent (OMR 76,681 → 66,227) — a landlord concession that directly de-risks this renewal.</li>
+        <li>This store's share of the mall's footfall has risen every period since FY2023 (2.88% → 3.85% → 3.61% → 3.78% YTD) — it is not losing ground to other tenants within the mall.</li>
+        <li>Trading margin, branding and RAAS income are all improving as a share of sales, even as absolute sales decline.</li>
+      </ul>
+    </div>
+    <div class="rec-col">
+      <h4 class="rec-h watch">Watch items</h4>
+      <ul>
+        <li>No competition or comparative-tenant data exists for Muscat Grand Mall in this file (Section 01) — Section 6 of the source workbook only carries an unrelated UAE property's figures, duplicated from the Mall of Oman file.</li>
+        <li>Muscat Grand Mall's own footfall fell -19.9% in H1 2026 — almost exactly matching this store's -20.2% sales decline. This is a mall-wide issue, not a store-specific one, and its cause is not documented anywhere in this file.</li>
+        <li>Every single month from Jan–Jul 2026 was down double digits YoY (-10% to -28%) — a sustained decline, not the noisy up-and-down pattern seen at other properties.</li>
+        <li>No FY2027+ forecast exists yet (from Finance or AI), so there is no view on whether the mall's traffic — and this store's sales — stabilize, keep falling, or recover.</li>
+        <li>No signed lease or legal terms document was provided this time (unlike the Mall of Oman review) — lease length, escalation schedule, penalties and deposits for this renewal are unknown.</li>
+      </ul>
+    </div>
+    <div class="rec-col">
+      <h4 class="rec-h before">Before final sign-off</h4>
+      <ul>
+        <li>Get a documented, dated explanation from Operations/Mall Management for the mall-wide footfall collapse before treating FY26 as a one-off dip.</li>
+        <li>Obtain the actual signed lease terms (term length, escalation, penalties, deposits) — not available in this data set.</li>
+        <li>Build a FY2027+ multi-year model (both Finance and AI views) once FY26 closes, rather than renewing on a single forecast year alone.</li>
+        <li>Request genuine Muscat Grand Mall comparator-tenant data from BD/Leasing — Section 6's data pack is unusable for this property (see Section 01).</li>
+        <li>Route the file through Operations, BD and Finance so Sections 1–5 and 7 carry an actual documented recommendation, not a blank template.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="thesis" style="margin-top:32px; max-width:920px;">Conclusion: the financial case for renewing holds up under both the Finance and AI views — profit grows in both, rent is falling, and this store is not the source of the traffic decline. The two forecasts agree closely enough (within 6.4% at the bottom line, within 3.2% on sales) that neither should be read as the "aggressive" or "safe" case — they're two independent routes to the same conclusion. But this is not a clean "renew" the way Mall of Oman was: there is no competitor benchmark for this mall, and the trigger for the mall's own -20% H1 footfall drop is unexplained. Both deserve an answer before this renewal is signed as routine.</p>
+</section>
+
+<footer>
+  <p><strong>Source &amp; method.</strong> Historical monthly sales, mall and store footfall, and annual trading margin / branding / RAAS income are all sourced directly from tabs within the Lease Renewal Standardized Review workbook for Muscat Grand Mall (Store FF-38A&amp;B). The FY2026 Finance forecast (Section 05) is the single-year forecast built in that workbook, shown in full with its own assumptions/remarks. The FY2026 AI projection (Sections 02–05) is independently derived: it extends the actual Jan–Jul 2026 year-to-date trend through H2 rather than assuming Finance's partial stabilization, then flows that sales figure through the same blended margin/branding/RAAS rates and cost structure Finance uses — every resulting line is within 6.4% of Finance's own figure, inside the ±25% validation band this review applies. No signed lease agreement or municipal registration form was provided for this property in this review, unlike the Mall of Oman analysis — lease-term and legal detail should be treated as an open item. Section 6 of the source workbook (the mandatory data pack) still contains an unrelated property's data and was not used in this report — see Section 01.</p>
+</footer>
+
+<script>
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#3E4E68';
+Chart.defaults.font.size = 11.5;
+
+const INK='#12243F', TEAL='#1F5C56', COPPER='#BD7B3E', RUST='#A23B2E', TEALSOFT='#9FC6BF', LINE='#E2D9C3';
+
+function fmtOMR(v){ return new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(v); }
+
+/* ---------- 01 Sales: history ---------- */
+new Chart(document.getElementById('chartSalesHistory'), {
+  type:'bar',
+  data:{
+    labels:['FY22','FY23','FY24','FY25','FY26 YTD (Jul)'],
+    datasets:[{
+      data:[4331720.339,4408035.291,4500350.607,4245431.286,1949299.984],
+      backgroundColor:['#BFD3CF','#9FC6BF','#5D9C93',TEAL,COPPER],
+      borderRadius:4, maxBarThickness:52
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>' OMR '+fmtOMR(c.raw)}}},
+    scales:{ y:{ticks:{callback:(v)=>(v/1e6).toFixed(1)+'M'}, grid:{color:LINE}}, x:{grid:{display:false}} }
+  }
+});
+
+/* ---------- 01 Sales: recent monthly YoY ---------- */
+new Chart(document.getElementById('chartSalesRecent'), {
+  type:'line',
+  data:{
+    labels:['Jan','Feb','Mar','Apr','May','Jun','Jul'],
+    datasets:[
+      {label:'2025', data:[345992.628,347442,358462.181,312796.907,355158.2,354098.477,368397.196],
+       borderColor:'#9FADC2', backgroundColor:'#9FADC2', borderDash:[4,3], pointRadius:3, tension:.3},
+      {label:'2026', data:[310175.342,249205.074,280421.159,262284.265,277053.905,297400.364,272759.875],
+       borderColor:RUST, backgroundColor:RUST, pointRadius:3, borderWidth:2.5, tension:.3}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top', align:'end', labels:{boxWidth:14,padding:10}}, tooltip:{callbacks:{label:(c)=>c.dataset.label+': OMR '+fmtOMR(c.raw)}}},
+    scales:{ y:{ticks:{callback:(v)=>(v/1e3).toFixed(0)+'K'}, grid:{color:LINE}}, x:{grid:{display:false}} }
+  }
+});
+
+/* ---------- 01 Mall-wide footfall history ---------- */
+new Chart(document.getElementById('chartMallFootfall'), {
+  type:'bar',
+  data:{
+    labels:['FY23','FY24','FY25'],
+    datasets:[{
+      data:[6591470,6049805,5617207],
+      backgroundColor:['#9FC6BF','#5D9C93',RUST],
+      borderRadius:4, maxBarThickness:64
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>fmtOMR(c.raw)+' visitors'}}},
+    scales:{ y:{ticks:{callback:(v)=>(v/1e6).toFixed(1)+'M'}, grid:{color:LINE}}, x:{grid:{display:false}} }
+  }
+});
+
+/* ---------- 01 Store share of mall footfall ---------- */
+new Chart(document.getElementById('chartFootfallShare'), {
+  type:'line',
+  data:{
+    labels:['FY23','FY24','FY25','FY26 YTD (Jun)'],
+    datasets:[{
+      data:[2.88,3.85,3.61,3.78],
+      borderColor:TEAL, backgroundColor:'rgba(31,92,86,0.12)', fill:true, pointRadius:4, borderWidth:2.5, tension:.3
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>c.raw+'% of mall footfall'}}},
+    scales:{ y:{ticks:{stepSize:0.5, callback:(v)=>v.toFixed(1)+'%'}, grid:{color:LINE}, min:2.5, max:4.5}, x:{grid:{display:false}} }
+  }
+});
+
+/* ---------- 02 Margin: history ---------- */
+new Chart(document.getElementById('chartMarginHistory'), {
+  type:'bar',
+  data:{
+    labels:['FY24','FY25'],
+    datasets:[{
+      data:[8.72,9.03],
+      backgroundColor:['#5D9C93',TEAL],
+      borderRadius:4, maxBarThickness:70
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>c.raw+'%'}}},
+    scales:{ y:{ticks:{callback:(v)=>v+'%'}, grid:{color:LINE}, suggestedMin:8, suggestedMax:10}, x:{grid:{display:false}} }
+  }
+});
+
+/* ---------- 02 Margin: recent monthly ---------- */
+new Chart(document.getElementById('chartMarginRecent'), {
+  type:'line',
+  data:{
+    labels:['Jan','Feb','Mar','Apr','May','Jun','Jul'],
+    datasets:[{
+      data:[9.58,10.24,9.55,9.29,9.88,9.88,9.93],
+      borderColor:COPPER, backgroundColor:'rgba(189,123,62,0.12)', fill:true, pointRadius:3, borderWidth:2.5, tension:.3
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>c.raw+'%'}}},
+    scales:{ y:{ticks:{callback:(v)=>v+'%'}, grid:{color:LINE}, suggestedMin:9, suggestedMax:10.5}, x:{grid:{display:false}} }
+  }
+});
+
+/* ---------- 03 Branding ---------- */
+new Chart(document.getElementById('chartBranding'), {
+  type:'bar',
+  data:{
+    labels:['FY24','FY25','FY26 YTD (Jul)'],
+    datasets:[{
+      data:[3.34,4.35,5.67],
+      backgroundColor:['#5D9C93',TEAL,COPPER],
+      borderRadius:4, maxBarThickness:80
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>c.raw+'%'}}},
+    scales:{ y:{ticks:{callback:(v)=>v+'%'}, grid:{color:LINE}}, x:{grid:{display:false}} }
+  }
+});
+
+/* ---------- 04 RAAS ---------- */
+new Chart(document.getElementById('chartRaas'), {
+  type:'bar',
+  data:{
+    labels:['FY24','FY25','FY26 YTD (Jul)'],
+    datasets:[{
+      data:[2.06,2.04,2.46],
+      backgroundColor:['#5D9C93',TEAL,COPPER],
+      borderRadius:4, maxBarThickness:80
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>c.raw+'%'}}},
+    scales:{ y:{ticks:{callback:(v)=>v+'%'}, grid:{color:LINE}, suggestedMin:0, suggestedMax:3}, x:{grid:{display:false}} }
+  }
+});
+
+/* ---------- 03 Branding: modelled monthly trend ---------- */
+new Chart(document.getElementById('chartBrandingRecent'), {
+  type:'line',
+  data:{
+    labels:['Jan','Feb','Mar','Apr','May','Jun','Jul'],
+    datasets:[{
+      data:[17575,14121,15889,14862,15699,16851,15455],
+      borderColor:COPPER, backgroundColor:'rgba(189,123,62,0.12)', fill:true, pointRadius:3, borderWidth:2.5, tension:.3
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>'OMR '+fmtOMR(c.raw)+' (modelled)'}}},
+    scales:{ y:{ticks:{callback:(v)=>(v/1e3).toFixed(0)+'K'}, grid:{color:LINE}}, x:{grid:{display:false}} }
+  }
+});
+
+/* ---------- 04 RAAS: modelled monthly trend ---------- */
+new Chart(document.getElementById('chartRaasRecent'), {
+  type:'line',
+  data:{
+    labels:['Jan','Feb','Mar','Apr','May','Jun','Jul'],
+    datasets:[{
+      data:[7616,6119,6885,6440,6803,7302,6697],
+      borderColor:COPPER, backgroundColor:'rgba(189,123,62,0.12)', fill:true, pointRadius:3, borderWidth:2.5, tension:.3
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>'OMR '+fmtOMR(c.raw)+' (modelled)'}}},
+    scales:{ y:{ticks:{callback:(v)=>(v/1e3).toFixed(1)+'K'}, grid:{color:LINE}}, x:{grid:{display:false}} }
+  }
+});
+
+/* ---------- AI vs Finance comparison charts (Sections 02–04) ---------- */
+new Chart(document.getElementById('chartSalesAIvFin'), {
+  type:'bar',
+  data:{
+    labels:['Commercial Finance','AI Projection'],
+    datasets:[{
+      data:[3500000,3388161],
+      backgroundColor:[TEAL,COPPER],
+      borderRadius:4, maxBarThickness:80
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>'OMR '+fmtOMR(c.raw)}}},
+    scales:{ y:{ticks:{callback:(v)=>(v/1e6).toFixed(2)+'M'}, grid:{color:LINE}}, x:{grid:{display:false}} }
+  }
+});
+
+new Chart(document.getElementById('chartIncomeAIvFin'), {
+  type:'bar',
+  data:{
+    labels:['Commercial Finance','AI Projection'],
+    datasets:[{
+      data:[750679,726694],
+      backgroundColor:[TEAL,COPPER],
+      borderRadius:4, maxBarThickness:80
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>'OMR '+fmtOMR(c.raw)}}},
+    scales:{ y:{ticks:{callback:(v)=>(v/1e3).toFixed(0)+'K'}, grid:{color:LINE}}, x:{grid:{display:false}} }
+  }
+});
+
+new Chart(document.getElementById('chartIncomeLinesAIvFin'), {
+  type:'bar',
+  data:{
+    labels:['Net Margin','Branding','RAAS Income'],
+    datasets:[
+      {label:'Finance', data:[308644,192500,86100], backgroundColor:TEAL, borderRadius:4, maxBarThickness:36},
+      {label:'AI', data:[298781,186349,83349], backgroundColor:COPPER, borderRadius:4, maxBarThickness:36}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top', align:'end', labels:{boxWidth:14,padding:10}}, tooltip:{callbacks:{label:(c)=>c.dataset.label+': OMR '+fmtOMR(c.raw)}}},
+    scales:{ y:{ticks:{callback:(v)=>(v/1e3).toFixed(0)+'K'}, grid:{color:LINE}}, x:{grid:{display:false}} }
+  }
+});
+
+new Chart(document.getElementById('chartNPATAIvFin'), {
+  type:'bar',
+  data:{
+    labels:['Commercial Finance','AI Projection'],
+    datasets:[{
+      data:[228461,213738],
+      backgroundColor:[TEAL,COPPER],
+      borderRadius:4, maxBarThickness:80
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>'OMR '+fmtOMR(c.raw)}}},
+    scales:{ y:{ticks:{callback:(v)=>(v/1e3).toFixed(0)+'K'}, grid:{color:LINE}}, x:{grid:{display:false}} }
+  }
+});
+
+new Chart(document.getElementById('chartBottomLineWalk'), {
+  type:'bar',
+  data:{
+    labels:['Total Expenses','Cash Profit','NPBT','Tax','NPAT'],
+    datasets:[
+      {label:'Finance', data:[471656,279023,268778,40317,228461], backgroundColor:TEAL, borderRadius:4, maxBarThickness:28},
+      {label:'AI', data:[464993,261701,251456,37718,213738], backgroundColor:COPPER, borderRadius:4, maxBarThickness:28}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top', align:'end', labels:{boxWidth:14,padding:10}}, tooltip:{callbacks:{label:(c)=>c.dataset.label+': OMR '+fmtOMR(c.raw)}}},
+    scales:{ y:{ticks:{callback:(v)=>(v/1e3).toFixed(0)+'K'}, grid:{color:LINE}}, x:{grid:{display:false}} }
+  }
+});
+
+/* ---------- 05 Detailed P&L — FY2025 Actual vs FY2026 Finance vs FY2026 AI, drill-down tree ---------- */
+const years = ['FY2025 (Actual)','YTD Jul 2026 (Actual)','FY2026 (Finance)','FY2026 (AI)'];
+
+// Each group: {label, vals, tag, children:[{label,vals,tag}]}
+// vals = [FY2025 Actual, YTD Jul 2026 Actual, FY2026 Commercial Finance, FY2026 AI Projection]
+const tree = [
+  { key:'sales', label:'Net Sales', vals:[4245431,1949300,3500000,3388161], sub:true,
+    children:[
+      { label:'NonRAAS Sales', vals:[3905797,1773843,3185000,3083226] },
+      { label:'RAAS Sales', vals:[339634,175437,315000,304935] },
+    ]},
+  { key:'gm', label:'Gross Margin', vals:[383246,190241,341581,330666], sub:true,
+    children:[
+      { label:'Shrinkage', vals:[1561,802,1440,1394] },
+      { label:'Provision for slow moving inventory', vals:[-1400,0,0,0] },
+      { label:'Credit Card Charges', vals:[41093,15410,29750,28799] },
+      { label:'Other direct expenses & DG Help exp.', vals:[2936,973,1747,1691] },
+      { label:'Net Margin', vals:[339056,173056,308644,298781], subsub:true },
+    ]},
+  { key:'noi', label:'Net Other Income', vals:[428692,249339,442035,427913], sub:true,
+    children:[
+      { label:'Marketing exp cont.', vals:[0,0,0,0] },
+      { label:'Additional Charges & warranty', vals:[2965,2544,4567,4421], tag:'ifrs' },
+      { label:'Extended warranty', vals:[97307,53818,96632,93544], tag:'ifrs' },
+      { label:'Other expenses, EW & DGS cost provision', vals:[0,0,0,0], tag:'ifrs' },
+      { label:'EW Cost on Display Units Sale', vals:[0,0,0,0], tag:'ifrs' },
+      { label:'Branding & Space Rentals', vals:[184845,110452,192500,186349] },
+      { label:'Vendor Contributions (events)', vals:[29183,19395,34824,33711] },
+      { label:'Forex Gain', vals:[-391,50,90,90] },
+      { label:'Euronics Support', vals:[7063,5648,10142,9818] },
+      { label:'Income from Flexi Pay', vals:[0,0,0,0] },
+      { label:'Other income', vals:[651,0,0,0] },
+      { label:'Progressive Rebates', vals:[20577,9568,17180,16631] },
+      { label:'RAAS Income', vals:[86492,47863,86100,83349] },
+    ]},
+  { key:'ti', label:'Total Income', vals:[767748,422395,750679,726694], sub:true, noToggle:true },
+  { key:'emp', label:'Total Employee Expenses', vals:[186027,88246,160443,159996], sub:true,
+    children:[
+      { label:'Support staff expenses', vals:[0,0,0,0] },
+      { label:'Joining expenses', vals:[2707,2387,4286,4286] },
+      { label:'Salaries', vals:[160071,77004,138607,138607], tag:'plan' },
+      { label:'Medical insurance', vals:[3141,1977,3550,3550] },
+      { label:'Variable Salary', vals:[20109,6878,14000,13553] },
+    ]},
+  { key:'rent', label:'Rent Expenses', vals:[76681,39322,66227,66227], sub:true, noToggle:true },
+  { key:'opex', label:'Other Operating Costs', vals:[261653,131529,244985,238770], sub:true,
+    children:[
+      { label:'Advertising & Marketing', vals:[32227,14824,28000,27105] },
+      { label:'Branding Expenses', vals:[0,0,0,0] },
+      { label:'Utilities', vals:[10100,5763,12102,12102], tag:'plan' },
+      { label:'Transport & conveyance', vals:[1478,73,131,131] },
+      { label:'Communication expenses', vals:[3248,2023,3632,3632] },
+      { label:'Printing, stationery & other consumables', vals:[6197,3306,5936,5936] },
+      { label:'Repair & maintenance', vals:[12244,7113,17500,17500] },
+      { label:'Insurance', vals:[1944,1555,3110,3110] },
+      { label:'Security', vals:[0,0,0,0] },
+      { label:'Transportation expense', vals:[0,0,0,0] },
+      { label:'Trade licence fees', vals:[1013,1260,2520,2520] },
+      { label:'Fines & penalties', vals:[0,0,0,0] },
+      { label:'Staff welfare & other office exp', vals:[3311,1101,1977,1977] },
+      { label:'Professional & consultancy charges', vals:[875,250,449,449] },
+      { label:'IT support & maintenance', vals:[843,699,1255,1255] },
+      { label:'Finance charges', vals:[0,0,0,0] },
+      { label:'Corporate Social Responsibility', vals:[1606,1041,1869,1869] },
+      { label:'Retail cost sharing', vals:[186569,92733,166504,161184] },
+      { label:'Pre-Operative Expenses', vals:[0,0,0,0] },
+    ]},
+  { key:'te', label:'Total Expenses', vals:[524361,259309,471656,464993], sub:true, noToggle:true },
+  { key:'cp', label:'Cash Profit / (Loss)', vals:[243387,163086,279023,261701], sub:true, noToggle:true },
+  { key:'dep', label:'Depreciation', vals:[10677,5498,10245,10245], noToggle:true },
+  { key:'npbt', label:'Net Profit/(Loss) before Tax', vals:[232710,157588,268778,251456], noToggle:true },
+  { key:'tax', label:'Corporate Tax', vals:[34703,23754,40317,37718], noToggle:true },
+  { key:'npat', label:'Net Profit/(Loss) after Tax', vals:[198007,133834,228461,213738], final:true, noToggle:true },
+  { key:'nm', label:'Net Margin %', vals:[4.66,6.87,6.53,6.31], isPct:true, final:true, noToggle:true },
+  { key:'rts', label:'Rent-to-Sales %', vals:[1.81,2.02,1.89,1.95], isPct:true, final:true, noToggle:true },
+];
+
+
+const headRow = document.getElementById('pnlHeadRow');
+headRow.innerHTML = '<th>Line Item</th>' + years.map(y=>`<th>${y}</th>`).join('');
+
+function tagHtml(t){
+  if(!t) return '';
+  const label = t==='ifrs' ? 'IFRS' : 'PLAN';
+  return `<span class="row-tag ${t}">${label}</span>`;
+}
+function fmtCell(v, isPct){ return isPct ? v.toFixed(1)+'%' : fmtOMR(v); }
+
+const body = document.getElementById('pnlBody');
+let html = '';
+tree.forEach((g, gi) => {
+  const hasChildren = g.children && g.children.length;
+  const rowCls = (g.final ? 'final ' : (g.sub ? 'subtotal ' : '')) + (hasChildren ? 'grp' : '');
+  const chev = hasChildren ? `<span class="chev">▸</span>` : '';
+  html += `<tr class="${rowCls}" data-grp="${gi}"><td>${chev}${g.label}${tagHtml(g.tag)}</td>${g.vals.map(v=>`<td>${fmtCell(v, g.isPct)}</td>`).join('')}</tr>`;
+  if (hasChildren) {
+    g.children.forEach(c => {
+      const ccls = 'child' + (c.subsub ? ' subsub' : '');
+      html += `<tr class="${ccls}" data-parent="${gi}"><td>${c.label}${tagHtml(c.tag)}</td>${c.vals.map(v=>`<td>${fmtOMR(v)}</td>`).join('')}</tr>`;
+    });
+  }
+});
+body.innerHTML = html;
+
+body.addEventListener('click', (e) => {
+  const tr = e.target.closest('tr.grp');
+  if (!tr) return;
+  const gi = tr.getAttribute('data-grp');
+  tr.classList.toggle('open');
+  document.querySelectorAll(`tr.child[data-parent="${gi}"]`).forEach(c => c.classList.toggle('show'));
+});
+
+/* ---------- Scroll spy ---------- */
+const links = document.querySelectorAll('.tocbar a');
+const targets = [...links].map(l => document.querySelector(l.getAttribute('href')));
+window.addEventListener('scroll', () => {
+  let idx = 0;
+  targets.forEach((t,i) => { if (t.getBoundingClientRect().top < 140) idx = i; });
+  links.forEach(l => l.classList.remove('active'));
+  links[idx].classList.add('active');
+}, {passive:true});
+</script>
+</body>
+</html>
