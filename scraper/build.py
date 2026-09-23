@@ -52,7 +52,7 @@ for p in prods:
         desc=clean(v['desc'])
         rows.append([t,dept(t,u),cat(t),sub(t),sku(v),desc,' | '.join(feats(v)) or None,pr,(pr*RATE if pr else None),u]); src['live']+=1
     elif u in old:
-        r=list(old[u]); rows.append(r); src['sample']+=1
+        r=list(old[u]); r[1]=r[1].title() if r[1] else r[1]; rows.append(r); src['sample']+=1
     else: src['missing']+=1
 wb=openpyxl.Workbook(); ns=wb.active; ns.title='0. Notes'
 live=src['live']; nop=sum(1 for r in rows if not r[7])
