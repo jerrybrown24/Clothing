@@ -14,10 +14,18 @@ def parse(h,meta):
             dl=json.loads(m.group(1)); r['style']=dl.get('id'); r['price']=dl.get('price'); r['stock']=dl.get('dimension8'); r['dl_cat']=dl.get('category')
         except Exception: pass
     m=re.search(r'<div class="product attribute description">.*?<div class="value">(.*?)</div>\s*</div>',h,re.S)
-    r['desc']=txt(m.group(1)) if m else ''
+    r['desc']=re.split(r'\s*Find More\b',txt(m.group(1)) if m else '')[0].strip()
+    r['desc_li']=[txt(x) for x in re.findall(r'<li[^>]*>(.*?)</li>',m.group(1),re.S)] if m else []
     m=re.search(r'<ul class="additional-attributes features-list">(.*?)</ul>',h,re.S)
     r['features']=[txt(x) for x in re.findall(r'<li[^>]*>(.*?)</li>',m.group(1),re.S)] if m else []
     r['features']=[f for f in r['features'] if f]
+    if not r['features']:
+        m=re.search(r'Main Features</h\d>.*?<ul>(.*?)</ul>',h,re.S)
+        if m:
+            for li in re.findall(r'<li[^>]*>(.*?)</li>',m.group(1),re.S):
+                st=re.search(r'<strong>(.*?)</strong>',li,re.S)
+                t=txt(st.group(1)) if st else txt(li)
+                if t: r['features'].append(t.rstrip(':'))
     r['imgs']=sorted(set(re.findall(r'/media/catalog/product/[^"\'\s)]*?/([a-z0-9_\-]+)\.(?:jpg|png|webp)',h)))[:40]
     r['unavailable']=('This product is currently unavailable' in h) or ('class="stock unavailable"' in h)
     return r
@@ -33,7 +41,7 @@ def run():
         if 'rawHtml' not in d or '<urlset' in d['rawHtml'][:500] or '<sitemapindex' in d['rawHtml'][:500]: continue
         r=parse(d['rawHtml'],d.get('metadata',{})); r['_file']=b
         done[r["url"]]=r; n+=1
-        os.remove(f) if (r.get("price") or r["unavailable"]) else None
+        os.remove(f)
     json.dump(done,open(OUT,'w'))
     return done,n
 if __name__=='__main__':

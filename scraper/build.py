@@ -33,13 +33,24 @@ def sku(v):
             if m: return (st+'-'+m.group(1)).upper()
         return st.upper()
     return None
+def feats(v):
+    if v['features']: return v['features']
+    out=[]
+    items=v.get('desc_li') or re.split(r'(?<=[.!])\s+(?=[A-Z])',v['desc'])
+    for it in items:
+        m=re.match(r'\s*([A-Z0-9][^.:\-–]{2,45}?)\s*(?:\s-\s|:\s|\s–\s)',it)
+        if m:
+            t=re.sub(r'^(Shop now!|Order now!|Buy now!)\s*','',m.group(1).strip(),flags=re.I)
+            if t and not re.match(r'(discover|shop|find|order|buy)\b',t,re.I): out.append(t)
+    return out
+def clean(d): return re.split(r'\s*Find More\b',d)[0].strip()
 rows=[];src={'live':0,'sample':0,'missing':0}
 for p in prods:
     u=p['url']; v=done.get(u)
     if v and v.get('status')==200 and v.get('title'):
         t=v['title']; pr=v.get('price') or None
-        desc=v['desc']
-        rows.append([t,dept(t,u),cat(t),sub(t),sku(v),desc,' | '.join(v['features']) or None,pr,(pr*RATE if pr else None),u]); src['live']+=1
+        desc=clean(v['desc'])
+        rows.append([t,dept(t,u),cat(t),sub(t),sku(v),desc,' | '.join(feats(v)) or None,pr,(pr*RATE if pr else None),u]); src['live']+=1
     elif u in old:
         r=list(old[u]); rows.append(r); src['sample']+=1
     else: src['missing']+=1
