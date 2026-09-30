@@ -101,6 +101,9 @@ tr.hl td{background:var(--accent-soft)}
 .method p{font-size:13px;color:var(--ink-2)}
 .wbar{display:inline-block;height:8px;border-radius:0 4px 4px 0;background:var(--s2);vertical-align:middle;margin-left:6px}
 .reco{display:grid;gap:10px;counter-reset:r}
+.recotext{display:grid;gap:12px;font-size:15.5px}
+.recotext p{max-width:80ch}
+.recotext ol{margin:0;padding-left:22px;display:grid;gap:8px;max-width:80ch}
 .reco li{margin-left:18px;padding-left:4px}
 .reco li::marker{font-family:var(--f-mono);color:var(--accent);font-weight:500}
 ol.reco{padding:0;margin:0}
@@ -132,7 +135,7 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
     <span>Jumeirah Village Circle, Dubai</span><span>GLA 3,598 sq ft</span><span>Term 8 Aug 2026 – 7 Aug 2029</span><span>Data to Aug-26 (Sep-26 partial, excluded)</span><span>AED</span>
   </div>
   <div class="verdict">
-    <span class="tag">Renew at AED 246</span>
+    <span class="tag">Renew only on better terms</span>
     <p id="verdictText"></p>
   </div>
   <div class="tiles" id="tiles"></div>
@@ -219,7 +222,7 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
       <h3>Circle Mall vs the rest of the chain</h3>
       <p class="small muted">Sales growth, Jan–Aug 26 vs Jan–Aug 25, for stores that traded in every month.</p>
       <div class="chart" id="chPeers"></div>
-      <p class="note">Most destination malls fell sharply in 2026 (Dubai Mall −19%, DCC −21%, Ibn Battuta −20%). Circle Mall grew 14%. A community mall with residents within walking distance held up better than tourist-dependent malls. That supports renewing, but it is one strong year, so the base case does not extrapolate it.</p>
+      <p class="note">Most destination malls fell sharply in 2026 (Dubai Mall −19%, DCC −21%, Ibn Battuta −20%). Circle Mall grew 14%. A community mall with residents within walking distance held up better than tourist-dependent malls. That supports keeping the store, but it is one strong year, so the base case does not extrapolate it.</p>
     </div>
     <div class="block">
       <h3>Footfall and conversion</h3>
@@ -272,8 +275,19 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
   </div>
 
   <div class="block">
+    <h3>What the new rent does to profit</h3>
+    <p class="small muted">PAT = net profit after depreciation, finance charges and 9% UAE corporate tax. "Same sales" keeps a past year's actual sales and costs and changes only the rent, so the difference is the rent increase alone.</p>
+    <div class="tbl"><table id="impactTbl"></table></div>
+  </div>
+
+  <div class="block">
+    <h3>Rent level vs profit (8 Aug 2026 – 7 Aug 2027)</h3>
+    <div class="tbl"><table id="levelTbl"></table></div>
+  </div>
+
+  <div class="block">
     <h3>Recommendation</h3>
-    <ol class="reco" id="reco"></ol>
+    <div class="recotext" id="reco"></div>
   </div>
 </section>
 
@@ -317,16 +331,20 @@ const band = (v,[a,b]) => v<=a?'good':(v<=b?'warn':'bad');
 const RTS_B=[0.20,0.24], RTI_B=[0.32,0.38];
 const pill = (v,b) => `<span class="pill ${band(v,b)}">${pct(v)}</span>`;
 const B = D.pnl.base;
+const TAX = 0.09;  // UAE corporate tax, applied at store level for PAT
 
 /* ---------- header ---------- */
 (function(){
   const N=B['New · 246'].s1[0], E=B['Earlier · 14%'].s1[0], SN=D.summary.base['New · 246'];
-  $('#verdictText').innerHTML = `At the new rent of <b>AED 246/sq ft</b> (AED ${fmtK(N.rent)}k in year 1), Circle Mall stays profitable in every year of the term, so renew. In year 1 rent is <b>${pct(N.rent_to_sales)}</b> of sales and <b>${pct(N.rent_to_ni)}</b> of Net Income. That is just above the 20% healthy ceiling. Compared with the earlier 14% turnover rent, the store pays about AED ${fmtK(N.rent-E.rent)}k more a year, and year-1 store profit falls from AED ${fmtK(E.store_profit)}k to AED ${fmtK(N.store_profit)}k.`;
+  const pat=(d,r)=>{const n=d.ni-(d.total_exp-d.rent)-r-d.dep-d.fin;return n>0?n*(1-TAX):n;};
+  const L0=D.ly0, F25=D.fy.base['New · 246'].s1[0], R246=246*D.consts.sqft;
+  const dLY=pat(L0,R246)/pat(L0,L0.rent)-1, dFY=pat(F25,R246)/pat(F25,F25.rent)-1;
+  $('#verdictText').innerHTML = `At <b>AED 246/sq ft</b>, gross rent rises from AED ${fmtK(L0.rent)}k to AED ${fmtK(R246)}k a year (${sgn(R246/L0.rent-1,0)}). On the same sales, that cuts PAT by <b>${pct(-dFY,0)}</b> on FY'25 figures and <b>${pct(-dLY,0)}</b> on the last lease year. The store stays profitable, and sales would have to fall about 25% before it made a loss. But the new rent takes most of its recent gains. Renew only if the rent comes down to <b>AED 208–220</b>, or if AED 246 comes with contract protections. Do not go above AED 246.`;
   const t=[
     [`${fmtM(N.sales)}M`,'Lease-year 1 sales forecast',`${sgn(N.sales/D.hist_ly['LY 25-26']-1)} vs LY 25-26 (${fmtM(D.hist_ly['LY 25-26'])}M)`],
-    [`${fmtK(N.rent)}k`,'New gross rent, year 1 (AED 246)',`${sgn(N.rent/E.rent-1)} vs earlier 14% rent (${fmtK(E.rent)}k)`],
-    [pct(N.rent_to_sales),'Rent-to-sales at AED 246',`vs ${pct(E.rent_to_sales)} earlier · rent-to-income ${pct(N.rent_to_ni)}`],
-    [`${fmtK(N.store_profit)}k`,'Store profit, year 1 at AED 246',`vs ${fmtK(E.store_profit)}k at the earlier rent`],
+    [`${fmtK(N.rent)}k`,'New gross rent, year 1 (AED 246)',`${sgn(N.rent/D.ly0.rent-1,0)} vs ${fmtK(D.ly0.rent)}k last lease year`],
+    [pct(N.rent_to_sales),'Rent-to-sales at AED 246',`vs ${pct(D.ly0.rent_to_sales)} last lease year · rent-to-income ${pct(N.rent_to_ni)}`],
+    [sgn(pat(D.ly0,246*D.consts.sqft)/pat(D.ly0,D.ly0.rent)-1,0),'PAT change from the rent alone',`same sales as the last lease year · ${sgn(pat(F25,246*D.consts.sqft)/pat(F25,F25.rent)-1,0)} on FY'25`],
   ];
   $('#tiles').innerHTML=t.map(x=>`<div class="tile"><div class="v">${x[0]}</div><div class="l">${x[1]}</div><div class="d muted">${x[2]}</div></div>`).join('');
 })();
@@ -523,16 +541,37 @@ function renderPnl(){
   $('#pnlTbl').innerHTML=h+'</tbody>';
 }
 (function(){
-  const S=D.summary, N=S.base['New · 246'], E=S.base['Earlier · 14%'];
-  const n1=D.pnl.base['New · 246'].s1[0];
-  const items=[
-    `<b>Renew at AED 246. The location has earned it.</b> Circle Mall grew 14.3% in Jan–Aug 2026 while the like-for-like chain fell 4.7%, and lease-year 25-26 sales reached a record AED ${fmtM(D.hist_ly['LY 25-26'])}M. At AED 246, store profit is AED ${fmtK(n1.store_profit)}k in year 1 and AED ${fmtM(N.sp3)}M over 3 years.`,
-    `<b>The cost of the new rent is real.</b> Against the earlier 14% turnover rent, 3-year store profit falls by AED ${fmtK(E.sp3-N.sp3)}k, and rent-to-sales goes from 14.0% to ${pct(N.rts_avg)}. The lease-year comparison above shows the same effect in year 1: store profit goes from AED ${fmtK(D.ly0.store_profit)}k (8 Aug 25 – 7 Aug 26) to AED ${fmtK(n1.store_profit)}k (8 Aug 26 – 7 Aug 27), even with sales up ${sgn(D.pnl.base['New · 246'].s1[0].sales/D.ly0.sales-1)}.`,
-    `<b>AED 246 is close to what the store can carry.</b> A 20% rent-to-sales ratio would mean AED ${D.breakeven.base.rts20.toFixed(0)}/sq ft, and break-even is AED ${D.breakeven.base.zero.toFixed(0)}/sq ft. So AED 246 leaves a solid profit, with little room to push lower.`,
-    `<b>Protect the downside in the contract.</b> Ask that the 12% turnover rent replace the fixed base in a downturn, since the higher-of clause never applies at these sales levels. Alternatively, ask for a sales-linked cap on the 5% annual base escalation.`,
-    `<b>Reset the sales plan before sign-off.</b> Budget lease-year 1 at about AED ${fmtM(n1.sales)}M, not the P&amp;L's AED 4.5M+. Growth drivers (Dubai population +7.5%, JVC densification) support 4–5% a year, and store footfall is already up 6% a year. Keep marketing at AED 90k+ to hold conversion.`,
+  const sq=D.consts.sqft, L0=D.ly0, F25=D.fy.base['New · 246'].s1[0], NY=D.pnl.base['New · 246'].s1;
+  const pat=(d,r)=>{const n=d.ni-(d.total_exp-d.rent)-r-d.dep-d.fin;return n>0?n*(1-TAX):n;};
+  const p0=pat(L0,L0.rent);
+  const rows=[
+    ["FY'25 (Jan–Dec 2025), same sales",F25.sales,pat(F25,F25.rent),pat(F25,246*sq)],
+    ['8 Aug 25 – 7 Aug 26, same sales',L0.sales,p0,pat(L0,246*sq)],
+    ['8 Aug 26 – 7 Aug 27, forecast',NY[0].sales,p0,pat(NY[0],NY[0].rent)],
+    ['8 Aug 27 – 7 Aug 28, forecast',NY[1].sales,p0,pat(NY[1],NY[1].rent)],
+    ['8 Aug 28 – 7 Aug 29, forecast',NY[2].sales,p0,pat(NY[2],NY[2].rent)],
   ];
-  $('#reco').innerHTML=items.map(x=>`<li>${x}</li>`).join('');
+  let h=`<thead><tr><th>Basis</th><th>Sales</th><th>PAT at earlier rent</th><th>PAT at AED 246</th><th>Change</th></tr></thead><tbody>`;
+  rows.forEach((r,i)=>{const c=r[3]/r[2]-1;h+=`<tr class="${i<2?'':'sub'}"><td>${r[0]}</td><td>${fmt(r[1])}</td><td>${fmt(r[2])}</td><td>${fmt(r[3])}</td><td><span class="pill ${c<-0.25?'bad':c<-0.05?'warn':'good'}">${sgn(c,0)}</span></td></tr>`;});
+  $('#impactTbl').innerHTML=h+'</tbody>';
+  const y=NY[0];
+  let l=`<thead><tr><th>Gross rent / sq ft</th><th>Annual rent</th><th>Rent-to-sales</th><th>PAT, same sales as last year</th><th>vs last year</th><th>PAT, year-1 forecast</th><th>vs last year</th></tr></thead><tbody>`;
+  [[246,'Offered'],[231,'20% of sales'],[220,''],[208,'18% of sales']].forEach(([psf,note])=>{const r=psf*sq,a=pat(L0,r),b=pat(y,r);
+    l+=`<tr class="${psf===246?'hl':''}"><td><b>AED ${psf}</b> <span class="muted small">${note}</span></td><td>${fmt(r)}</td><td>${pill(r/y.sales,RTS_B)}</td><td>${fmt(a)}</td><td>${sgn(a/p0-1,0)}</td><td>${fmt(b)}</td><td>${sgn(b/p0-1,0)}</td></tr>`;});
+  $('#levelTbl').innerHTML=l+`</tbody>`;
+  const dFY=pat(F25,246*sq)/pat(F25,F25.rent)-1, dLY=pat(L0,246*sq)/p0-1, d1=pat(y,y.rent)/p0-1;
+  const be=((y.total_exp-y.rent)+y.rent)/(y.ni/y.sales);
+  $('#reco').innerHTML=`
+    <p><b>Renew only if the rent comes down or the lease is restructured. Treat AED 246 as the ceiling, not the deal.</b></p>
+    <p>The rent increase is severe. Gross rent goes from AED ${fmtK(L0.rent)}k to AED ${fmtK(246*sq)}k a year, and rent's share of sales goes from ${pct(L0.rent_to_sales)} to ${pct(y.rent_to_sales)}, above the 20% level that is healthy for apparel. On the same sales, PAT falls by ${pct(-dFY,0)} on FY'25 figures and by ${pct(-dLY,0)} on the last lease year. The forecast narrows the drop to ${pct(-d1,0)} in year 1, but only because it assumes sales grow ${sgn(y.sales/L0.sales-1)}. PAT gets back to last year's AED ${fmtK(p0)}k only in the third year, and only if that growth holds. That can't be assumed: the wider Cotton On chain fell 4.7% like-for-like in 2026, and your own P&amp;L plan for 2026 is already running behind.</p>
+    <p>Closing isn't justified either. At AED 246 the store still earns about AED ${fmtK(pat(y,y.rent))}k PAT in year 1. Sales would have to fall to about AED ${fmtM(be)}M, roughly ${pct(1-be/L0.sales,0)} below last year, before it made a loss. It is also the one store in the chain growing against a falling market. Exiting gives up that profit and the JVC catchment growth.</p>
+    <p>So the question is not whether to stay, but at what price. Proposed approach:</p>
+    <ol>
+      <li><b>Counter at AED 208–220 gross.</b> That keeps rent at 18–19% of sales. The like-for-like PAT drop falls to 22–27%, and year-1 PAT is about flat with last year on the forecast.</li>
+      <li><b>If the landlord holds at AED 246, ask for protections that share the risk.</b> These are a lower base rent plus turnover rent (for example 14% of sales, as today), a 3% annual escalation instead of 5%, two to three rent-free months, and a break option after year 2 if sales stay below AED 4.0M.</li>
+      <li><b>Do not go above AED 246.</b> Every extra AED 10/sq ft costs about AED ${fmtK(10*sq*(1-TAX))}k of PAT a year.</li>
+      <li><b>Budget year 1 at AED ${fmtM(y.sales)}M</b>, not the P&amp;L's AED 4.5M+. Review actual sales against the forecast after six months.</li>
+    </ol>`;
 })();
 
 function colTable(cols,{change=false}={}){
