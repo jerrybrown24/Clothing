@@ -784,7 +784,7 @@
  ],
  "pnl": {
   "bear": {
-   "Current (P&L)": {
+   "New \u00b7 246": {
     "s1": [
      {
       "sales": 3998155.5721997176,
@@ -931,6 +931,156 @@
       "rent_to_sales": 0.22965479335839467,
       "rent_to_ni": 0.3588356142785491,
       "rent_to_gm": 0.3103443153675582
+     }
+    ]
+   },
+   "Earlier \u00b7 14%": {
+    "s1": [
+     {
+      "sales": 3998155.5721997176,
+      "gm": 2958635.1232526037,
+      "ni": 2558819.5686604385,
+      "Employee expense": 382176.05,
+      "Advertising & marketing": 91379.44,
+      "Other opex": 280819.93,
+      "Shared common": 203661.9,
+      "Shared others": 93040.68,
+      "rent": 559741.7801079606,
+      "rent_base": 559741.7801079606,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 155.5702557276155,
+      "total_exp": 1610819.7801079606,
+      "store_profit": 947999.788552478,
+      "dep": 15213.98,
+      "fin": 4878.21,
+      "net": 927907.598552478,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032897,
+      "rent_to_gm": 0.18918918920039154
+     },
+     {
+      "sales": 4077918.7758651017,
+      "gm": 3017659.893961493,
+      "ni": 2609868.019055214,
+      "Employee expense": 389819.57,
+      "Advertising & marketing": 93207.03,
+      "Other opex": 286436.33,
+      "Shared common": 207735.13,
+      "Shared others": 94901.5,
+      "rent": 570908.6286211143,
+      "rent_base": 570908.6286211143,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 158.6738823293814,
+      "total_exp": 1643008.1886211145,
+      "store_profit": 966859.8304340993,
+      "dep": 0,
+      "fin": 0,
+      "net": 966859.8304340993,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032897,
+      "rent_to_gm": 0.18918918920039152
+     },
+     {
+      "sales": 4159273.2554436107,
+      "gm": 3077862.2088460247,
+      "ni": 2661934.8860353655,
+      "Employee expense": 397615.96,
+      "Advertising & marketing": 95071.17,
+      "Other opex": 292165.06,
+      "Shared common": 211889.84,
+      "Shared others": 96799.53,
+      "rent": 582298.2557621056,
+      "rent_base": 582298.2557621056,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 161.83942628185258,
+      "total_exp": 1675839.8157621054,
+      "store_profit": 986095.0702732601,
+      "dep": 0,
+      "fin": 0,
+      "net": 986095.0702732601,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032897,
+      "rent_to_gm": 0.18918918920039154
+     }
+    ],
+    "s2": [
+     {
+      "sales": 3998155.5721997176,
+      "gm": 2958635.1232526037,
+      "ni": 2558819.5686604385,
+      "Employee expense": 382176.05,
+      "Advertising & marketing": 91379.44,
+      "Other opex": 280819.93,
+      "Shared common": 203661.9,
+      "Shared others": 93040.68,
+      "rent": 559741.7801079606,
+      "rent_base": 559741.7801079606,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 155.5702557276155,
+      "total_exp": 1610819.7801079606,
+      "store_profit": 947999.788552478,
+      "dep": 415213.98,
+      "fin": 4878.21,
+      "net": 527907.598552478,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032897,
+      "rent_to_gm": 0.18918918920039154
+     },
+     {
+      "sales": 4077918.7758651017,
+      "gm": 3017659.893961493,
+      "ni": 2609868.019055214,
+      "Employee expense": 389819.57,
+      "Advertising & marketing": 93207.03,
+      "Other opex": 286436.33,
+      "Shared common": 207735.13,
+      "Shared others": 94901.5,
+      "rent": 570908.6286211143,
+      "rent_base": 570908.6286211143,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 158.6738823293814,
+      "total_exp": 1643008.1886211145,
+      "store_profit": 966859.8304340993,
+      "dep": 400000.0,
+      "fin": 0,
+      "net": 566859.8304340993,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032897,
+      "rent_to_gm": 0.18918918920039152
+     },
+     {
+      "sales": 4159273.2554436107,
+      "gm": 3077862.2088460247,
+      "ni": 2661934.8860353655,
+      "Employee expense": 397615.96,
+      "Advertising & marketing": 95071.17,
+      "Other opex": 292165.06,
+      "Shared common": 211889.84,
+      "Shared others": 96799.53,
+      "rent": 582298.2557621056,
+      "rent_base": 582298.2557621056,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 161.83942628185258,
+      "total_exp": 1675839.8157621054,
+      "store_profit": 986095.0702732601,
+      "dep": 400000.0,
+      "fin": 0,
+      "net": 586095.0702732601,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032897,
+      "rent_to_gm": 0.18918918920039154
      }
     ]
    },
@@ -1536,7 +1686,7 @@
    }
   },
   "base": {
-   "Current (P&L)": {
+   "New \u00b7 246": {
     "s1": [
      {
       "sales": 4151435.555567917,
@@ -1683,6 +1833,156 @@
       "rent_to_sales": 0.21032766793341875,
       "rent_to_ni": 0.3286369808309694,
       "rent_to_gm": 0.28422657830523346
+     }
+    ]
+   },
+   "Earlier \u00b7 14%": {
+    "s1": [
+     {
+      "sales": 4151435.555567917,
+      "gm": 3072062.3109383546,
+      "ni": 2656918.758110114,
+      "Employee expense": 382176.05,
+      "Advertising & marketing": 91379.44,
+      "Other opex": 280819.93,
+      "Shared common": 203661.9,
+      "Shared others": 93040.68,
+      "rent": 581200.9777795085,
+      "rent_base": 581200.9777795085,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 161.53445741509407,
+      "total_exp": 1632278.9777795086,
+      "store_profit": 1024639.7803306053,
+      "dep": 15213.98,
+      "fin": 4878.21,
+      "net": 1004547.5903306054,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032894,
+      "rent_to_gm": 0.18918918920039154
+     },
+     {
+      "sales": 4343550.330024835,
+      "gm": 3214227.244028056,
+      "ni": 2779872.2138803913,
+      "Employee expense": 389819.57,
+      "Advertising & marketing": 93207.03,
+      "Other opex": 286436.33,
+      "Shared common": 207735.13,
+      "Shared others": 94901.5,
+      "rent": 608097.046203477,
+      "rent_base": 608097.046203477,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 169.00974046789244,
+      "total_exp": 1680196.606203477,
+      "store_profit": 1099675.6076769144,
+      "dep": 0,
+      "fin": 0,
+      "net": 1099675.6076769144,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032897,
+      "rent_to_gm": 0.18918918920039154
+     },
+     {
+      "sales": 4541471.169177689,
+      "gm": 3360688.6649924954,
+      "ni": 2906541.5510596302,
+      "Employee expense": 397615.96,
+      "Advertising & marketing": 95071.17,
+      "Other opex": 292165.06,
+      "Shared common": 211889.84,
+      "Shared others": 96799.53,
+      "rent": 635805.9636848764,
+      "rent_base": 635805.9636848764,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 176.71094043492954,
+      "total_exp": 1729347.5236848763,
+      "store_profit": 1177194.027374754,
+      "dep": 0,
+      "fin": 0,
+      "net": 1177194.027374754,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032894,
+      "rent_to_gm": 0.18918918920039154
+     }
+    ],
+    "s2": [
+     {
+      "sales": 4151435.555567917,
+      "gm": 3072062.3109383546,
+      "ni": 2656918.758110114,
+      "Employee expense": 382176.05,
+      "Advertising & marketing": 91379.44,
+      "Other opex": 280819.93,
+      "Shared common": 203661.9,
+      "Shared others": 93040.68,
+      "rent": 581200.9777795085,
+      "rent_base": 581200.9777795085,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 161.53445741509407,
+      "total_exp": 1632278.9777795086,
+      "store_profit": 1024639.7803306053,
+      "dep": 415213.98,
+      "fin": 4878.21,
+      "net": 604547.5903306054,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032894,
+      "rent_to_gm": 0.18918918920039154
+     },
+     {
+      "sales": 4343550.330024835,
+      "gm": 3214227.244028056,
+      "ni": 2779872.2138803913,
+      "Employee expense": 389819.57,
+      "Advertising & marketing": 93207.03,
+      "Other opex": 286436.33,
+      "Shared common": 207735.13,
+      "Shared others": 94901.5,
+      "rent": 608097.046203477,
+      "rent_base": 608097.046203477,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 169.00974046789244,
+      "total_exp": 1680196.606203477,
+      "store_profit": 1099675.6076769144,
+      "dep": 400000.0,
+      "fin": 0,
+      "net": 699675.6076769144,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032897,
+      "rent_to_gm": 0.18918918920039154
+     },
+     {
+      "sales": 4541471.169177689,
+      "gm": 3360688.6649924954,
+      "ni": 2906541.5510596302,
+      "Employee expense": 397615.96,
+      "Advertising & marketing": 95071.17,
+      "Other opex": 292165.06,
+      "Shared common": 211889.84,
+      "Shared others": 96799.53,
+      "rent": 635805.9636848764,
+      "rent_base": 635805.9636848764,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 176.71094043492954,
+      "total_exp": 1729347.5236848763,
+      "store_profit": 1177194.027374754,
+      "dep": 400000.0,
+      "fin": 0,
+      "net": 777194.027374754,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032894,
+      "rent_to_gm": 0.18918918920039154
      }
     ]
    },
@@ -2288,7 +2588,7 @@
    }
   },
   "bull": {
-   "Current (P&L)": {
+   "New \u00b7 246": {
     "s1": [
      {
       "sales": 4460763.568247856,
@@ -2435,6 +2735,156 @@
       "rent_to_sales": 0.1906136416277088,
       "rent_to_ni": 0.2978338147578224,
       "rent_to_gm": 0.2575860022148587
+     }
+    ]
+   },
+   "Earlier \u00b7 14%": {
+    "s1": [
+     {
+      "sales": 4460763.568247856,
+      "gm": 3300965.040307956,
+      "ni": 2854888.686415028,
+      "Employee expense": 382176.05,
+      "Advertising & marketing": 91379.44,
+      "Other opex": 280819.93,
+      "Shared common": 203661.9,
+      "Shared others": 93040.68,
+      "rent": 624506.8995546999,
+      "rent_base": 624506.8995546999,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 173.57056685789325,
+      "total_exp": 1675584.8995547,
+      "store_profit": 1179303.786860328,
+      "dep": 15213.98,
+      "fin": 4878.21,
+      "net": 1159211.596860328,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032897,
+      "rent_to_gm": 0.18918918920039152
+     },
+     {
+      "sales": 4727963.305985902,
+      "gm": 3498692.8462224025,
+      "ni": 3025896.518731288,
+      "Employee expense": 389819.57,
+      "Advertising & marketing": 93207.03,
+      "Other opex": 286436.33,
+      "Shared common": 207735.13,
+      "Shared others": 94901.5,
+      "rent": 661914.8628380264,
+      "rent_base": 661914.8628380264,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 183.96744381268104,
+      "total_exp": 1734014.4228380264,
+      "store_profit": 1291882.0958932617,
+      "dep": 0,
+      "fin": 0,
+      "net": 1291882.0958932617,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032894,
+      "rent_to_gm": 0.18918918920039152
+     },
+     {
+      "sales": 5011168.308014459,
+      "gm": 3708264.547711125,
+      "ni": 3207147.720203293,
+      "Employee expense": 397615.96,
+      "Advertising & marketing": 95071.17,
+      "Other opex": 292165.06,
+      "Shared common": 211889.84,
+      "Shared others": 96799.53,
+      "rent": 701563.5631220243,
+      "rent_base": 701563.5631220243,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 194.98709369706066,
+      "total_exp": 1795105.1231220241,
+      "store_profit": 1412042.597081269,
+      "dep": 0,
+      "fin": 0,
+      "net": 1412042.597081269,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032894,
+      "rent_to_gm": 0.18918918920039152
+     }
+    ],
+    "s2": [
+     {
+      "sales": 4460763.568247856,
+      "gm": 3300965.040307956,
+      "ni": 2854888.686415028,
+      "Employee expense": 382176.05,
+      "Advertising & marketing": 91379.44,
+      "Other opex": 280819.93,
+      "Shared common": 203661.9,
+      "Shared others": 93040.68,
+      "rent": 624506.8995546999,
+      "rent_base": 624506.8995546999,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 173.57056685789325,
+      "total_exp": 1675584.8995547,
+      "store_profit": 1179303.786860328,
+      "dep": 415213.98,
+      "fin": 4878.21,
+      "net": 759211.596860328,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032897,
+      "rent_to_gm": 0.18918918920039152
+     },
+     {
+      "sales": 4727963.305985902,
+      "gm": 3498692.8462224025,
+      "ni": 3025896.518731288,
+      "Employee expense": 389819.57,
+      "Advertising & marketing": 93207.03,
+      "Other opex": 286436.33,
+      "Shared common": 207735.13,
+      "Shared others": 94901.5,
+      "rent": 661914.8628380264,
+      "rent_base": 661914.8628380264,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 183.96744381268104,
+      "total_exp": 1734014.4228380264,
+      "store_profit": 1291882.0958932617,
+      "dep": 400000.0,
+      "fin": 0,
+      "net": 891882.0958932617,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032894,
+      "rent_to_gm": 0.18918918920039152
+     },
+     {
+      "sales": 5011168.308014459,
+      "gm": 3708264.547711125,
+      "ni": 3207147.720203293,
+      "Employee expense": 397615.96,
+      "Advertising & marketing": 95071.17,
+      "Other opex": 292165.06,
+      "Shared common": 211889.84,
+      "Shared others": 96799.53,
+      "rent": 701563.5631220243,
+      "rent_base": 701563.5631220243,
+      "rent_sc": 0.0,
+      "rent_mkt": 0.0,
+      "tor_binding": true,
+      "rent_psf": 194.98709369706066,
+      "total_exp": 1795105.1231220241,
+      "store_profit": 1412042.597081269,
+      "dep": 400000.0,
+      "fin": 0,
+      "net": 1012042.5970812689,
+      "rent_to_sales": 0.14,
+      "rent_to_ni": 0.21874999979032894,
+      "rent_to_gm": 0.18918918920039152
      }
     ]
    },
@@ -3095,33 +3545,41 @@
    "rts": 0.2505195661249249
   },
   {
-   "store": "Circle Mall \u00b7 current",
+   "store": "Circle Mall \u00b7 earlier (14% TOR)",
+   "sqft": 3598,
+   "psf": 152.90355311284046,
+   "ttm": 3929621.315,
+   "rent": 550146.9841,
+   "sales_psf": 1092.168236520289,
+   "rts": 0.14
+  },
+  {
+   "store": "Circle Mall \u00b7 new rent",
    "sqft": 3598,
    "psf": 246.0,
    "ttm": 3929621.315,
    "rent": 885108.0,
    "sales_psf": 1092.168236520289,
    "rts": 0.22524002417774955
-  },
-  {
-   "store": "Circle Mall \u00b7 proposed",
-   "sqft": 3598,
-   "psf": 296.0,
-   "ttm": 3929621.315,
-   "rent": 1065008.0,
-   "sales_psf": 1092.168236520289,
-   "rts": 0.27102051689680434
   }
  ],
  "summary": {
   "bear": {
-   "Current (P&L)": {
+   "New \u00b7 246": {
     "sp3": 1854309.3137510181,
     "net3_s1": 1834217.1237510182,
     "net3_s2": 634217.1237510182,
     "npv_s1": 1537874.0113262446,
     "npv_s2": -462125.98867375543,
     "rts_avg": 0.2255427577070797
+   },
+   "Earlier \u00b7 14%": {
+    "sp3": 2900954.6892598374,
+    "net3_s1": 2880862.4992598374,
+    "net3_s2": 1680862.4992598374,
+    "npv_s1": 2401743.522088105,
+    "npv_s2": 401743.52208810486,
+    "rts_avg": 0.14000000000000004
    },
    "A \u00b7 296": {
     "sp3": 1283522.593751018,
@@ -3157,13 +3615,21 @@
    }
   },
   "base": {
-   "Current (P&L)": {
+   "New \u00b7 246": {
     "sp3": 2367019.363050136,
     "net3_s1": 2346927.173050136,
     "net3_s2": 1146927.1730501358,
     "npv_s1": 1951331.0350422978,
     "npv_s2": -48668.96495770221,
     "rts_avg": 0.2116828236695015
+   },
+   "Earlier \u00b7 14%": {
+    "sp3": 3301509.4153822735,
+    "net3_s1": 3281417.225382274,
+    "net3_s2": 2081417.2253822738,
+    "npv_s1": 2724756.8219529614,
+    "npv_s2": 724756.8219529614,
+    "rts_avg": 0.14
    },
    "A \u00b7 296": {
     "sp3": 1796232.6430501356,
@@ -3199,13 +3665,21 @@
    }
   },
   "bull": {
-   "Current (P&L)": {
+   "New \u00b7 246": {
     "sp3": 3111619.7653496093,
     "net3_s1": 3091527.5753496094,
     "net3_s2": 1891527.5753496094,
     "npv_s1": 2560479.4330352317,
     "npv_s2": 560479.4330352317,
     "rts_avg": 0.19433904297053295
+   },
+   "Earlier \u00b7 14%": {
+    "sp3": 3883228.4798348583,
+    "net3_s1": 3863136.289834859,
+    "net3_s2": 2663136.289834859,
+    "npv_s1": 3200654.0080126617,
+    "npv_s2": 1200654.0080126617,
+    "rts_avg": 0.14
    },
    "A \u00b7 296": {
     "sp3": 2540833.045349609,
@@ -3242,18 +3716,20 @@
   }
  },
  "options": {
-  "Current (P&L)": "Current rent carried in P&L",
-  "A \u00b7 296": "Landlord proposal",
+  "New \u00b7 246": "New rent (P&L basis)",
+  "Earlier \u00b7 14%": "Earlier turnover rent",
+  "A \u00b7 296": "Landlord's first ask",
   "B \u00b7 256": "Option B",
   "C \u00b7 236": "Option C",
   "D \u00b7 226": "Option D"
  },
  "option_psf": {
-  "Current (P&L)": [
+  "New \u00b7 246": [
    246,
    255.5,
    265.48
   ],
+  "Earlier \u00b7 14%": null,
   "A \u00b7 296": [
    296,
    308,
@@ -3282,5 +3758,47 @@
   "tor": 0.12,
   "capex": 2000000,
   "capex_life": 5
+ },
+ "last_year": {
+  "earlier": {
+   "sales": 3635846.29,
+   "gm": 2505247.92,
+   "ni": 2235204.25,
+   "Employee expense": 246033.86,
+   "Advertising & marketing": 33418.94,
+   "Other opex": 278611.63,
+   "Shared common": 183849.07,
+   "Shared others": 86106.41,
+   "rent": 509018.48,
+   "dep": 259318.77,
+   "fin": 0.0,
+   "total_exp": 1337038.3900000001,
+   "store_profit": 898165.8599999999,
+   "net": 638847.0899999999,
+   "rent_psf": 141.4726181211784,
+   "rent_to_sales": 0.13999999983497652,
+   "rent_to_ni": 0.22772794924669634,
+   "rent_to_gm": 0.2031808811959816
+  },
+  "new": {
+   "sales": 3635846.29,
+   "gm": 2505247.92,
+   "ni": 2235204.25,
+   "Employee expense": 246033.86,
+   "Advertising & marketing": 33418.94,
+   "Other opex": 278611.63,
+   "Shared common": 183849.07,
+   "Shared others": 86106.41,
+   "rent": 885108,
+   "dep": 259318.77,
+   "fin": 0.0,
+   "total_exp": 1713127.9100000001,
+   "store_profit": 522076.33999999985,
+   "net": 262757.56999999983,
+   "rent_psf": 246.0,
+   "rent_to_sales": 0.2434393341749329,
+   "rent_to_ni": 0.3959852885927539,
+   "rent_to_gm": 0.35330156066949253
+  }
  }
 }

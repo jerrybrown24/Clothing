@@ -113,7 +113,7 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
     <span>Jumeirah Village Circle, Dubai</span><span>GLA 3,598 sq ft</span><span>Term 8 Aug 2026 – 7 Aug 2029</span><span>Data to Aug-26 (Sep-26 partial, excluded)</span><span>AED</span>
   </div>
   <div class="verdict">
-    <span class="tag">Renew · renegotiate</span>
+    <span class="tag">Renew at AED 246</span>
     <p id="verdictText"></p>
   </div>
   <div class="tiles" id="tiles"></div>
@@ -154,12 +154,12 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
     <div class="block">
       <h3>Rent history at Circle Mall</h3>
       <div class="tbl"><table id="histRent"></table></div>
-      <p class="note">Until 2025-26 the store paid turnover rent of 14% of sales. The P&amp;L moved to a fixed rent of AED 246/sq ft (AED 885k) from 2026. The landlord's proposal of AED 296 is +20% on that and roughly 2× what the store paid under turnover rent.</p>
+      <p class="note">Until 2025-26 the store paid turnover rent of 14% of sales. The new rent of AED 246/sq ft (AED 885k) is about 1.7× what the store paid under turnover rent (AED 529k in the last lease year).</p>
     </div>
     <div class="block">
       <h3>Benchmark: other Cotton On stores</h3>
       <div class="tbl"><table id="benchTbl"></table></div>
-      <p class="note">Sales are the trailing 12 months, Sep-25 to Aug-26, from the Cotton On monthly file. Circle Mall makes AED 1,092 per sq ft. Dubai Hills makes AED 1,722 at a rent-to-sales ratio of 19.5%. At AED 296 on current sales, Circle Mall's rent-to-sales ratio would be 27.1%, the highest of these stores.</p>
+      <p class="note">Sales are the trailing 12 months, Sep-25 to Aug-26, from the Cotton On monthly file. Circle Mall makes AED 1,092 per sq ft. Dubai Hills makes AED 1,722 at a rent-to-sales ratio of 19.5%. At AED 246 on current sales, Circle Mall's rent-to-sales ratio is 22.5%. That is above Dubai Hills but below Mirdif and Dubai Mall.</p>
     </div>
   </div>
 
@@ -236,6 +236,13 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
   </header>
 
   <div class="block">
+    <h3>Last year's P&amp;L: earlier rent vs the new rent</h3>
+    <p class="small muted">FY'25 (Jan–Dec 2025) as reported in the "P &amp; L" sheet, when the store paid the earlier 14% turnover rent. The second column restates the same year at the new AED 246/sq ft gross rent, with everything else unchanged.</p>
+    <div class="tbl"><table id="lyTbl"></table></div>
+    <p class="note">The "P &amp; L 5 Yrs" sheet shows FY'25 rent as AED 444k, not AED 509k. This table uses the "P &amp; L" sheet figure, which matches its reported store profit of AED 898k.</p>
+  </div>
+
+  <div class="block">
     <div class="controls">
       <div><label>Sales</label><span class="seg" data-ctl="pscen"></span></div>
       <div><label>Rent</label><span class="seg" data-ctl="popt"></span></div>
@@ -282,20 +289,20 @@ const B = D.pnl.base;
 
 /* ---------- header ---------- */
 (function(){
-  const A=B['A · 296'].s1[0], C=B['C · 236'].s1[0], cur=B['Current (P&L)'].s1[0];
-  $('#verdictText').innerHTML = `Circle Mall is profitable and growing against a falling chain, so keep the store. Don't sign the landlord's <b>AED 296/sq ft</b>. In the base case it takes rent to <b>${pct(A.rent_to_sales)}</b> of sales and ${pct(A.rent_to_ni)} of Net Income, and the AED 2M renovation would not pay back within the 3-year term. Counter at <b>AED 236 (Option C)</b>, which is about today's rent level. Walk away above <b>AED 256 (Option B)</b> unless the landlord funds the fit-out or the term goes to 5 years.`;
+  const N=B['New · 246'].s1[0], E=B['Earlier · 14%'].s1[0], SN=D.summary.base['New · 246'];
+  $('#verdictText').innerHTML = `At the new rent of <b>AED 246/sq ft</b> (AED ${fmtK(N.rent)}k in year 1), Circle Mall stays profitable under every sales scenario, so renew. In the base case rent is <b>${pct(N.rent_to_sales)}</b> of sales and <b>${pct(N.rent_to_ni)}</b> of Net Income. That is just above the 20% healthy ceiling but well below the landlord's first ask of AED 296. Compared with the earlier 14% turnover rent, the store pays about AED ${fmtK(N.rent-E.rent)}k more a year, and year-1 store profit falls from AED ${fmtK(E.store_profit)}k to AED ${fmtK(N.store_profit)}k. The AED 2M renovation pays back in ${(D.consts.capex/(SN.sp3/3)).toFixed(1)} years, within the 3-year term.`;
   const t=[
     [`${fmtM(D.scenarios.base[0])}M`,'Lease-year 1 sales, base forecast',`${sgn(D.scenarios.base[0]/D.hist_ly['LY 25-26']-1)} vs LY 25-26 (${fmtM(D.hist_ly['LY 25-26'])}M)`],
-    [`${fmtK(A.rent)}k`,'Proposed gross rent, year 1',`${sgn(A.rent/cur.rent-1)} vs current ${fmtK(cur.rent)}k`],
-    [pct(A.rent_to_sales),'Rent-to-sales at AED 296',`vs ${pct(cur.rent_to_sales)} current · ${pct(C.rent_to_sales)} at Option C`],
-    [`${fmtK(A.store_profit)}k`,'Store profit, year 1 at AED 296',`vs ${fmtK(C.store_profit)}k at Option C`],
+    [`${fmtK(N.rent)}k`,'New gross rent, year 1 (AED 246)',`${sgn(N.rent/E.rent-1)} vs earlier 14% rent (${fmtK(E.rent)}k)`],
+    [pct(N.rent_to_sales),'Rent-to-sales at AED 246',`vs ${pct(E.rent_to_sales)} earlier · rent-to-income ${pct(N.rent_to_ni)}`],
+    [`${fmtK(N.store_profit)}k`,'Store profit, year 1 at AED 246',`vs ${fmtK(E.store_profit)}k at the earlier rent`],
   ];
   $('#tiles').innerHTML=t.map(x=>`<div class="tile"><div class="v">${x[0]}</div><div class="l">${x[1]}</div><div class="d muted">${x[2]}</div></div>`).join('');
 })();
 
 /* ---------- segmented controls ---------- */
-const state={s1scen:'base',pscen:'base',popt:'A · 296',pcase:'s1'};
-const CTL={s1scen:SCN.map(s=>[s,SCN_L[s]]),pscen:SCN.map(s=>[s,SCN_L[s]]),popt:OPTS.map(o=>[o,o.replace(' (P&L)','')]),pcase:[['s1','Sc. 1: rent only'],['s2','Sc. 2: rent + AED 2M capex']]};
+const state={s1scen:'base',pscen:'base',popt:'New · 246',pcase:'s1'};
+const CTL={s1scen:SCN.map(s=>[s,SCN_L[s]]),pscen:SCN.map(s=>[s,SCN_L[s]]),popt:OPTS.map(o=>[o,o]),pcase:[['s1','Sc. 1: rent only'],['s2','Sc. 2: rent + AED 2M capex']]};
 document.querySelectorAll('.seg').forEach(el=>{
   const k=el.dataset.ctl;
   el.innerHTML=CTL[k].map(([v,l])=>`<button type="button" id="b-${k}-${v.replace(/\W+/g,'')}" data-v="${v}" aria-pressed="${state[k]===v}">${l}</button>`).join('');
@@ -381,37 +388,36 @@ function groupBars(host,groups){ // groups: [{label, bars:[{name,v,color}]}]
 
 /* ---------- SECTION 1 static ---------- */
 (function(){
-  const cur=B['Current (P&L)'].s1;
-  let h=`<thead><tr><th>Option</th><th>Base/SC/MKT Y1</th><th>Gross psf Y1·Y2·Y3</th><th>Rent Y1</th><th>Rent Y2</th><th>Rent Y3</th><th>3-yr total</th><th>vs current</th></tr></thead><tbody>`;
-  OPTS.forEach(o=>{const y=B[o].s1;const t=y.reduce((a,b)=>a+b.rent,0);const tc=cur.reduce((a,b)=>a+b.rent,0);
-    h+=`<tr class="${o.startsWith('A')?'hl':''}"><td><b>${o.replace(' (P&L)','')}</b> <span class="muted small">${D.options[o]}</span></td><td>${fmt(y[0].rent_base/D.consts.sqft)} / ${fmt(y[0].rent_sc/D.consts.sqft)} / ${fmt(y[0].rent_mkt/D.consts.sqft)}</td><td>${D.option_psf[o].map(v=>v.toFixed(1)).join(' · ')}</td>${y.map(v=>`<td>${fmt(v.rent)}</td>`).join('')}<td><b>${fmt(t)}</b></td><td>${o.startsWith('Current')?'—':sgn(t/tc-1)}</td></tr>`;});
+  const cur=B['New · 246'].s1;
+  let h=`<thead><tr><th>Option</th><th>Base/SC/MKT Y1</th><th>Gross psf Y1·Y2·Y3</th><th>Rent Y1</th><th>Rent Y2</th><th>Rent Y3</th><th>3-yr total</th><th>vs AED 246</th></tr></thead><tbody>`;
+  OPTS.forEach(o=>{const y=B[o].s1;const t=y.reduce((a,b)=>a+b.rent,0);const tc=cur.reduce((a,b)=>a+b.rent,0);const tor=!D.option_psf[o];
+    h+=`<tr class="${o.startsWith('New')?'hl':''}"><td><b>${o}</b> <span class="muted small">${D.options[o]}</span></td><td>${tor?'14% of sales, all-in':`${fmt(y[0].rent_base/D.consts.sqft)} / ${fmt(y[0].rent_sc/D.consts.sqft)} / ${fmt(y[0].rent_mkt/D.consts.sqft)}`}</td><td>${(tor?y.map(v=>v.rent_psf):D.option_psf[o]).map(v=>v.toFixed(1)).join(' · ')}</td>${y.map(v=>`<td>${fmt(v.rent)}</td>`).join('')}<td><b>${fmt(t)}</b></td><td>${o.startsWith('New')?'—':sgn(t/tc-1)}</td></tr>`;});
   $('#rentTbl').innerHTML=h+'</tbody>';
-  const A=B['A · 296'].s1;
-  $('#s1lead').innerHTML=`The landlord's proposal (Option A) raises gross rent from AED 246 to AED 296 per sq ft, from AED ${fmtK(cur[0].rent)}k to AED ${fmtK(A[0].rent)}k in year 1, with base rent rising 5% a year after that. Turnover rent at 12% never applies: sales would need to pass AED ${fmtM(240*D.consts.sqft/0.12,1)}M for it to exceed base rent.`;
+  const E=B['Earlier · 14%'].s1;
+  $('#s1lead').innerHTML=`The new rent is AED 246 gross per sq ft: base AED 190, service charge AED 41 and marketing levy AED 15. That is AED ${fmtK(cur[0].rent)}k in year 1, with base rent rising 5% a year to AED ${fmtK(cur[2].rent)}k in year 3. On the same base-case sales, the earlier 14% turnover rent would have cost AED ${fmtK(E[0].rent)}k. The new rent is AED 50 below the landlord's first ask of AED 296. Turnover rent at 12% never applies: sales would need to pass AED ${fmtM(190*D.consts.sqft/0.12,1)}M for it to exceed base rent.`;
   // history
   const hr=[['Aug-22 – Aug-23',3345376,468352.64],['Aug-23 – Aug-24',3476676,486734.64],['Aug-24 – Aug-25',3375376,472552.64],['Aug-25 – Aug-26',3778830.96,529036.33]];
   let t=`<thead><tr><th>Lease year</th><th>Sales</th><th>Rent</th><th>psf</th><th>Rent / sales</th></tr></thead><tbody>`;
   hr.forEach(r=>t+=`<tr><td>${r[0]}</td><td>${fmt(r[1])}</td><td>${fmt(r[2])}</td><td>${(r[2]/3598).toFixed(0)}</td><td>${pct(r[2]/r[1])}</td></tr>`);
-  t+=`<tr class="sub"><td>Fixed rent in P&amp;L (2026)</td><td>${fmt(D.hist_ly['LY 25-26'])}</td><td>${fmt(885108)}</td><td>246</td><td>${pct(885108/D.hist_ly['LY 25-26'])}</td></tr>`;
-  t+=`<tr class="hl"><td><b>Proposed, year 1 (on LY 25-26 sales)</b></td><td>${fmt(D.hist_ly['LY 25-26'])}</td><td>${fmt(1065008)}</td><td>296</td><td>${pct(1065008/D.hist_ly['LY 25-26'])}</td></tr>`;
+  t+=`<tr class="hl"><td><b>New rent AED 246 (on LY 25-26 sales)</b></td><td>${fmt(D.hist_ly['LY 25-26'])}</td><td>${fmt(885108)}</td><td>246</td><td>${pct(885108/D.hist_ly['LY 25-26'])}</td></tr>`;
   $('#histRent').innerHTML=t+'</tbody>';
   let b=`<thead><tr><th>Store</th><th>Sq ft</th><th>Gross psf</th><th>TTM sales</th><th>Sales psf</th><th>Rent / sales</th></tr></thead><tbody>`;
-  D.bench.forEach(r=>b+=`<tr class="${r.store.includes('proposed')?'hl':''}"><td>${r.store}</td><td>${fmt(r.sqft)}</td><td>${r.psf.toFixed(0)}</td><td>${fmtM(r.ttm)}M</td><td>${fmt(r.sales_psf)}</td><td>${pill(r.rts,RTS_B)}</td></tr>`);
+  D.bench.forEach(r=>b+=`<tr class="${r.store.includes('new rent')?'hl':''}"><td>${r.store}</td><td>${fmt(r.sqft)}</td><td>${r.psf.toFixed(0)}</td><td>${fmtM(r.ttm)}M</td><td>${fmt(r.sales_psf)}</td><td>${pill(r.rts,RTS_B)}</td></tr>`);
   $('#benchTbl').innerHTML=b+'</tbody>';
   let a=`<thead><tr><th>Gross rent per sq ft that gives…</th>${SCN.map(s=>`<th>${SCN_L[s]} (${fmtM(D.breakeven[s].sales)}M)</th>`).join('')}</tr></thead><tbody>`;
   [['rts18','Rent-to-sales of 18%'],['rts20','Rent-to-sales of 20% (healthy ceiling)'],['ten','Store profit of 10% of sales'],['capex_zero','Net profit of zero with the AED 2M renovation'],['zero','Store profit of zero (break-even)']].forEach(([k,l])=>
     a+=`<tr><td>${l}</td>${SCN.map(s=>`<td>AED ${D.breakeven[s][k].toFixed(0)}</td>`).join('')}</tr>`);
-  a+=`<tr class="hl"><td><b>Landlord proposal</b></td>${SCN.map(()=>`<td><b>AED 296</b></td>`).join('')}</tr>`;
+  a+=`<tr class="hl"><td><b>New rent</b></td>${SCN.map(()=>`<td><b>AED 246</b></td>`).join('')}</tr>`;
   $('#affTbl').innerHTML=a+'</tbody>';
 })();
 
 function renderS1(){
   const P=D.pnl[state.s1scen];
-  const colors={'Current (P&L)':css('--ink-3'),'A · 296':css('--s2'),'B · 256':css('--s1'),'C · 236':css('--s1'),'D · 226':css('--s1')};
-  hbar($('#chRts'),OPTS.map(o=>({label:o.replace(' (P&L)',''),value:P[o].s1[0].rent_to_sales,color:colors[o]})),{title:'Rent-to-sales, lease year 1',ref:[{v:.20,l:'20%'}],max:.30});
-  hbar($('#chRti'),OPTS.map(o=>({label:o.replace(' (P&L)',''),value:P[o].s1[0].rent_to_ni,color:colors[o]})),{title:'Rent-to-income, lease year 1',ref:[{v:.32,l:'32%'}],max:.50});
+  const colors={'New · 246':css('--s2'),'Earlier · 14%':css('--ink-3'),'A · 296':css('--s1'),'B · 256':css('--s1'),'C · 236':css('--s1'),'D · 226':css('--s1')};
+  hbar($('#chRts'),OPTS.map(o=>({label:o,value:P[o].s1[0].rent_to_sales,color:colors[o]})),{title:'Rent-to-sales, lease year 1',ref:[{v:.20,l:'20%'}],max:.30});
+  hbar($('#chRti'),OPTS.map(o=>({label:o,value:P[o].s1[0].rent_to_ni,color:colors[o]})),{title:'Rent-to-income, lease year 1',ref:[{v:.32,l:'32%'}],max:.50});
   let h=`<thead><tr><th>Option</th><th>Gross rent Y1</th><th>RtS Y1</th><th>RtS Y2</th><th>RtS Y3</th><th>RtI Y1</th><th>RtI Y2</th><th>RtI Y3</th><th>Rent / GM Y1</th></tr></thead><tbody>`;
-  OPTS.forEach(o=>{const y=P[o].s1;h+=`<tr class="${o.startsWith('A')?'hl':''}"><td><b>${o.replace(' (P&L)','')}</b></td><td>${fmt(y[0].rent)}</td>${y.map(v=>`<td>${pill(v.rent_to_sales,RTS_B)}</td>`).join('')}${y.map(v=>`<td>${pill(v.rent_to_ni,RTI_B)}</td>`).join('')}<td>${pct(y[0].rent_to_gm)}</td></tr>`;});
+  OPTS.forEach(o=>{const y=P[o].s1;h+=`<tr class="${o.startsWith('New')?'hl':''}"><td><b>${o}</b></td><td>${fmt(y[0].rent)}</td>${y.map(v=>`<td>${pill(v.rent_to_sales,RTS_B)}</td>`).join('')}${y.map(v=>`<td>${pill(v.rent_to_ni,RTI_B)}</td>`).join('')}<td>${pct(y[0].rent_to_gm)}</td></tr>`;});
   $('#ratioTbl').innerHTML=h+'</tbody>';
 }
 
@@ -481,21 +487,31 @@ function renderPnl(){
 (function(){
   let h=`<thead><tr><th>Option</th>${SCN.map(s=>`<th>Store profit · ${SCN_L[s]}</th>`).join('')}<th>Net · Sc. 1</th><th>Net · Sc. 2</th><th>Payback</th><th>Avg RtS</th></tr></thead><tbody>`;
   OPTS.forEach(o=>{const s=D.summary;const sp=s.base[o].sp3/3;const pb=D.consts.capex/sp;
-    h+=`<tr class="${o.startsWith('A')?'hl':''}"><td><b>${o.replace(' (P&L)','')}</b></td>${SCN.map(sc=>`<td>${fmt(s[sc][o].sp3)}</td>`).join('')}<td>${fmt(s.base[o].net3_s1)}</td><td>${fmt(s.base[o].net3_s2)}</td><td><span class="pill ${pb<=3?(pb<=2.6?'good':'warn'):'bad'}">${pb.toFixed(1)} yrs</span></td><td>${pill(s.base[o].rts_avg,RTS_B)}</td></tr>`;});
+    h+=`<tr class="${o.startsWith('New')?'hl':''}"><td><b>${o}</b></td>${SCN.map(sc=>`<td>${fmt(s[sc][o].sp3)}</td>`).join('')}<td>${fmt(s.base[o].net3_s1)}</td><td>${fmt(s.base[o].net3_s2)}</td><td><span class="pill ${pb<=3?(pb<=2.6?'good':'warn'):'bad'}">${pb.toFixed(1)} yrs</span></td><td>${pill(s.base[o].rts_avg,RTS_B)}</td></tr>`;});
   $('#cmpTbl').innerHTML=h+'</tbody>';
-  const S=D.summary, A=S.base['A · 296'], C=S.base['C · 236'], Bo=S.base['B · 256'];
-  const beA=D.pnl.bear['A · 296'].s2;
+  const S=D.summary, N=S.base['New · 246'], E=S.base['Earlier · 14%'], A=S.base['A · 296'];
+  const n1=D.pnl.base['New · 246'].s1[0], bearN=D.pnl.bear['New · 246'];
   const items=[
-    `<b>Renew. The location has earned it.</b> Circle Mall grew 14.3% in Jan–Aug 2026 while the like-for-like chain fell, and lease-year 25-26 sales reached AED ${fmtM(D.hist_ly['LY 25-26'])}M, a record. The store is profitable under every rent option and every sales scenario before renovation capex.`,
-    `<b>Reject AED 296 as offered.</b> In the base case it takes rent-to-sales to ${pct(D.pnl.base['A · 296'].s1[0].rent_to_sales)} and rent-to-income to ${pct(D.pnl.base['A · 296'].s1[0].rent_to_ni)}. That is above Mirdif (25.1%) and level with Dubai Mall (25.8%), which makes AED 1,840 per sq ft against Circle Mall's AED 1,092. It cuts 3-year store profit by AED ${fmtK(S.base['Current (P&L)'].sp3-A.sp3)}k compared with today's rent.`,
-    `<b>Counter at AED 236 gross (Option C, base AED 180), with AED 256 (Option B) as the walk-away.</b> Option C keeps rent-to-sales near ${pct(C.rts_avg)} and 3-year store profit at AED ${fmtM(C.sp3)}M. The healthy 20% ceiling equals about AED ${D.breakeven.base.rts20.toFixed(0)}/sq ft on base-case sales, and only Options C and D come close to it. Option B (${pct(Bo.rts_avg)}) is acceptable if the landlord concedes on capex.`,
-    `<b>Tie the renovation to the rent.</b> At AED 296, the AED 2M refit pays back in ${(D.consts.capex/(A.sp3/3)).toFixed(1)} years, longer than the 3-year term, and 3-year net profit falls to AED ${fmtK(A.net3_s2)}k (AED ${fmtK(beA.reduce((a,b)=>a+b.net,0))}k in the bear case). Ask for (a) a 5-year term matching the 5-year depreciation, or (b) a landlord fit-out contribution or 3–6 rent-free months to cover the AED 800k book value left at year 3.`,
-    `<b>Keep turnover rent in the structure.</b> Ask that the 12% turnover rent replace the fixed base in a downturn (the higher-of clause means it never applies at these sales levels), or ask for a sales-linked cap on the 5% annual base escalation.`,
+    `<b>Renew at AED 246. The location has earned it.</b> Circle Mall grew 14.3% in Jan–Aug 2026 while the like-for-like chain fell 4.7%, and lease-year 25-26 sales reached a record AED ${fmtM(D.hist_ly['LY 25-26'])}M. At AED 246, base-case store profit is AED ${fmtK(n1.store_profit)}k in year 1 and AED ${fmtM(N.sp3)}M over 3 years. In the bear case it is still AED ${fmtM(D.summary.bear['New · 246'].sp3)}M.`,
+    `<b>The cost of the new rent is real.</b> Against the earlier 14% turnover rent, 3-year store profit falls by AED ${fmtK(E.sp3-N.sp3)}k, and rent-to-sales goes from 14.0% to ${pct(N.rts_avg)}. Last year's P&amp;L restated at AED 246 (above) shows the same effect: store profit drops from AED ${fmtK(D.last_year.earlier.store_profit)}k to AED ${fmtK(D.last_year.new.store_profit)}k.`,
+    `<b>AED 246 is a fair deal against the alternatives.</b> It is AED ${fmtK(A.sp3>0?(N.sp3-A.sp3):0)}k better over 3 years than the landlord's first ask of AED 296, and it sits between Option B (AED 256) and Option C (AED 236). A 20% rent-to-sales ratio would mean AED ${D.breakeven.base.rts20.toFixed(0)}/sq ft, so there is little room left to push for more.`,
+    `<b>The renovation works at this rent.</b> The AED 2M refit pays back in ${(D.consts.capex/(N.sp3/3)).toFixed(1)} years on base-case sales, within the term. 3-year net profit after depreciation is AED ${fmtM(N.net3_s2)}M (AED ${fmtK(bearN.s2.reduce((a,b)=>a+b.net,0))}k in the bear case). About AED 800k of book value remains at year 3, so ask for a 5-year term or an option to renew on the same terms.`,
+    `<b>Protect the downside in the contract.</b> Ask that the 12% turnover rent replace the fixed base in a downturn, since the higher-of clause never applies at these sales levels. Alternatively, ask for a sales-linked cap on the 5% annual base escalation.`,
     `<b>Reset the sales plan before sign-off.</b> Budget lease-year 1 at about AED ${fmtM(D.scenarios.base[0])}M, not the P&amp;L's AED 4.5M+. Growth drivers (Dubai population +7.5%, JVC densification) support 4–5% a year, and store footfall is already up 6% a year. Keep marketing at AED 90k+ to hold conversion.`,
   ];
   $('#reco').innerHTML=items.map(x=>`<li>${x}</li>`).join('');
 })();
 
+(function(){
+  const e=D.last_year.earlier,n=D.last_year.new;
+  const L=[['sales','Net sales','key'],['gm','Gross margin',''],['ni','Net Income','tot'],['Employee expense','Employee expense','sub'],['rent','Rent (gross)','hl'],['Advertising & marketing','Advertising & marketing','sub'],['Other opex','Other opex','sub'],['Shared common','Shared common','sub'],['Shared others','Shared others','sub'],['total_exp','Total expenses','tot'],['store_profit','Store profit','key'],['dep','Depreciation',''],['fin','Finance &amp; extraordinary',''],['net','Net profit / loss','key']];
+  let h=`<thead><tr><th>AED</th><th>FY'25 · earlier rent</th><th>%</th><th>FY'25 · at AED 246</th><th>%</th><th>Change</th></tr></thead><tbody>`;
+  L.forEach(([k,l,c])=>{const d=n[k]-e[k];h+=`<tr class="${c}"><td>${l}</td><td>${fmt(e[k])}</td><td class="pct">${pct(e[k]/e.sales)}</td><td>${fmt(n[k])}</td><td class="pct">${pct(n[k]/n.sales)}</td><td>${Math.abs(d)<1?'—':(d>0?'+':'−')+fmt(Math.abs(d))}</td></tr>`;});
+  h+=`<tr class="sub"><td>Gross rent per sq ft</td><td>${e.rent_psf.toFixed(2)}</td><td></td><td>${n.rent_psf.toFixed(2)}</td><td></td><td></td></tr>`;
+  h+=`<tr><td>Rent-to-sales</td><td>${pill(e.rent_to_sales,RTS_B)}</td><td></td><td>${pill(n.rent_to_sales,RTS_B)}</td><td></td><td></td></tr>`;
+  h+=`<tr><td>Rent-to-income</td><td>${pill(e.rent_to_ni,RTI_B)}</td><td></td><td>${pill(n.rent_to_ni,RTI_B)}</td><td></td><td></td></tr>`;
+  $('#lyTbl').innerHTML=h+'</tbody>';
+})();
 function render(){renderS1();renderPnl();}
 render();
 </script>
