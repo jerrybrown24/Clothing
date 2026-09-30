@@ -168,6 +168,8 @@ for scen in out:
         summary[scen][o] = dict(sp3=sum(sp), net3_s1=sum(y["net"] for y in d["s1"]), net3_s2=sum(y["net"] for y in d["s2"]),
                                 npv_s1=npv(sp), npv_s2=npv(sp) - CAPEX,
                                 rts_avg=sum(y["rent"] for y in d["s1"]) / sum(y["sales"] for y in d["s1"]))
+_ms = monthly_sales("base")
+R["forecast_monthly"] = [float(_ms[pd.Period(m, "M")]) for m in R["fut_months"]]   # final base forecast by month
 R.update(pnl=out, breakeven=be, bench=bench, summary=summary,
          options={k: v["label"] for k, v in OPTIONS.items()},
          option_psf={k: [a + b + c for a, b, c in v["psf"]] if "psf" in v else None for k, v in OPTIONS.items()},

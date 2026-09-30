@@ -99,7 +99,7 @@ ol.reco{padding:0;margin:0}
 .dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;font-size:14px}
 .dl dt{color:var(--ink-3);font-family:var(--f-mono);font-size:12px;padding-top:2px}
 .dl dd{margin:0}
-.simform{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1.7fr) minmax(0,.8fr) minmax(0,1fr) minmax(0,.8fr);gap:12px 16px;align-items:end}
+.simform{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1.7fr) minmax(0,1fr) minmax(0,.8fr);gap:12px 16px;align-items:end}
 .fld{display:grid;gap:6px;min-width:0}
 .fld label{font-family:var(--f-mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3)}
 .fld input[type=number],.fld select{font:600 15px var(--f-body);color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:5px;padding:8px 10px;width:100%;min-width:0}
@@ -143,21 +143,18 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
   </header>
 
   <div class="block">
-    <h3>Rent options for the new term</h3>
-    <p class="small muted">Gross rent = base rent + service charge + marketing levy, per sq ft per year, × 3,598 sq ft. Turnover rent is 12% of sales, charged only if it exceeds base rent.</p>
+    <h3>New rent schedule and ratios</h3>
+    <p class="small muted">Gross rent = base rent + service charge + marketing levy, per sq ft per year, × 3,598 sq ft. The first row is the last year of the old lease, for comparison.</p>
     <div class="tbl"><table id="rentTbl"></table></div>
   </div>
 
   <div class="block">
-    <div class="controls">
-      <h3 style="margin-right:auto">Ratios by option</h3>
-      <div><label>Sales scenario</label><span class="seg" data-ctl="s1scen"></span></div>
-    </div>
+    <h3>Rent ratios by lease year</h3>
     <div class="grid2">
       <div class="chart" id="chRts"></div>
       <div class="chart" id="chRti"></div>
     </div>
-    <div class="tbl"><table id="ratioTbl"></table></div>
+    <div class="legend"><span><i class="sq" style="background:var(--ink-3)"></i>Earlier lease (14% turnover rent)</span><span><i class="sq" style="background:var(--s2)"></i>New lease (AED 246)</span></div>
     <p class="note">Rent-to-sales is gross rent ÷ net sales. Rent-to-income is gross rent ÷ Net Income, the P&amp;L line after gross margin and margin deductions (64.0% of sales). Bands used: rent-to-sales ≤20% healthy, 20–24% stretched, &gt;24% high. Rent-to-income ≤32% healthy, 32–38% stretched, &gt;38% high.</p>
   </div>
 
@@ -175,7 +172,7 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
   </div>
 
   <div class="block">
-    <h3>What the store can afford (lease year 1)</h3>
+    <h3>What the store can afford (8 Aug 2026 – 7 Aug 2027)</h3>
     <div class="tbl"><table id="affTbl"></table></div>
   </div>
 </section>
@@ -192,7 +189,7 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
     <div class="controls">
       <h3 style="margin-right:auto">Monthly sales: actual and ensemble forecast</h3>
     </div>
-    <div class="legend"><span><i style="background:var(--s1)"></i>Actual</span><span><i style="background:var(--s2)"></i>Ensemble forecast (base, before macro overlay)</span><span><i class="sq" style="background:var(--band)"></i>Lease years of the new term</span></div>
+    <div class="legend"><span><i style="background:var(--s1)"></i>Actual</span><span><i style="background:var(--s2)"></i>Forecast</span><span><i class="sq" style="background:var(--band)"></i>Lease years of the new term</span></div>
     <div class="chart" id="chMonthly"></div>
   </div>
 
@@ -231,7 +228,7 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
 
   <div class="block">
     <h3>Forecast by lease year (8 Aug – 7 Aug)</h3>
-    <div class="legend"><span><i class="sq" style="background:var(--ink-3)"></i>Actual</span><span><i class="sq" style="background:var(--s8)"></i>Bear</span><span><i class="sq" style="background:var(--s2)"></i>Base</span><span><i class="sq" style="background:var(--s3)"></i>Bull</span></div>
+    <div class="legend"><span><i class="sq" style="background:var(--ink-3)"></i>Actual</span><span><i class="sq" style="background:var(--s2)"></i>Forecast</span></div>
     <div class="chart" id="chLY"></div>
     <div class="tbl"><table id="scenTbl"></table></div>
     <div class="flag" id="planFlag"></div>
@@ -243,15 +240,9 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
   <header>
     <div class="secnum">Section 3</div>
     <h2>Full P&amp;L and recommendation</h2>
-    <p class="muted">The P&amp;L is built month by month from Jan 2025 to 7 Aug 2029, then added up by financial year and by lease year, so the two views reconcile. Sources: FY'25 actuals from the "P &amp; L" sheet; Jan–Jul 2026 monthly actuals from the "YR'26" sheet; your Aug–Dec 2026 cost estimates; and the Yr'27–29 cost lines from "P &amp; L 5 Yrs" (74.0% gross margin, 64.0% Net Income). Only sales (the forecast) and rent change. Everything else is your P&amp;L.</p>
+    <p class="muted">The P&amp;L is built month by month from Jan 2025 to 7 Aug 2029, then added up by financial year and by lease year, so the two views reconcile. Sources: FY'25 actuals from the "P &amp; L" sheet; Jan–Jul 2026 monthly actuals from the "YR'26" sheet; your Aug–Dec 2026 cost estimates; and the Yr'27–29 cost lines from "P &amp; L 5 Yrs" (74.0% gross margin, 64.0% Net Income). Only sales (the forecast) and rent change. Rent is AED 246 per sq ft gross from 8 Aug 2026. Everything before that date is actual, at the earlier 14% turnover rent.</p>
   </header>
 
-  <div class="block">
-    <div class="controls">
-      <div><label>Sales</label><span class="seg" data-ctl="pscen"></span></div>
-    </div>
-    <p class="small muted">Rent is AED 246 per sq ft gross from 8 Aug 2026. The sales switch applies to every table in this section. Everything before 8 Aug 2026 is actual, at the earlier 14% turnover rent, and doesn't change.</p>
-  </div>
 
   <div class="block">
     <h3>Financial years: FY'25, FY'26, FY'27 (Jan–Dec)</h3>
@@ -290,7 +281,6 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
       <div class="fld"><label for="simPsf">Rent per sq ft (AED / year, gross)</label>
         <div class="psfrow"><input type="number" id="simPsf" min="0" max="1000" step="0.5" value="246"><input type="range" id="simPsfR" min="100" max="400" step="1" value="246" aria-label="Rent per sq ft slider"></div></div>
       <div class="fld"><label for="simYear">Lease year</label><select id="simYear"></select></div>
-      <div class="fld"><label for="simScen">Sales case</label><select id="simScen"><option value="bear">Bear</option><option value="base" selected>Base</option><option value="bull">Bull</option></select></div>
       <div class="fld"><label for="simDep">Depreciation (AED / year)</label><input type="number" id="simDep" min="0" step="1000"></div>
       <div class="fld"><label for="simTax">Tax on profit (%)</label><input type="number" id="simTax" min="0" max="100" step="0.5" value="9"></div>
     </form>
@@ -314,9 +304,6 @@ const fmtM = (v,d=2) => (v/1e6).toFixed(d);
 const fmt = v => Math.round(v).toLocaleString('en-US');
 const pct = (v,d=1) => (v*100).toFixed(d)+'%';
 const sgn = (v,d=1) => (v>=0?'+':'−')+Math.abs(v*100).toFixed(d)+'%';
-const OPTS = Object.keys(D.options);
-const SCN = ['bear','base','bull'];
-const SCN_L = {bear:'Bear',base:'Base',bull:'Bull'};
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const band = (v,[a,b]) => v<=a?'good':(v<=b?'warn':'bad');
 const RTS_B=[0.20,0.24], RTI_B=[0.32,0.38];
@@ -326,9 +313,9 @@ const B = D.pnl.base;
 /* ---------- header ---------- */
 (function(){
   const N=B['New · 246'].s1[0], E=B['Earlier · 14%'].s1[0], SN=D.summary.base['New · 246'];
-  $('#verdictText').innerHTML = `At the new rent of <b>AED 246/sq ft</b> (AED ${fmtK(N.rent)}k in year 1), Circle Mall stays profitable under every sales scenario, so renew. In the base case rent is <b>${pct(N.rent_to_sales)}</b> of sales and <b>${pct(N.rent_to_ni)}</b> of Net Income. That is just above the 20% healthy ceiling but well below the landlord's first ask of AED 296. Compared with the earlier 14% turnover rent, the store pays about AED ${fmtK(N.rent-E.rent)}k more a year, and year-1 store profit falls from AED ${fmtK(E.store_profit)}k to AED ${fmtK(N.store_profit)}k.`;
+  $('#verdictText').innerHTML = `At the new rent of <b>AED 246/sq ft</b> (AED ${fmtK(N.rent)}k in year 1), Circle Mall stays profitable in every year of the term, so renew. In year 1 rent is <b>${pct(N.rent_to_sales)}</b> of sales and <b>${pct(N.rent_to_ni)}</b> of Net Income. That is just above the 20% healthy ceiling. Compared with the earlier 14% turnover rent, the store pays about AED ${fmtK(N.rent-E.rent)}k more a year, and year-1 store profit falls from AED ${fmtK(E.store_profit)}k to AED ${fmtK(N.store_profit)}k.`;
   const t=[
-    [`${fmtM(D.scenarios.base[0])}M`,'Lease-year 1 sales, base forecast',`${sgn(D.scenarios.base[0]/D.hist_ly['LY 25-26']-1)} vs LY 25-26 (${fmtM(D.hist_ly['LY 25-26'])}M)`],
+    [`${fmtM(N.sales)}M`,'Lease-year 1 sales forecast',`${sgn(N.sales/D.hist_ly['LY 25-26']-1)} vs LY 25-26 (${fmtM(D.hist_ly['LY 25-26'])}M)`],
     [`${fmtK(N.rent)}k`,'New gross rent, year 1 (AED 246)',`${sgn(N.rent/E.rent-1)} vs earlier 14% rent (${fmtK(E.rent)}k)`],
     [pct(N.rent_to_sales),'Rent-to-sales at AED 246',`vs ${pct(E.rent_to_sales)} earlier · rent-to-income ${pct(N.rent_to_ni)}`],
     [`${fmtK(N.store_profit)}k`,'Store profit, year 1 at AED 246',`vs ${fmtK(E.store_profit)}k at the earlier rent`],
@@ -337,8 +324,8 @@ const B = D.pnl.base;
 })();
 
 /* ---------- segmented controls ---------- */
-const state={s1scen:'base',pscen:'base',popt:'New · 246',pcase:'s1'};  // P&L section is fixed to AED 246, rent only
-const CTL={s1scen:SCN.map(s=>[s,SCN_L[s]]),pscen:SCN.map(s=>[s,SCN_L[s]]),};
+const state={pscen:'base',popt:'New · 246',pcase:'s1'};  // single case: base forecast, AED 246, rent only
+const CTL={};
 document.querySelectorAll('.seg').forEach(el=>{
   const k=el.dataset.ctl;
   el.innerHTML=CTL[k].map(([v,l])=>`<button type="button" id="b-${k}-${v.replace(/\W+/g,'')}" data-v="${v}" aria-pressed="${state[k]===v}">${l}</button>`).join('');
@@ -424,13 +411,16 @@ function groupBars(host,groups){ // groups: [{label, bars:[{name,v,color}]}]
 
 /* ---------- SECTION 1 static ---------- */
 (function(){
-  const cur=B['New · 246'].s1;
-  let h=`<thead><tr><th>Option</th><th>Base/SC/MKT Y1</th><th>Gross psf Y1·Y2·Y3</th><th>Rent Y1</th><th>Rent Y2</th><th>Rent Y3</th><th>3-yr total</th><th>vs AED 246</th></tr></thead><tbody>`;
-  OPTS.forEach(o=>{const y=B[o].s1;const t=y.reduce((a,b)=>a+b.rent,0);const tc=cur.reduce((a,b)=>a+b.rent,0);const tor=!D.option_psf[o];
-    h+=`<tr class="${o.startsWith('New')?'hl':''}"><td><b>${o}</b> <span class="muted small">${D.options[o]}</span></td><td>${tor?'14% of sales, all-in':`${fmt(y[0].rent_base/D.consts.sqft)} / ${fmt(y[0].rent_sc/D.consts.sqft)} / ${fmt(y[0].rent_mkt/D.consts.sqft)}`}</td><td>${(tor?y.map(v=>v.rent_psf):D.option_psf[o]).map(v=>v.toFixed(1)).join(' · ')}</td>${y.map(v=>`<td>${fmt(v.rent)}</td>`).join('')}<td><b>${fmt(t)}</b></td><td>${o.startsWith('New')?'—':sgn(t/tc-1)}</td></tr>`;});
+  const cur=B['New · 246'].s1, L0=D.ly0, sq=D.consts.sqft;
+  const DATES=['8 Aug 26 – 7 Aug 27','8 Aug 27 – 7 Aug 28','8 Aug 28 – 7 Aug 29'];
+  let h=`<thead><tr><th>Lease year</th><th>Base / SC / MKT</th><th>Gross psf</th><th>Gross rent</th><th>Sales</th><th>Rent-to-sales</th><th>Rent-to-income</th><th>Rent / GM</th></tr></thead><tbody>`;
+  h+=`<tr class="sub"><td>8 Aug 25 – 7 Aug 26 · earlier lease</td><td>14% of sales</td><td>${(L0.rent/sq).toFixed(1)}</td><td>${fmt(L0.rent)}</td><td>${fmt(L0.sales)}</td><td>${pill(L0.rent_to_sales,RTS_B)}</td><td>${pill(L0.rent_to_ni,RTI_B)}</td><td>${pct(L0.rent_to_gm)}</td></tr>`;
+  cur.forEach((y,i)=>h+=`<tr><td><b>${DATES[i]}</b></td><td>${(y.rent_base/sq).toFixed(1)} / ${(y.rent_sc/sq).toFixed(0)} / ${(y.rent_mkt/sq).toFixed(0)}</td><td>${y.rent_psf.toFixed(1)}</td><td>${fmt(y.rent)}</td><td>${fmt(y.sales)}</td><td>${pill(y.rent_to_sales,RTS_B)}</td><td>${pill(y.rent_to_ni,RTI_B)}</td><td>${pct(y.rent_to_gm)}</td></tr>`);
+  const tr=cur.reduce((a,b)=>a+b.rent,0),ts=cur.reduce((a,b)=>a+b.sales,0),tn=cur.reduce((a,b)=>a+b.ni,0),tg=cur.reduce((a,b)=>a+b.gm,0);
+  h+=`<tr class="tot"><td>New term, 3 years</td><td></td><td></td><td>${fmt(tr)}</td><td>${fmt(ts)}</td><td>${pill(tr/ts,RTS_B)}</td><td>${pill(tr/tn,RTI_B)}</td><td>${pct(tr/tg)}</td></tr>`;
   $('#rentTbl').innerHTML=h+'</tbody>';
   const E=B['Earlier · 14%'].s1;
-  $('#s1lead').innerHTML=`The new rent is AED 246 gross per sq ft: base AED 190, service charge AED 41 and marketing levy AED 15. That is AED ${fmtK(cur[0].rent)}k in year 1, with base rent rising 5% a year to AED ${fmtK(cur[2].rent)}k in year 3. On the same base-case sales, the earlier 14% turnover rent would have cost AED ${fmtK(E[0].rent)}k. The new rent is AED 50 below the landlord's first ask of AED 296. Turnover rent at 12% never applies: sales would need to pass AED ${fmtM(190*D.consts.sqft/0.12,1)}M for it to exceed base rent.`;
+  $('#s1lead').innerHTML=`The new rent is AED 246 gross per sq ft: base AED 190, service charge AED 41 and marketing levy AED 15. That is AED ${fmtK(cur[0].rent)}k in year 1, with base rent rising 5% a year to AED ${fmtK(cur[2].rent)}k in year 3. On the same forecast sales, the earlier 14% turnover rent would have cost AED ${fmtK(E[0].rent)}k. Turnover rent at 12% never applies: sales would need to pass AED ${fmtM(190*D.consts.sqft/0.12,1)}M for it to exceed base rent.`;
   // history
   const hr=[['Aug-22 – Aug-23',3345376,468352.64],['Aug-23 – Aug-24',3476676,486734.64],['Aug-24 – Aug-25',3375376,472552.64],['Aug-25 – Aug-26',3778830.96,529036.33]];
   let t=`<thead><tr><th>Lease year</th><th>Sales</th><th>Rent</th><th>psf</th><th>Rent / sales</th></tr></thead><tbody>`;
@@ -440,21 +430,21 @@ function groupBars(host,groups){ // groups: [{label, bars:[{name,v,color}]}]
   let b=`<thead><tr><th>Store</th><th>Sq ft</th><th>Gross psf</th><th>TTM sales</th><th>Sales psf</th><th>Rent / sales</th></tr></thead><tbody>`;
   D.bench.forEach(r=>b+=`<tr class="${r.store.includes('new rent')?'hl':''}"><td>${r.store}</td><td>${fmt(r.sqft)}</td><td>${r.psf.toFixed(0)}</td><td>${fmtM(r.ttm)}M</td><td>${fmt(r.sales_psf)}</td><td>${pill(r.rts,RTS_B)}</td></tr>`);
   $('#benchTbl').innerHTML=b+'</tbody>';
-  let a=`<thead><tr><th>Gross rent per sq ft that gives…</th>${SCN.map(s=>`<th>${SCN_L[s]} (${fmtM(D.breakeven[s].sales)}M)</th>`).join('')}</tr></thead><tbody>`;
-  [['rts18','Rent-to-sales of 18%'],['rts20','Rent-to-sales of 20% (healthy ceiling)'],['ten','Store profit of 10% of sales'],['capex_zero','Net profit of zero with the AED 2M renovation'],['zero','Store profit of zero (break-even)']].forEach(([k,l])=>
-    a+=`<tr><td>${l}</td>${SCN.map(s=>`<td>AED ${D.breakeven[s][k].toFixed(0)}</td>`).join('')}</tr>`);
-  a+=`<tr class="hl"><td><b>New rent</b></td>${SCN.map(()=>`<td><b>AED 246</b></td>`).join('')}</tr>`;
+  const BE=D.breakeven.base;
+  let a=`<thead><tr><th>Gross rent per sq ft that gives…</th><th>AED / sq ft</th><th>Annual rent</th></tr></thead><tbody>`;
+  [['rts18','Rent-to-sales of 18%'],['rts20','Rent-to-sales of 20% (healthy ceiling)'],['ten','Store profit of 10% of sales'],['zero','Store profit of zero (break-even)']].forEach(([k,l])=>
+    a+=`<tr><td>${l}</td><td>AED ${BE[k].toFixed(0)}</td><td>${fmt(BE[k]*sq)}</td></tr>`);
+  a+=`<tr class="hl"><td><b>New rent</b></td><td><b>AED 246</b></td><td><b>${fmt(246*sq)}</b></td></tr>`;
   $('#affTbl').innerHTML=a+'</tbody>';
 })();
 
 function renderS1(){
-  const P=D.pnl[state.s1scen];
-  const colors={'New · 246':css('--s2'),'Earlier · 14%':css('--ink-3'),'A · 296':css('--s1'),'B · 256':css('--s1'),'C · 236':css('--s1'),'D · 226':css('--s1')};
-  hbar($('#chRts'),OPTS.map(o=>({label:o,value:P[o].s1[0].rent_to_sales,color:colors[o]})),{title:'Rent-to-sales, lease year 1',ref:[{v:.20,l:'20%'}],max:.30});
-  hbar($('#chRti'),OPTS.map(o=>({label:o,value:P[o].s1[0].rent_to_ni,color:colors[o]})),{title:'Rent-to-income, lease year 1',ref:[{v:.32,l:'32%'}],max:.50});
-  let h=`<thead><tr><th>Option</th><th>Gross rent Y1</th><th>RtS Y1</th><th>RtS Y2</th><th>RtS Y3</th><th>RtI Y1</th><th>RtI Y2</th><th>RtI Y3</th><th>Rent / GM Y1</th></tr></thead><tbody>`;
-  OPTS.forEach(o=>{const y=P[o].s1;h+=`<tr class="${o.startsWith('New')?'hl':''}"><td><b>${o}</b></td><td>${fmt(y[0].rent)}</td>${y.map(v=>`<td>${pill(v.rent_to_sales,RTS_B)}</td>`).join('')}${y.map(v=>`<td>${pill(v.rent_to_ni,RTI_B)}</td>`).join('')}<td>${pct(y[0].rent_to_gm)}</td></tr>`;});
-  $('#ratioTbl').innerHTML=h+'</tbody>';
+  const H=[['22-23',3345376,468352.64],['23-24',3476676,486734.64],['24-25',3375376,472552.64]];
+  const old=css('--ink-3'),nw=css('--s2'),cur=B['New · 246'].s1,L0=D.ly0,lab=['26-27','27-28','28-29'];
+  const rts=[...H.map(r=>({label:r[0],value:r[2]/r[1],color:old})),{label:'25-26',value:L0.rent_to_sales,color:old},...cur.map((y,i)=>({label:lab[i],value:y.rent_to_sales,color:nw}))];
+  const rti=[{label:'25-26',value:L0.rent_to_ni,color:old},...cur.map((y,i)=>({label:lab[i],value:y.rent_to_ni,color:nw}))];
+  hbar($('#chRts'),rts,{title:'Rent-to-sales by lease year',ref:[{v:.20,l:'20%'}],max:.25});
+  hbar($('#chRti'),rti,{title:'Rent-to-income by lease year',ref:[{v:.32,l:'32%'}],max:.40});
 }
 
 /* ---------- SECTION 2 static ---------- */
@@ -462,9 +452,9 @@ function renderS1(){
   const mlab=m=>{const [yy,mm]=m.split('-');return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mm-1]+'-'+yy.slice(2)};
   const labels=[...D.months,...D.fut_months].map(mlab);const n=D.months.length;
   const actual=D.actual.map((v,i)=>[i,v]);
-  const fc=[[n-1,D.actual[n-1]],...D.ensemble.forecast.map((v,i)=>[n+i,v])];
+  const fc=[[n-1,D.actual[n-1]],...D.forecast_monthly.map((v,i)=>[n+i,v])];
   const idx=m=>labels.indexOf(m);
-  lines($('#chMonthly'),labels,[{name:'Actual',color:css('--s1'),pts:actual,end:true},{name:'Ensemble forecast',color:css('--s2'),pts:fc,dash:'6 4'}],
+  lines($('#chMonthly'),labels,[{name:'Actual',color:css('--s1'),pts:actual,end:true},{name:'Forecast',color:css('--s2'),pts:fc,dash:'6 4'}],
     {bands:[{from:idx('Aug-26'),to:idx('Aug-27'),label:'LY1'},{from:idx('Aug-27'),to:idx('Aug-28'),label:'LY2'},{from:idx('Aug-28'),to:idx('Aug-29'),label:'LY3'}],every:3});
   const DESC={
     'Seasonal naive × YoY growth':'Last year\'s same month × trailing-12-month growth. The simple benchmark that every other model has to beat.',
@@ -496,15 +486,19 @@ function renderS1(){
   d+=`<tr class="tot"><td>External growth</td><td></td><td></td><td>+${D.macro_g.toFixed(2)}%</td><td></td></tr>`;
   $('#drvTbl').innerHTML=d+'</tbody>';
   const eg2=D.ensemble.lease_years[1]/D.ensemble.lease_years[0]-1;
-  $('#drvNote').innerHTML=`Year 1 uses the ensemble on its own, because the models already carry current momentum. For years 2 and 3, growth is 50% the ensemble's own trend (${sgn(eg2)}) and 50% the external rate (+${D.macro_g.toFixed(1)}%). That gives <b>${sgn(D.g2)}</b> in LY2 and <b>${sgn(D.g3)}</b> in LY3. Bear takes the lowest credible model's year 1 and half the external growth. Bull takes the highest model's year 1 and external growth +2 pp.`;
+  $('#drvNote').innerHTML=`Year 1 uses the ensemble on its own, because the models already carry current momentum. For years 2 and 3, growth is 50% the ensemble's own trend (${sgn(eg2)}) and 50% the external rate (+${D.macro_g.toFixed(1)}%). That gives <b>${sgn(D.g2)}</b> in LY2 and <b>${sgn(D.g3)}</b> in LY3.`;
   const H=D.hist_ly;const groups=Object.entries(H).map(([k,v])=>({label:k,bars:[{name:'Actual',v,color:css('--ink-3')}]}));
-  ['LY1 26-27','LY2 27-28','LY3 28-29'].forEach((l,i)=>groups.push({label:l,bars:[{name:'Bear',v:D.scenarios.bear[i],color:css('--s8')},{name:'Base',v:D.scenarios.base[i],color:css('--s2')},{name:'Bull',v:D.scenarios.bull[i],color:css('--s3')}]}));
+  ['LY 26-27','LY 27-28','LY 28-29'].forEach((l,i)=>groups.push({label:l,bars:[{name:'Forecast',v:B['New · 246'].s1[i].sales,color:css('--s2')}]}));
   groupBars($('#chLY'),groups);
-  let st=`<thead><tr><th>Scenario</th><th>LY1 26-27</th><th>LY2 27-28</th><th>LY3 28-29</th><th>3-yr total</th><th>LY1 vs LY 25-26</th></tr></thead><tbody>`;
-  SCN.forEach(s=>{const v=D.scenarios[s];st+=`<tr class="${s==='base'?'key':''}"><td>${SCN_L[s]}</td>${v.map(x=>`<td>${fmt(x)}</td>`).join('')}<td>${fmt(v.reduce((a,b)=>a+b,0))}</td><td>${sgn(v[0]/H['LY 25-26']-1)}</td></tr>`});
+  const rowsLY=[...Object.entries(H).map(([k,v])=>['8 Aug 20'+k.slice(3,5)+' – 7 Aug 20'+k.slice(6,8),v,'Actual']),
+    ...B['New · 246'].s1.map((y,i)=>[`8 Aug 20${26+i} – 7 Aug 20${27+i}`,y.sales,'Forecast'])];
+  let st=`<thead><tr><th>Lease year</th><th></th><th>Sales</th><th>Growth</th></tr></thead><tbody>`;
+  rowsLY.forEach((r,i)=>st+=`<tr class="${r[2]==='Forecast'?'':'sub'}"><td>${r[0]}</td><td class="muted">${r[2]}</td><td>${fmt(r[1])}</td><td>${i?sgn(r[1]/rowsLY[i-1][1]-1):'—'}</td></tr>`);
+  const f3=B['New · 246'].s1.reduce((a,b)=>a+b.sales,0);
+  st+=`<tr class="key"><td>New term, 3 years</td><td></td><td>${fmt(f3)}</td><td></td></tr>`;
   $('#scenTbl').innerHTML=st+'</tbody>';
   const aug_dec=D.actual[n-1]+D.ensemble.forecast.slice(0,4).reduce((a,b)=>a+b,0);
-  $('#planFlag').innerHTML=`<strong>Check the P&amp;L sales plan.</strong> The current P&amp;L assumes Aug–Dec 2026 sales of AED 2.21M, +33% on Aug–Dec 2025 (AED 1.66M). August 2026 came in at AED ${fmtK(D.actual[n-1])}k, +2% on last August. The models project Aug–Dec 2026 at AED ${fmtM(aug_dec)}M, which puts calendar 2026 at about AED ${fmtM(2265227+aug_dec)}M, not AED 4.47M. The P&amp;L's Yr'27–29 sales (AED 4.56–4.75M) are about 5–10% above this base case. This report uses the forecast, not the plan.`;
+  $('#planFlag').innerHTML=`<strong>Check the P&amp;L sales plan.</strong> The current P&amp;L assumes Aug–Dec 2026 sales of AED 2.21M, +33% on Aug–Dec 2025 (AED 1.66M). August 2026 came in at AED ${fmtK(D.actual[n-1])}k, +2% on last August. The models project Aug–Dec 2026 at AED ${fmtM(aug_dec)}M, which puts calendar 2026 at about AED ${fmtM(2265227+aug_dec)}M, not AED 4.47M. The P&amp;L's Yr'27–29 sales (AED 4.56–4.75M) are about 5–10% above this forecast. This report uses the forecast, not the plan.`;
 })();
 
 /* ---------- SECTION 3 ---------- */
@@ -521,14 +515,14 @@ function renderPnl(){
   $('#pnlTbl').innerHTML=h+'</tbody>';
 }
 (function(){
-  const S=D.summary, N=S.base['New · 246'], E=S.base['Earlier · 14%'], A=S.base['A · 296'];
-  const n1=D.pnl.base['New · 246'].s1[0], bearN=D.pnl.bear['New · 246'];
+  const S=D.summary, N=S.base['New · 246'], E=S.base['Earlier · 14%'];
+  const n1=D.pnl.base['New · 246'].s1[0];
   const items=[
-    `<b>Renew at AED 246. The location has earned it.</b> Circle Mall grew 14.3% in Jan–Aug 2026 while the like-for-like chain fell 4.7%, and lease-year 25-26 sales reached a record AED ${fmtM(D.hist_ly['LY 25-26'])}M. At AED 246, base-case store profit is AED ${fmtK(n1.store_profit)}k in year 1 and AED ${fmtM(N.sp3)}M over 3 years. In the bear case it is still AED ${fmtM(D.summary.bear['New · 246'].sp3)}M.`,
-    `<b>The cost of the new rent is real.</b> Against the earlier 14% turnover rent, 3-year store profit falls by AED ${fmtK(E.sp3-N.sp3)}k, and rent-to-sales goes from 14.0% to ${pct(N.rts_avg)}. The lease-year comparison above shows the same effect in year 1: store profit goes from AED ${fmtK(D.ly0.store_profit)}k (Aug 25–Jul 26) to AED ${fmtK(D.pnl.base['New · 246'].s1[0].store_profit)}k (Aug 26–Jul 27), even with sales up ${sgn(D.pnl.base['New · 246'].s1[0].sales/D.ly0.sales-1)}.`,
-    `<b>AED 246 is a fair deal against the alternatives.</b> It is AED ${fmtK(A.sp3>0?(N.sp3-A.sp3):0)}k better over 3 years than the landlord's first ask of AED 296, and it sits between Option B (AED 256) and Option C (AED 236). A 20% rent-to-sales ratio would mean AED ${D.breakeven.base.rts20.toFixed(0)}/sq ft, so there is little room left to push for more.`,
+    `<b>Renew at AED 246. The location has earned it.</b> Circle Mall grew 14.3% in Jan–Aug 2026 while the like-for-like chain fell 4.7%, and lease-year 25-26 sales reached a record AED ${fmtM(D.hist_ly['LY 25-26'])}M. At AED 246, store profit is AED ${fmtK(n1.store_profit)}k in year 1 and AED ${fmtM(N.sp3)}M over 3 years.`,
+    `<b>The cost of the new rent is real.</b> Against the earlier 14% turnover rent, 3-year store profit falls by AED ${fmtK(E.sp3-N.sp3)}k, and rent-to-sales goes from 14.0% to ${pct(N.rts_avg)}. The lease-year comparison above shows the same effect in year 1: store profit goes from AED ${fmtK(D.ly0.store_profit)}k (8 Aug 25 – 7 Aug 26) to AED ${fmtK(n1.store_profit)}k (8 Aug 26 – 7 Aug 27), even with sales up ${sgn(D.pnl.base['New · 246'].s1[0].sales/D.ly0.sales-1)}.`,
+    `<b>AED 246 is close to what the store can carry.</b> A 20% rent-to-sales ratio would mean AED ${D.breakeven.base.rts20.toFixed(0)}/sq ft, and break-even is AED ${D.breakeven.base.zero.toFixed(0)}/sq ft. So AED 246 leaves a solid profit, with little room to push lower.`,
     `<b>Protect the downside in the contract.</b> Ask that the 12% turnover rent replace the fixed base in a downturn, since the higher-of clause never applies at these sales levels. Alternatively, ask for a sales-linked cap on the 5% annual base escalation.`,
-    `<b>Reset the sales plan before sign-off.</b> Budget lease-year 1 at about AED ${fmtM(D.scenarios.base[0])}M, not the P&amp;L's AED 4.5M+. Growth drivers (Dubai population +7.5%, JVC densification) support 4–5% a year, and store footfall is already up 6% a year. Keep marketing at AED 90k+ to hold conversion.`,
+    `<b>Reset the sales plan before sign-off.</b> Budget lease-year 1 at about AED ${fmtM(n1.sales)}M, not the P&amp;L's AED 4.5M+. Growth drivers (Dubai population +7.5%, JVC densification) support 4–5% a year, and store footfall is already up 6% a year. Keep marketing at AED 90k+ to hold conversion.`,
   ];
   $('#reco').innerHTML=items.map(x=>`<li>${x}</li>`).join('');
 })();
@@ -546,7 +540,7 @@ function colTable(cols,{change=false}={}){
 }
 function renderYears(){
   const fy=D.fy[state.pscen][state.popt][state.pcase];
-  $('#fyLead').innerHTML=`FY'25 is actual. FY'26 is Jan–Jul actual plus Aug actual sales and a Sep–Dec forecast (${SCN_L[state.pscen].toLowerCase()} case). Rent is the earlier turnover rent to 7 Aug and AED 246/sq ft from 8 Aug. FY'27 is forecast, at AED 246 to 7 Aug and AED 255.5 from 8 Aug (5% rise in base rent).`;
+  $('#fyLead').innerHTML=`FY'25 is actual. FY'26 is Jan–Jul actual plus Aug actual sales and a Sep–Dec forecast. Rent is the earlier turnover rent to 7 Aug and AED 246/sq ft from 8 Aug. FY'27 is forecast, at AED 246 to 7 Aug and AED 255.5 from 8 Aug (5% rise in base rent).`;
   $('#fyTbl').innerHTML=colTable([{h:"FY'25 actual",d:fy[0]},{h:"FY'26 act + fcst",d:fy[1]},{h:"FY'27 forecast",d:fy[2]}]);
   $('#fyNote').innerHTML=`Your P&amp;L plans FY'26 sales at AED 4.47M and store profit at AED 1.17M. With the same costs, the forecast gives AED ${fmtM(D.fy.base['New · 246'].s1[1].sales)}M sales and AED ${fmtK(D.fy.base['New · 246'].s1[1].store_profit)}k store profit, because Aug–Dec sales are forecast at AED 1.72M rather than AED 2.21M. FY'26 rent is AED ${fmtK(D.fy.base['New · 246'].s1[1].rent)}k, not the P&amp;L's AED 695k, because the new rent starts on 8 Aug rather than 1 Aug. The FY'25 depreciation of AED 259k is as reported.`;
   const l0=D.ly0,l1=D.pnl[state.pscen][state.popt][state.pcase][0];
@@ -556,14 +550,13 @@ function renderYears(){
 /* ---------- simulator ---------- */
 const SIMY=[{v:'ly0',l:'8 Aug 25 – 7 Aug 26 (actual)'},{v:'0',l:'8 Aug 26 – 7 Aug 27'},{v:'1',l:'8 Aug 27 – 7 Aug 28'},{v:'2',l:'8 Aug 28 – 7 Aug 29'}];
 $('#simYear').innerHTML=SIMY.map(o=>`<option value="${o.v}"${o.v==='0'?' selected':''}>${o.l}</option>`).join('');
-function simBase(){const y=$('#simYear').value;return y==='ly0'?D.ly0:D.pnl[$('#simScen').value]['New · 246'].s1[+y];}
+function simBase(){const y=$('#simYear').value;return y==='ly0'?D.ly0:D.pnl.base['New · 246'].s1[+y];}
 function simSetDep(){$('#simDep').value=Math.round(simBase().dep);}
 function simRun(){
   const b=simBase(),sq=D.consts.sqft;
   let psf=parseFloat($('#simPsf').value); if(!isFinite(psf)||psf<0) psf=0;
   let dep=parseFloat($('#simDep').value); if(!isFinite(dep)||dep<0) dep=0;
   let tax=parseFloat($('#simTax').value); if(!isFinite(tax)||tax<0) tax=0;
-  $('#simScen').disabled=$('#simYear').value==='ly0';
   const rent=psf*sq, other=b.total_exp-b.rent, exp=other+rent, cash=b.ni-exp, pbt=cash-dep-b.fin, tx=Math.max(0,pbt)*tax/100, pat=pbt-tx;
   const bePsf=(b.ni-other)/sq, rts=rent/b.sales, rti=rent/b.ni, dts=dep/b.sales;
   const tiles=[['Sales',fmt(b.sales),''],['Income (Net Income)',fmt(b.ni),pct(b.ni/b.sales)+' of sales'],['Expense',fmt(exp),`incl. rent ${fmt(rent)}`],['Cash profit',fmt(cash),pct(cash/b.sales)+' of sales'],
@@ -574,7 +567,7 @@ function simRun(){
 }
 $('#simPsf').addEventListener('input',()=>{$('#simPsfR').value=$('#simPsf').value;simRun();});
 $('#simPsfR').addEventListener('input',()=>{$('#simPsf').value=$('#simPsfR').value;simRun();});
-['simYear','simScen'].forEach(id=>$('#'+id).addEventListener('change',()=>{simSetDep();simRun();}));
+['simYear'].forEach(id=>$('#'+id).addEventListener('change',()=>{simSetDep();simRun();}));
 ['simDep','simTax'].forEach(id=>$('#'+id).addEventListener('input',simRun));
 $('#simForm').addEventListener('submit',e=>e.preventDefault());
 simSetDep();simRun();
