@@ -232,22 +232,34 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
   <header>
     <div class="secnum">Section 3</div>
     <h2>Full P&amp;L and recommendation</h2>
-    <p class="muted">Costs are carried unchanged from the existing P&amp;L (the Yr'27, Yr'28 and Yr'29 lines of the "P &amp; L 5 Yrs" sheet): gross margin 74.0%, Net Income 64.0% of sales, and the same employee, marketing, opex and shared-cost amounts with +2% a year. Only sales and rent change. Years run on the lease calendar (Aug–Jul).</p>
+    <p class="muted">The P&amp;L is built month by month from Jan 2025 to Jul 2029, then added up by financial year and by lease year, so the two views reconcile. Sources: FY'25 actuals from the "P &amp; L" sheet; Jan–Jul 2026 monthly actuals from the "YR'26" sheet; your Aug–Dec 2026 cost estimates; and the Yr'27–29 cost lines from "P &amp; L 5 Yrs" (74.0% gross margin, 64.0% Net Income). Only sales (the forecast) and rent change. Everything else is your P&amp;L.</p>
   </header>
-
-  <div class="block">
-    <h3>Last year's P&amp;L: earlier rent vs the new rent</h3>
-    <p class="small muted">FY'25 (Jan–Dec 2025) as reported in the "P &amp; L" sheet, when the store paid the earlier 14% turnover rent. The second column restates the same year at the new AED 246/sq ft gross rent, with everything else unchanged.</p>
-    <div class="tbl"><table id="lyTbl"></table></div>
-    <p class="note">The "P &amp; L 5 Yrs" sheet shows FY'25 rent as AED 444k, not AED 509k. This table uses the "P &amp; L" sheet figure, which matches its reported store profit of AED 898k.</p>
-  </div>
 
   <div class="block">
     <div class="controls">
       <div><label>Sales</label><span class="seg" data-ctl="pscen"></span></div>
-      <div><label>Rent</label><span class="seg" data-ctl="popt"></span></div>
+      <div><label>Rent from Aug-26</label><span class="seg" data-ctl="popt"></span></div>
       <div><label>Case</label><span class="seg" data-ctl="pcase"></span></div>
     </div>
+    <p class="small muted">These controls apply to every table in this section. Months up to Jul-26 are actuals at the earlier 14% turnover rent and don't change.</p>
+  </div>
+
+  <div class="block">
+    <h3>Financial years: FY'25, FY'26, FY'27 (Jan–Dec)</h3>
+    <p class="small muted" id="fyLead"></p>
+    <div class="tbl"><table id="fyTbl"></table></div>
+    <p class="note" id="fyNote"></p>
+  </div>
+
+  <div class="block">
+    <h3>Lease years: Aug 25–Jul 26 (earlier rent) vs Aug 26–Jul 27 (revised rent)</h3>
+    <p class="small muted">The last lease year of the old contract against the first year of the new one. Aug–Dec 2025 costs are FY'25 actuals spread evenly by month. Jan–Jul 2026 are monthly actuals.</p>
+    <div class="tbl"><table id="lyCmpTbl"></table></div>
+    <p class="note" id="lyNote"></p>
+  </div>
+
+  <div class="block">
+    <h3>Full new term by lease year (Aug–Jul)</h3>
     <div class="tbl"><table id="pnlTbl"></table></div>
     <p class="note">Scenario 2 follows the mall's renovation requirement: AED 2.0M capex, depreciated straight-line over 5 years (AED 400k a year). Over a 3-year term, AED 800k of book value is left at expiry. That is only recovered if the lease is renewed again.</p>
   </div>
@@ -472,7 +484,7 @@ function renderS1(){
 })();
 
 /* ---------- SECTION 3 ---------- */
-const LINES=[['sales','Net sales','key'],['gm','Gross margin',''],['ni','Net Income','tot'],['Employee expense','Employee expense','sub'],['rent','Rent (gross)','hl'],['rent_base','  of which base rent','sub'],['rent_sc','  of which service charge','sub'],['rent_mkt','  of which marketing levy','sub'],['Advertising & marketing','Advertising & marketing','sub'],['Other opex','Other opex','sub'],['Shared common','Shared common','sub'],['Shared others','Shared others','sub'],['total_exp','Total expenses','tot'],['store_profit','Store profit','key'],['dep','Depreciation',''],['fin','Finance &amp; extraordinary',''],['net','Net profit / loss','key']];
+const LINES=[['sales','Net sales','key'],['gm','Gross margin',''],['ni','Net Income','tot'],['Employee expense','Employee expense','sub'],['rent','Rent (gross)','hl'],['rent_base','  of which base / turnover rent','sub'],['rent_sc','  of which service charge','sub'],['rent_mkt','  of which marketing levy','sub'],['Advertising & marketing','Advertising & marketing','sub'],['Other opex','Other opex','sub'],['Shared common','Shared common','sub'],['Shared others','Shared others','sub'],['total_exp','Total expenses','tot'],['store_profit','Store profit','key'],['dep','Depreciation',''],['fin','Finance &amp; extraordinary',''],['net','Net profit / loss','key']];
 function renderPnl(){
   const y=D.pnl[state.pscen][state.popt][state.pcase];
   let h=`<thead><tr><th>AED</th><th>LY1 26-27</th><th>%</th><th>LY2 27-28</th><th>%</th><th>LY3 28-29</th><th>%</th><th>3-yr total</th><th>%</th></tr></thead><tbody>`;
@@ -493,7 +505,7 @@ function renderPnl(){
   const n1=D.pnl.base['New · 246'].s1[0], bearN=D.pnl.bear['New · 246'];
   const items=[
     `<b>Renew at AED 246. The location has earned it.</b> Circle Mall grew 14.3% in Jan–Aug 2026 while the like-for-like chain fell 4.7%, and lease-year 25-26 sales reached a record AED ${fmtM(D.hist_ly['LY 25-26'])}M. At AED 246, base-case store profit is AED ${fmtK(n1.store_profit)}k in year 1 and AED ${fmtM(N.sp3)}M over 3 years. In the bear case it is still AED ${fmtM(D.summary.bear['New · 246'].sp3)}M.`,
-    `<b>The cost of the new rent is real.</b> Against the earlier 14% turnover rent, 3-year store profit falls by AED ${fmtK(E.sp3-N.sp3)}k, and rent-to-sales goes from 14.0% to ${pct(N.rts_avg)}. Last year's P&amp;L restated at AED 246 (above) shows the same effect: store profit drops from AED ${fmtK(D.last_year.earlier.store_profit)}k to AED ${fmtK(D.last_year.new.store_profit)}k.`,
+    `<b>The cost of the new rent is real.</b> Against the earlier 14% turnover rent, 3-year store profit falls by AED ${fmtK(E.sp3-N.sp3)}k, and rent-to-sales goes from 14.0% to ${pct(N.rts_avg)}. The lease-year comparison above shows the same effect in year 1: store profit goes from AED ${fmtK(D.ly0.store_profit)}k (Aug 25–Jul 26) to AED ${fmtK(D.pnl.base['New · 246'].s1[0].store_profit)}k (Aug 26–Jul 27), even with sales up ${sgn(D.pnl.base['New · 246'].s1[0].sales/D.ly0.sales-1)}.`,
     `<b>AED 246 is a fair deal against the alternatives.</b> It is AED ${fmtK(A.sp3>0?(N.sp3-A.sp3):0)}k better over 3 years than the landlord's first ask of AED 296, and it sits between Option B (AED 256) and Option C (AED 236). A 20% rent-to-sales ratio would mean AED ${D.breakeven.base.rts20.toFixed(0)}/sq ft, so there is little room left to push for more.`,
     `<b>The renovation works at this rent.</b> The AED 2M refit pays back in ${(D.consts.capex/(N.sp3/3)).toFixed(1)} years on base-case sales, within the term. 3-year net profit after depreciation is AED ${fmtM(N.net3_s2)}M (AED ${fmtK(bearN.s2.reduce((a,b)=>a+b.net,0))}k in the bear case). About AED 800k of book value remains at year 3, so ask for a 5-year term or an option to renew on the same terms.`,
     `<b>Protect the downside in the contract.</b> Ask that the 12% turnover rent replace the fixed base in a downturn, since the higher-of clause never applies at these sales levels. Alternatively, ask for a sales-linked cap on the 5% annual base escalation.`,
@@ -502,16 +514,27 @@ function renderPnl(){
   $('#reco').innerHTML=items.map(x=>`<li>${x}</li>`).join('');
 })();
 
-(function(){
-  const e=D.last_year.earlier,n=D.last_year.new;
-  const L=[['sales','Net sales','key'],['gm','Gross margin',''],['ni','Net Income','tot'],['Employee expense','Employee expense','sub'],['rent','Rent (gross)','hl'],['Advertising & marketing','Advertising & marketing','sub'],['Other opex','Other opex','sub'],['Shared common','Shared common','sub'],['Shared others','Shared others','sub'],['total_exp','Total expenses','tot'],['store_profit','Store profit','key'],['dep','Depreciation',''],['fin','Finance &amp; extraordinary',''],['net','Net profit / loss','key']];
-  let h=`<thead><tr><th>AED</th><th>FY'25 · earlier rent</th><th>%</th><th>FY'25 · at AED 246</th><th>%</th><th>Change</th></tr></thead><tbody>`;
-  L.forEach(([k,l,c])=>{const d=n[k]-e[k];h+=`<tr class="${c}"><td>${l}</td><td>${fmt(e[k])}</td><td class="pct">${pct(e[k]/e.sales)}</td><td>${fmt(n[k])}</td><td class="pct">${pct(n[k]/n.sales)}</td><td>${Math.abs(d)<1?'—':(d>0?'+':'−')+fmt(Math.abs(d))}</td></tr>`;});
-  h+=`<tr class="sub"><td>Gross rent per sq ft</td><td>${e.rent_psf.toFixed(2)}</td><td></td><td>${n.rent_psf.toFixed(2)}</td><td></td><td></td></tr>`;
-  h+=`<tr><td>Rent-to-sales</td><td>${pill(e.rent_to_sales,RTS_B)}</td><td></td><td>${pill(n.rent_to_sales,RTS_B)}</td><td></td><td></td></tr>`;
-  h+=`<tr><td>Rent-to-income</td><td>${pill(e.rent_to_ni,RTI_B)}</td><td></td><td>${pill(n.rent_to_ni,RTI_B)}</td><td></td><td></td></tr>`;
-  $('#lyTbl').innerHTML=h+'</tbody>';
-})();
-function render(){renderS1();renderPnl();}
+function colTable(cols,{change=false}={}){
+  // cols: [{h, d}] -> P&L table with value + % columns, optional change (last − first)
+  let h=`<thead><tr><th>AED</th>${cols.map(c=>`<th>${c.h}</th><th>%</th>`).join('')}${change?'<th>Change</th><th>Change %</th>':''}</tr></thead><tbody>`;
+  const f=cols[0].d,l=cols[cols.length-1].d;
+  LINES.forEach(([k,lab,c])=>{const d=l[k]-f[k];
+    h+=`<tr class="${c}"><td>${lab.replace(/^  /,'&nbsp;&nbsp;&nbsp;')}</td>${cols.map(x=>`<td>${fmt(x.d[k])}</td><td class="pct">${pct(x.d[k]/x.d.sales)}</td>`).join('')}${change?`<td>${Math.abs(d)<1?'—':(d>0?'+':'−')+fmt(Math.abs(d))}</td><td class="pct">${Math.abs(f[k])<1?'—':sgn(d/Math.abs(f[k]))}</td>`:''}</tr>`;});
+  h+=`<tr class="sub"><td>Rent per sq ft</td>${cols.map(x=>`<td>${x.d.rent_psf.toFixed(2)}</td><td></td>`).join('')}${change?'<td></td><td></td>':''}</tr>`;
+  h+=`<tr><td>Rent-to-sales</td>${cols.map(x=>`<td>${pill(x.d.rent_to_sales,RTS_B)}</td><td></td>`).join('')}${change?'<td></td><td></td>':''}</tr>`;
+  h+=`<tr><td>Rent-to-income</td>${cols.map(x=>`<td>${pill(x.d.rent_to_ni,RTI_B)}</td><td></td>`).join('')}${change?'<td></td><td></td>':''}</tr>`;
+  return h+'</tbody>';
+}
+function renderYears(){
+  const fy=D.fy[state.pscen][state.popt][state.pcase];
+  const ro=state.popt==='Earlier · 14%'?'the earlier 14% turnover rent':`AED ${D.option_psf[state.popt][0].toFixed(0)}/sq ft (${state.popt})`;
+  $('#fyLead').innerHTML=`FY'25 is actual. FY'26 is Jan–Jul actual plus Aug actual sales and a Sep–Dec forecast (${SCN_L[state.pscen].toLowerCase()} case), with 7 months of turnover rent and 5 months at ${ro}. FY'27 is forecast, with rent at lease-year-1 rates for Jan–Jul and lease-year-2 rates for Aug–Dec.`;
+  $('#fyTbl').innerHTML=colTable([{h:"FY'25 actual",d:fy[0]},{h:"FY'26 act + fcst",d:fy[1]},{h:"FY'27 forecast",d:fy[2]}]);
+  $('#fyNote').innerHTML=`Your P&amp;L plans FY'26 sales at AED 4.47M and store profit at AED 1.17M. Using the same costs and rent, the forecast gives AED ${fmtM(D.fy.base['New · 246'].s1[1].sales)}M sales and AED ${fmtK(D.fy.base['New · 246'].s1[1].store_profit)}k store profit, because Aug–Dec sales are forecast at AED 1.72M rather than AED 2.21M. The FY'25 depreciation of AED 259k is as reported.`;
+  const l0=D.ly0,l1=D.pnl[state.pscen][state.popt][state.pcase][0];
+  $('#lyCmpTbl').innerHTML=colTable([{h:'Aug 25 – Jul 26 · earlier rent',d:l0},{h:'Aug 26 – Jul 27 · revised rent',d:l1}],{change:true});
+  $('#lyNote').innerHTML=`Rent goes from AED ${fmtK(l0.rent)}k to AED ${fmtK(l1.rent)}k (${sgn(l1.rent/l0.rent-1)}) while sales grow ${sgn(l1.sales/l0.sales-1)}. Store profit moves from AED ${fmtK(l0.store_profit)}k to AED ${fmtK(l1.store_profit)}k (${sgn(l1.store_profit/l0.store_profit-1)}). The old contract's last lease year shows AED 529k of rent in your rent history, based on 8 Aug – 7 Aug dates. This table uses calendar months, so it shows AED ${fmtK(l0.rent)}k.`;
+}
+function render(){renderS1();renderPnl();renderYears();}
 render();
 </script>
