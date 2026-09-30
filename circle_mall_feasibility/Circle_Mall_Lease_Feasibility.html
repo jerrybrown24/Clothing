@@ -57,6 +57,33 @@ nav.rail a:hover,nav.rail a:focus-visible{color:var(--accent);border-color:var(-
 .tile .v{font-family:var(--f-display);font-weight:800;font-size:26px;line-height:1.1}
 .tile .l{font-size:13px;color:var(--ink-2)}
 .tile .d{font-family:var(--f-mono);font-size:12px}
+
+.summary{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 20px 14px;margin-top:20px;overflow-x:auto}
+.sumhead,.sumrow{display:grid;grid-template-columns:minmax(150px,1.2fr) minmax(120px,1fr) minmax(150px,1fr) minmax(120px,1fr);gap:12px;align-items:baseline;min-width:560px}
+.sumhead{padding:12px 0 10px;border-bottom:1.5px solid var(--ink-3)}
+.sumhead>div{display:grid;gap:2px}
+.sumhead b{font-family:var(--f-display);font-size:16px}
+.sumhead .col0,.sumhead .col1,.sumhead .colc{text-align:right;justify-items:end}
+.sumrow{padding:9px 0;border-bottom:1px solid var(--line)}
+.sumrow .lab{font-size:14.5px;color:var(--ink-2)}
+.sumrow .v0,.sumrow .v1{text-align:right;font-family:var(--f-display);font-weight:700;font-size:19px}
+.sumrow .v0{color:var(--ink-2)}
+.sumrow .vc{text-align:right;font-family:var(--f-mono);font-size:13px}
+.sumrow .vc.down{color:var(--bad)} .sumrow .vc.up{color:var(--good)}
+.sumrow.key{background:var(--accent-soft)}
+.sumrow.key .lab{color:var(--ink);font-weight:700;padding-left:8px}
+.sumrow.key .v1{padding-right:8px}
+.sumnote{margin-top:10px}
+@media (max-width:600px){
+  .summary{padding:4px 14px 12px}
+  .sumhead,.sumrow{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);min-width:0;gap:4px 10px}
+  .sumhead .colc{display:none}
+  .sumhead b{font-size:13.5px}
+  .sumrow .vc{order:4;grid-column:2/-1}
+  .sumrow .v1{order:3}
+  .sumrow .v0,.sumrow .v1{font-size:16px}
+  .sumrow .lab{font-size:13.5px}
+}
 section.sec{padding-top:40px;display:grid;gap:18px}
 section.sec>header{display:grid;gap:8px}
 .secnum{font-family:var(--f-mono);font-size:12px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}
@@ -134,11 +161,11 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
   <div class="meta">
     <span>Jumeirah Village Circle, Dubai</span><span>GLA 3,598 sq ft</span><span>Term 8 Aug 2026 – 7 Aug 2029</span><span>Data to Aug-26 (Sep-26 partial, excluded)</span><span>AED</span>
   </div>
+  <div class="summary" id="summary" aria-label="Before and after summary"></div>
   <div class="verdict">
     <span class="tag">Renew only on better terms</span>
     <p id="verdictText"></p>
   </div>
-  <div class="tiles" id="tiles"></div>
 </header>
 
 <nav class="rail" aria-label="Sections">
@@ -346,7 +373,19 @@ const TAX = 0.09;  // UAE corporate tax, applied at store level for PAT
     [pct(N.rent_to_sales),'Rent-to-sales at AED 246',`vs ${pct(D.ly0.rent_to_sales)} last lease year · rent-to-income ${pct(N.rent_to_ni)}`],
     [sgn(pat(D.ly0,246*D.consts.sqft)/pat(D.ly0,D.ly0.rent)-1,0),'PAT change from the rent alone',`same sales as the last lease year · ${sgn(pat(F25,246*D.consts.sqft)/pat(F25,F25.rent)-1,0)} on FY'25`],
   ];
-  $('#tiles').innerHTML=t.map(x=>`<div class="tile"><div class="v">${x[0]}</div><div class="l">${x[1]}</div><div class="d muted">${x[2]}</div></div>`).join('');
+  // before / after summary: last lease year of the old lease vs first year of the new lease
+  const A0=D.ly0, A1=B['New · 246'].s1[0];
+  const row=(d)=>({rent:d.rent,sales:d.sales,ni:d.ni,exp:d.total_exp,pat:pat(d,d.rent),rts:d.rent/d.sales,rti:d.rent/d.ni});
+  const b0=row(A0), b1=row(A1);
+  const lines=[['Rent','rent','amt',true],['Sales','sales','amt',false],['Income (Net Income)','ni','amt',false],['Expense (incl. rent)','exp','amt',true],['PAT','pat','amt',false],['Rent-to-sales','rts','ratio',true],['Rent-to-income','rti','ratio',true]];
+  let sh=`<div class="sumhead"><div></div><div class="col0"><span class="eyebrow">Before · actual</span><b>8 Aug 2025 – 7 Aug 2026</b><span class="muted small">Old lease, 14% turnover rent</span></div><div class="colc"><span class="eyebrow">Change</span></div><div class="col1"><span class="eyebrow">After · forecast</span><b>8 Aug 2026 – 7 Aug 2027</b><span class="muted small">New lease, AED 246/sq ft gross</span></div></div>`;
+  lines.forEach(([l,k,t,badUp])=>{const v0=b0[k],v1=b1[k];
+    let ch,cls;
+    if(t==='amt'){const c=v1/v0-1;ch=`${v1-v0>=0?'+':'−'}${fmt(Math.abs(v1-v0))} <span class="muted">(${sgn(c,0)})</span>`;cls=(badUp?c>0.02:c<-0.02)?'down':((badUp?c<-0.02:c>0.02)?'up':'');}
+    else{const c=v1-v0;ch=`${c>=0?'+':'−'}${Math.abs(c*100).toFixed(1)} pts`;cls=c>0.005?'down':(c<-0.005?'up':'');}
+    const f=x=>t==='amt'?fmt(x):pct(x);
+    sh+=`<div class="sumrow ${k==='pat'?'key':''}"><div class="lab">${l}</div><div class="v0">${f(v0)}</div><div class="vc ${cls}">${ch}</div><div class="v1">${f(v1)}</div></div>`;});
+  $('#summary').innerHTML=sh+`<p class="small muted sumnote">Before is actual (8 Aug 2025 – 7 Aug 2026). After is the sales forecast with your P&amp;L costs and the new rent. Income is Net Income (sales after gross margin and margin deductions). Expense is all store operating costs including rent. PAT is after depreciation, finance charges and 9% UAE corporate tax.</p>`;
 })();
 
 /* ---------- segmented controls ---------- */
