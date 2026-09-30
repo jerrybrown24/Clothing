@@ -4,7 +4,8 @@ calendar years (FY'25-27) and lease years (Aug-Jul). Sources:
   * Jan-Jul 26: 'YR'26' sheet monthly actuals
   * Aug-Dec 26: 'P & L' sheet 'Aug to DEC' cost estimates; sales = Aug actual + forecast
   * 2027-29: 'P & L 5 Yrs' Yr'27/28/29 cost lines (spread evenly); sales = forecast
-Rent: earlier 14% turnover rent until Jul-26, then the chosen option from Aug-26."""
+Lease years run 8 Aug .. 7 Aug: each August is split 7/31 (old lease year) and 24/31 (new).
+Rent: earlier 14% turnover rent until 7 Aug 2026, then the chosen option from 8 Aug 2026."""
 import json
 import openpyxl
 import pandas as pd
@@ -12,7 +13,7 @@ R = json.load(open("results.json"))
 SQFT = 3598
 TOR = 0.12
 KEYS = ["Employee expense", "Advertising & marketing", "Other opex", "Shared common", "Shared others"]
-M = pd.period_range("2025-01", "2029-07", freq="M")
+M = pd.period_range("2025-01", "2029-08", freq="M")
 # rent options (Scenario / Circle Mall Rent sheets). base, SC, MKT per sqft per lease year
 OPTIONS = {
     "New · 246":       dict(label="New rent (P&L basis)", psf=[(190, 41, 15), (199.5, 41, 15), (209.48, 41, 15)]),
@@ -48,21 +49,20 @@ ens = pd.Series(R["ensemble"]["forecast"], index=pd.PeriodIndex(R["fut_months"],
 ens_ly = R["ensemble"]["lease_years"]
 fy25_scale = FY25["sales"] / act["2025-01":"2025-12"].sum()     # align COG months to reported FY'25
 AUG26 = pd.Period("2026-08", "M")
-def ly_index(p):                                 # 0,1,2 for lease years from Aug-26
-    return (p - AUG26).n // 12
+PRE, POST = 7 / 31, 24 / 31                       # August split around the 8 Aug lease anniversary
+
+def lease_idx(p, after_8th):
+    """-2: before 8 Aug 2025, -1: 8 Aug 2025..7 Aug 2026, 0,1,2: new term years (3 = after term)."""
+    y = p.year if (p.month > 8 or (p.month == 8 and after_8th)) else p.year - 1
+    return y - 2026
 
 def monthly_sales(scen):
     tgt = R["scenarios"][scen]; out = {}
+    f = [(tgt[0] - POST * act[AUG26]) / (ens_ly[0] - POST * act[AUG26]), tgt[1] / ens_ly[1], tgt[2] / ens_ly[2]]
     for p in M:
         if p.year == 2025: out[p] = act[p] * fy25_scale
         elif p <= AUG26: out[p] = act[p]
-        else:
-            k = ly_index(p)
-            if k == 0:   # keep Aug-26 actual, scale Sep..Jul to the scenario total
-                f = (tgt[0] - act[AUG26]) / (ens_ly[0] - act[AUG26])
-            else:
-                f = tgt[k] / ens_ly[k]
-            out[p] = ens[p] * f
+        else: out[p] = ens[p] * f[min(lease_idx(p, True), 2)]
     return out
 
 def ly_rent(opt, ly_sales):
@@ -75,51 +75,58 @@ def ly_rent(opt, ly_sales):
         out.append(dict(base=base, sc=sc * SQFT, mkt=mk * SQFT, psf=b + sc + mk))
     return out
 
+def segments():
+    for p in M:
+        if p.month == 8: yield p, PRE, lease_idx(p, False); yield p, POST, lease_idx(p, True)
+        else: yield p, 1.0, lease_idx(p, True)
+
 def monthly_pnl(scen, opt, capex):
     sales = monthly_sales(scen)
-    ly_s = [sum(v for p, v in sales.items() if p >= AUG26 and ly_index(p) == k) for k in range(3)]
+    segs = list(segments())
+    ly_s = [sum(sales[p] * w for p, w, k in segs if k == j) for j in range(3)]
     lr = ly_rent(opt, ly_s)
-    rows = {}
-    for p, s in sales.items():
-        r = dict(sales=s)
+    rows = []
+    for p, w, k in segs:
+        s = sales[p] * w
+        r = dict(p=p, k=k, sales=s)
         if p.year == 2025:
             r.update(gm=s * FY25["gm"] / FY25["sales"], ni=s * FY25["ni"] / FY25["sales"],
-                     dep=FY25["dep"] / 12, fin=0.0, **{k: FY25[k] / 12 for k in KEYS})
-            r.update(rent_base=s * FY25["rent"] / FY25["sales"], rent_sc=0.0, rent_mkt=0.0)
+                     dep=FY25["dep"] / 12 * w, fin=0.0, **{c: FY25[c] / 12 * w for c in KEYS})
         elif p < AUG26:
             i = p.month - 1
             r.update(gm=Y26["gm"][i], ni=Y26["ni"][i], dep=Y26["dep"][i], fin=Y26["fin"][i],
-                     **{k: Y26[k][i] for k in KEYS}, rent_base=Y26["rent"][i], rent_sc=0.0, rent_mkt=0.0)
+                     **{c: Y26[c][i] for c in KEYS})
+        elif p.year == 2026:
+            r.update(gm=s * AUGDEC26["gm"] / AUGDEC26["sales"], ni=s * AUGDEC26["ni"] / AUGDEC26["sales"],
+                     dep=0.0, fin=AUGDEC26["fin"] / 5 * w, **{c: AUGDEC26[c] / 5 * w for c in KEYS})
         else:
-            if p.year == 2026:
-                r.update(gm=s * AUGDEC26["gm"] / AUGDEC26["sales"], ni=s * AUGDEC26["ni"] / AUGDEC26["sales"],
-                         dep=0.0, fin=AUGDEC26["fin"] / 5, **{k: AUGDEC26[k] / 5 for k in KEYS})
-            else:
-                r.update(gm=s * GM_PCT, ni=s * NI_PCT, dep=DEPFIN[p.year][0] / 12, fin=DEPFIN[p.year][1] / 12,
-                         **dict(zip(KEYS, [v / 12 for v in YR[p.year]])))
-            k = ly_index(p)
+            r.update(gm=s * GM_PCT, ni=s * NI_PCT, dep=DEPFIN[p.year][0] / 12 * w, fin=DEPFIN[p.year][1] / 12 * w,
+                     **{c: v / 12 * w for c, v in zip(KEYS, YR[p.year])})
+        if k < 0:                                   # old lease: turnover rent
+            rent = Y26["rent"][p.month - 1] if (p.year == 2026 and p < AUG26) else s * FY25["rent"] / FY25["sales"]
+            r.update(rent_base=rent, rent_sc=0.0, rent_mkt=0.0)
+        else:
+            j = min(k, 2)
             if lr is None:
                 r.update(rent_base=OPTIONS[opt]["tor_only"] * s, rent_sc=0.0, rent_mkt=0.0)
             else:
-                r.update(rent_base=lr[k]["base"] / 12, rent_sc=lr[k]["sc"] / 12, rent_mkt=lr[k]["mkt"] / 12)
-            if capex: r["dep"] += CAPEX / CAPEX_LIFE / 12
-        rows[p] = r
+                r.update(rent_base=lr[j]["base"] / 12 * w, rent_sc=lr[j]["sc"] / 12 * w, rent_mkt=lr[j]["mkt"] / 12 * w)
+            if capex: r["dep"] += CAPEX / CAPEX_LIFE / 12 * w
+        rows.append(r)
     return rows, lr
 
 SUMK = ["sales", "gm", "ni", *KEYS, "rent_base", "rent_sc", "rent_mkt", "dep", "fin"]
-def agg(rows, months, psf=None):
-    d = {k: float(sum(rows[p][k] for p in months)) for k in SUMK}
+def agg(rows, pick, psf=None):
+    sel = [r for r in rows if pick(r)]
+    d = {c: float(sum(r[c] for r in sel)) for c in SUMK}
     d["rent"] = d["rent_base"] + d["rent_sc"] + d["rent_mkt"]
-    d["total_exp"] = sum(d[k] for k in KEYS) + d["rent"]
+    d["total_exp"] = sum(d[c] for c in KEYS) + d["rent"]
     d["store_profit"] = d["ni"] - d["total_exp"]
     d["net"] = d["store_profit"] - d["dep"] - d["fin"]
     d["rent_psf"] = psf if psf is not None else d["rent"] / SQFT
     d["rent_to_sales"] = d["rent"] / d["sales"]; d["rent_to_ni"] = d["rent"] / d["ni"]; d["rent_to_gm"] = d["rent"] / d["gm"]
+    d["dep_to_sales"] = d["dep"] / d["sales"]
     return d
-
-def ly_months(start):  # lease year starting Aug of `start`
-    return [p for p in M if pd.Period(f"{start}-08", "M") <= p <= pd.Period(f"{start+1}-07", "M")]
-def fy_months(y): return [p for p in M if p.year == y]
 
 out, fy, ly0 = {}, {}, None
 for scen in ("bear", "base", "bull"):
@@ -128,9 +135,9 @@ for scen in ("bear", "base", "bull"):
         out[scen][o], fy[scen][o] = {}, {}
         for case, cx in (("s1", False), ("s2", True)):
             rows, lr = monthly_pnl(scen, o, cx)
-            out[scen][o][case] = [agg(rows, ly_months(2026 + k), lr[k]["psf"] if lr else None) for k in range(3)]
-            fy[scen][o][case] = [agg(rows, fy_months(y)) for y in (2025, 2026, 2027)]
-            if ly0 is None: ly0 = agg(rows, ly_months(2025))
+            out[scen][o][case] = [agg(rows, lambda r, j=j: r["k"] == j, lr[j]["psf"] if lr else None) for j in range(3)]
+            fy[scen][o][case] = [agg(rows, lambda r, y=y: r["p"].year == y) for y in (2025, 2026, 2027)]
+            if ly0 is None: ly0 = agg(rows, lambda r: r["k"] == -1)
 
 # breakeven: max gross rent/sqft (LY1) for store profit = 0 / 10% of sales, and rent-to-sales 18/20%
 be = {}

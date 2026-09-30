@@ -28,7 +28,7 @@ peers = [c for c in P.columns if c != CM and P[c].notna().all()]
 chain = P[peers].sum(axis=1)
 
 TEST = 8                                     # hold-out Jan-26..Aug-26
-FUT = pd.period_range("2026-09", "2029-07", freq="M")   # to end of lease year 3
+FUT = pd.period_range("2026-09", "2029-08", freq="M")   # to end of lease year 3 (7 Aug 2029)
 
 def mape(a, b): a, b = np.asarray(a), np.asarray(b); return float(np.mean(np.abs(a - b) / a) * 100)
 
@@ -143,7 +143,9 @@ for k in res: res[k]["weight"] = w[k]
 
 def ly(series_idx, vals, start):
     s_ = pd.Series(vals, index=series_idx)
-    return float(s_[pd.Period(f"{start}-08", "M"):pd.Period(f"{start+1}-07", "M")].sum())
+    # lease year runs 8 Aug (start) .. 7 Aug (start+1): 24/31 of the first August, 7/31 of the next
+    a0, a1 = pd.Period(f"{start}-08", "M"), pd.Period(f"{start+1}-08", "M")
+    return float(s_[a0] * 24 / 31 + s_[a0 + 1:a1 - 1].sum() + s_[a1] * 7 / 31)
 
 full_idx = y.index.append(FUT)
 def lease_years(fc):
