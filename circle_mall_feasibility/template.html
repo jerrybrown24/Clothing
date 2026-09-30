@@ -1,0 +1,501 @@
+<title>Circle Mall Lease Renewal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column (max 1120px) with a sticky section rail; each section = heading, verdict line, then evidence blocks. */
+:root{
+  --bg:#eef1f0; --surface:#ffffff; --surface-2:#f6f8f7; --line:#d6dcda; --ink:#15201c; --ink-2:#4d5a55; --ink-3:#77837e;
+  --accent:#0d5f52; --accent-soft:#dcece8;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948;
+  --good:#1a7f4b; --good-bg:#e1f2e8; --warn:#9a6400; --warn-bg:#fbefd6; --bad:#b3261e; --bad-bg:#fbe3e1;
+  --band:#e8edeb;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111715; --surface:#19211e; --surface-2:#1f2926; --line:#33403b; --ink:#eef3f1; --ink-2:#b9c5c0; --ink-3:#8b9892;
+  --accent:#5cc2ad; --accent-soft:#1d3a34;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#2f9a2f; --s7:#9085e9; --s8:#e66767;
+  --good:#5fd08f; --good-bg:#17352a; --warn:#f0b54a; --warn-bg:#3a2e14; --bad:#f28b82; --bad-bg:#3d1c1a; --band:#222c29;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111715; --surface:#19211e; --surface-2:#1f2926; --line:#33403b; --ink:#eef3f1; --ink-2:#b9c5c0; --ink-3:#8b9892;
+  --accent:#5cc2ad; --accent-soft:#1d3a34;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#2f9a2f; --s7:#9085e9; --s8:#e66767;
+  --good:#5fd08f; --good-bg:#17352a; --warn:#f0b54a; --warn-bg:#3a2e14; --bad:#f28b82; --bad-bg:#3d1c1a; --band:#222c29;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;font-variant-numeric:tabular-nums}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:28px 64px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(28px,4.2vw,44px);font-weight:800;line-height:1.05}
+h2{font-size:clamp(22px,2.8vw,28px);font-weight:800}
+h3{font-size:17px;font-weight:700}
+p{margin:0;max-width:72ch}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.muted{color:var(--ink-2)} .small{font-size:13px}
+header.top{display:grid;gap:14px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--f-mono);font-size:12.5px;color:var(--ink-2)}
+nav.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:6px;flex-wrap:wrap;padding-block:10px;border-bottom:1px solid var(--line);margin-bottom:8px}
+nav.rail a{font-family:var(--f-mono);font-size:12.5px;color:var(--ink-2);text-decoration:none;padding:5px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+nav.rail a:hover,nav.rail a:focus-visible{color:var(--accent);border-color:var(--accent);outline:none}
+.verdict{display:grid;grid-template-columns:auto 1fr;gap:14px 18px;align-items:start;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--accent);padding:18px 20px;border-radius:6px;margin-top:20px}
+.verdict .tag{font-family:var(--f-display);font-weight:800;font-size:13px;letter-spacing:.05em;text-transform:uppercase;background:var(--accent);color:var(--surface);padding:6px 10px;border-radius:4px;white-space:nowrap}
+.verdict p{font-size:16.5px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:4px;min-width:0}
+.tile .v{font-family:var(--f-display);font-weight:800;font-size:26px;line-height:1.1}
+.tile .l{font-size:13px;color:var(--ink-2)}
+.tile .d{font-family:var(--f-mono);font-size:12px}
+section.sec{padding-top:40px;display:grid;gap:18px}
+section.sec>header{display:grid;gap:8px}
+.secnum{font-family:var(--f-mono);font-size:12px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px 18px 16px;display:grid;gap:12px;min-width:0}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.tbl{overflow-x:auto;min-width:0}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-family:var(--f-mono);font-weight:500;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);border-bottom:1.5px solid var(--ink-3)}
+tbody tr:hover td{background:var(--surface-2)}
+tr.sub td{color:var(--ink-2);font-size:13px}
+tr.tot td{font-weight:700;border-top:1.5px solid var(--ink-3)}
+tr.key td{font-weight:700;background:var(--accent-soft)}
+td.pct{color:var(--ink-3);font-size:12.5px}
+tr.hl td{background:var(--accent-soft)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:12px;padding:2px 8px;border-radius:999px;font-weight:500}
+.pill.good{background:var(--good-bg);color:var(--good)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)}
+.pill.good::before{content:"●"} .pill.warn::before{content:"▲"} .pill.bad::before{content:"■"}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--surface)}
+.seg button{font:500 12.5px var(--f-mono);color:var(--ink-2);background:transparent;border:0;border-right:1px solid var(--line);padding:6px 11px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.controls label{font-family:var(--f-mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);margin-right:6px}
+.chart{position:relative;width:100%;min-width:0}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{fill:var(--ink-2);font-family:var(--f-mono);font-size:11px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2)}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.legend i.sq{height:10px;width:10px}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.12);border-radius:5px;padding:7px 10px;font-size:12.5px;line-height:1.4;white-space:nowrap;z-index:3}
+.tip b{font-family:var(--f-mono);font-weight:500}
+.note{font-size:13px;color:var(--ink-2);border-left:3px solid var(--line);padding-left:10px}
+.flag{background:var(--warn-bg);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font-size:14.5px}
+.flag strong{color:var(--warn)}
+.methods{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.method{border:1px solid var(--line);border-radius:5px;padding:11px 12px;display:grid;gap:4px;align-content:start;background:var(--surface-2)}
+.method .fam{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3)}
+.method b{font-size:14px}
+.method p{font-size:13px;color:var(--ink-2)}
+.wbar{display:inline-block;height:8px;border-radius:0 4px 4px 0;background:var(--s2);vertical-align:middle;margin-left:6px}
+.reco{display:grid;gap:10px;counter-reset:r}
+.reco li{margin-left:18px;padding-left:4px}
+.reco li::marker{font-family:var(--f-mono);color:var(--accent);font-weight:500}
+ol.reco{padding:0;margin:0}
+.dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;font-size:14px}
+.dl dt{color:var(--ink-3);font-family:var(--f-mono);font-size:12px;padding-top:2px}
+.dl dd{margin:0}
+footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
+@media (max-width:860px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:minmax(0,1fr)}.methods{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.methods{grid-template-columns:minmax(0,1fr)}.verdict{grid-template-columns:1fr}.tile .v{font-size:22px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Lease renewal feasibility · Cotton On Adults · Store C49</div>
+  <h1>Circle Mall Lease Renewal</h1>
+  <div class="meta">
+    <span>Jumeirah Village Circle, Dubai</span><span>GLA 3,598 sq ft</span><span>Term 8 Aug 2026 – 7 Aug 2029</span><span>Data to Aug-26 (Sep-26 partial, excluded)</span><span>AED</span>
+  </div>
+  <div class="verdict">
+    <span class="tag">Renew · renegotiate</span>
+    <p id="verdictText"></p>
+  </div>
+  <div class="tiles" id="tiles"></div>
+</header>
+
+<nav class="rail" aria-label="Sections">
+  <a href="#rent">1 · Rent &amp; ratios</a><a href="#forecast">2 · Sales forecast</a><a href="#pnl">3 · P&amp;L &amp; recommendation</a>
+</nav>
+
+<!-- ============ SECTION 1 ============ -->
+<section class="sec" id="rent">
+  <header>
+    <div class="secnum">Section 1</div>
+    <h2>Rent, rent-to-sales and rent-to-income</h2>
+    <p class="muted" id="s1lead"></p>
+  </header>
+
+  <div class="block">
+    <h3>Rent options for the new term</h3>
+    <p class="small muted">Gross rent = base rent + service charge + marketing levy, per sq ft per year, × 3,598 sq ft. Turnover rent is 12% of sales, charged only if it exceeds base rent.</p>
+    <div class="tbl"><table id="rentTbl"></table></div>
+  </div>
+
+  <div class="block">
+    <div class="controls">
+      <h3 style="margin-right:auto">Ratios by option</h3>
+      <div><label>Sales scenario</label><span class="seg" data-ctl="s1scen"></span></div>
+    </div>
+    <div class="grid2">
+      <div class="chart" id="chRts"></div>
+      <div class="chart" id="chRti"></div>
+    </div>
+    <div class="tbl"><table id="ratioTbl"></table></div>
+    <p class="note">Rent-to-sales is gross rent ÷ net sales. Rent-to-income is gross rent ÷ Net Income, the P&amp;L line after gross margin and margin deductions (64.0% of sales). Bands used: rent-to-sales ≤20% healthy, 20–24% stretched, &gt;24% high. Rent-to-income ≤32% healthy, 32–38% stretched, &gt;38% high.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="block">
+      <h3>Rent history at Circle Mall</h3>
+      <div class="tbl"><table id="histRent"></table></div>
+      <p class="note">Until 2025-26 the store paid turnover rent of 14% of sales. The P&amp;L moved to a fixed rent of AED 246/sq ft (AED 885k) from 2026. The landlord's proposal of AED 296 is +20% on that and roughly 2× what the store paid under turnover rent.</p>
+    </div>
+    <div class="block">
+      <h3>Benchmark: other Cotton On stores</h3>
+      <div class="tbl"><table id="benchTbl"></table></div>
+      <p class="note">Sales are the trailing 12 months, Sep-25 to Aug-26, from the Cotton On monthly file. Circle Mall makes AED 1,092 per sq ft. Dubai Hills makes AED 1,722 at a rent-to-sales ratio of 19.5%. At AED 296 on current sales, Circle Mall's rent-to-sales ratio would be 27.1%, the highest of these stores.</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>What the store can afford (lease year 1)</h3>
+    <div class="tbl"><table id="affTbl"></table></div>
+  </div>
+</section>
+
+<!-- ============ SECTION 2 ============ -->
+<section class="sec" id="forecast">
+  <header>
+    <div class="secnum">Section 2</div>
+    <h2>Sales forecast</h2>
+    <p class="muted">Eight methods were run on 32 months of Circle Mall sales (Jan-24 to Aug-26), plus sales and footfall from every Cotton On store in the region. Each method was trained to Dec-25 and tested on Jan–Aug 26. They were then combined, weighted by accuracy. From lease year 2, growth blends the model trend with UAE market, target-segment and JVC catchment drivers.</p>
+  </header>
+
+  <div class="block">
+    <div class="controls">
+      <h3 style="margin-right:auto">Monthly sales: actual and ensemble forecast</h3>
+    </div>
+    <div class="legend"><span><i style="background:var(--s1)"></i>Actual</span><span><i style="background:var(--s2)"></i>Ensemble forecast (base, before macro overlay)</span><span><i class="sq" style="background:var(--band)"></i>Lease years of the new term</span></div>
+    <div class="chart" id="chMonthly"></div>
+  </div>
+
+  <div class="block">
+    <h3>Methods</h3>
+    <div class="methods" id="methods"></div>
+  </div>
+
+  <div class="block">
+    <h3>Backtest and results by method</h3>
+    <p class="small muted">MAPE = mean absolute % error against actual Jan–Aug 26 sales, which none of the models saw. Ensemble weight = 1/MAPE, normalised. Models with MAPE above 25% would get zero weight; none did.</p>
+    <div class="tbl"><table id="modelTbl"></table></div>
+    <div class="legend"><span><i style="background:var(--s1)"></i>Actual Jan–Aug 26</span><span><i style="background:var(--s2)"></i>Ensemble backtest</span><span><i style="background:var(--ink-3)"></i>Individual models</span></div>
+    <div class="chart" id="chBacktest"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="block">
+      <h3>Circle Mall vs the rest of the chain</h3>
+      <p class="small muted">Sales growth, Jan–Aug 26 vs Jan–Aug 25, for stores that traded in every month.</p>
+      <div class="chart" id="chPeers"></div>
+      <p class="note">Most destination malls fell sharply in 2026 (Dubai Mall −19%, DCC −21%, Ibn Battuta −20%). Circle Mall grew 14%. A community mall with residents within walking distance held up better than tourist-dependent malls. That supports renewing, but it is one strong year, so the base case does not extrapolate it.</p>
+    </div>
+    <div class="block">
+      <h3>Footfall and conversion</h3>
+      <dl class="dl" id="ffdl"></dl>
+      <div class="chart" id="chFF"></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>External growth drivers (lease years 2 and 3)</h3>
+    <div class="tbl"><table id="drvTbl"></table></div>
+    <p class="note" id="drvNote"></p>
+  </div>
+
+  <div class="block">
+    <h3>Forecast by lease year (Aug–Jul)</h3>
+    <div class="legend"><span><i class="sq" style="background:var(--ink-3)"></i>Actual</span><span><i class="sq" style="background:var(--s8)"></i>Bear</span><span><i class="sq" style="background:var(--s2)"></i>Base</span><span><i class="sq" style="background:var(--s3)"></i>Bull</span></div>
+    <div class="chart" id="chLY"></div>
+    <div class="tbl"><table id="scenTbl"></table></div>
+    <div class="flag" id="planFlag"></div>
+  </div>
+</section>
+
+<!-- ============ SECTION 3 ============ -->
+<section class="sec" id="pnl">
+  <header>
+    <div class="secnum">Section 3</div>
+    <h2>Full P&amp;L and recommendation</h2>
+    <p class="muted">Costs are carried unchanged from the existing P&amp;L (the Yr'27, Yr'28 and Yr'29 lines of the "P &amp; L 5 Yrs" sheet): gross margin 74.0%, Net Income 64.0% of sales, and the same employee, marketing, opex and shared-cost amounts with +2% a year. Only sales and rent change. Years run on the lease calendar (Aug–Jul).</p>
+  </header>
+
+  <div class="block">
+    <div class="controls">
+      <div><label>Sales</label><span class="seg" data-ctl="pscen"></span></div>
+      <div><label>Rent</label><span class="seg" data-ctl="popt"></span></div>
+      <div><label>Case</label><span class="seg" data-ctl="pcase"></span></div>
+    </div>
+    <div class="tbl"><table id="pnlTbl"></table></div>
+    <p class="note">Scenario 2 follows the mall's renovation requirement: AED 2.0M capex, depreciated straight-line over 5 years (AED 400k a year). Over a 3-year term, AED 800k of book value is left at expiry. That is only recovered if the lease is renewed again.</p>
+  </div>
+
+  <div class="block">
+    <h3>All options side by side (3-year totals)</h3>
+    <p class="small muted">Net profit, capex payback (AED 2M ÷ average annual store profit) and average rent-to-sales are for base-case sales.</p>
+    <div class="tbl"><table id="cmpTbl"></table></div>
+  </div>
+
+  <div class="block">
+    <h3>Recommendation</h3>
+    <ol class="reco" id="reco"></ol>
+  </div>
+</section>
+
+<footer>
+  <div>Sources: Circle_Mall_002.xlsx (P&amp;L, P&amp;L 5 Yrs, Scenario, Circle Mall Rent, notes, YR'26) and COG_month-loc_salesfootfall_from_2024.xlsx (sales and footfall, all Cotton On stores). Market inputs: Grand View Research apparel outlook (MEA CAGR 4.3%, 2026–33), Dubai Data &amp; Statistics / WAM (Dubai population 4.58M at end-2025, +7.5%), public JVC community guides (≈90–100k residents, ≈300k+ at build-out).</div>
+  <div>Models: Holt-Winters and SARIMA (statsmodels), Ridge, Random Forest and Gradient Boosting (scikit-learn). Reproduce with forecast.py and pnl.py in this folder.</div>
+</footer>
+</div>
+
+<script>
+const D = /*DATA*/null;
+const $ = s => document.querySelector(s);
+const fmtK = v => (v/1000).toLocaleString('en-US',{maximumFractionDigits:0});
+const fmtM = (v,d=2) => (v/1e6).toFixed(d);
+const fmt = v => Math.round(v).toLocaleString('en-US');
+const pct = (v,d=1) => (v*100).toFixed(d)+'%';
+const sgn = (v,d=1) => (v>=0?'+':'−')+Math.abs(v*100).toFixed(d)+'%';
+const OPTS = Object.keys(D.options);
+const SCN = ['bear','base','bull'];
+const SCN_L = {bear:'Bear',base:'Base',bull:'Bull'};
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const band = (v,[a,b]) => v<=a?'good':(v<=b?'warn':'bad');
+const RTS_B=[0.20,0.24], RTI_B=[0.32,0.38];
+const pill = (v,b) => `<span class="pill ${band(v,b)}">${pct(v)}</span>`;
+const B = D.pnl.base;
+
+/* ---------- header ---------- */
+(function(){
+  const A=B['A · 296'].s1[0], C=B['C · 236'].s1[0], cur=B['Current (P&L)'].s1[0];
+  $('#verdictText').innerHTML = `Circle Mall is profitable and growing against a falling chain, so keep the store. Don't sign the landlord's <b>AED 296/sq ft</b>. In the base case it takes rent to <b>${pct(A.rent_to_sales)}</b> of sales and ${pct(A.rent_to_ni)} of Net Income, and the AED 2M renovation would not pay back within the 3-year term. Counter at <b>AED 236 (Option C)</b>, which is about today's rent level. Walk away above <b>AED 256 (Option B)</b> unless the landlord funds the fit-out or the term goes to 5 years.`;
+  const t=[
+    [`${fmtM(D.scenarios.base[0])}M`,'Lease-year 1 sales, base forecast',`${sgn(D.scenarios.base[0]/D.hist_ly['LY 25-26']-1)} vs LY 25-26 (${fmtM(D.hist_ly['LY 25-26'])}M)`],
+    [`${fmtK(A.rent)}k`,'Proposed gross rent, year 1',`${sgn(A.rent/cur.rent-1)} vs current ${fmtK(cur.rent)}k`],
+    [pct(A.rent_to_sales),'Rent-to-sales at AED 296',`vs ${pct(cur.rent_to_sales)} current · ${pct(C.rent_to_sales)} at Option C`],
+    [`${fmtK(A.store_profit)}k`,'Store profit, year 1 at AED 296',`vs ${fmtK(C.store_profit)}k at Option C`],
+  ];
+  $('#tiles').innerHTML=t.map(x=>`<div class="tile"><div class="v">${x[0]}</div><div class="l">${x[1]}</div><div class="d muted">${x[2]}</div></div>`).join('');
+})();
+
+/* ---------- segmented controls ---------- */
+const state={s1scen:'base',pscen:'base',popt:'A · 296',pcase:'s1'};
+const CTL={s1scen:SCN.map(s=>[s,SCN_L[s]]),pscen:SCN.map(s=>[s,SCN_L[s]]),popt:OPTS.map(o=>[o,o.replace(' (P&L)','')]),pcase:[['s1','Sc. 1: rent only'],['s2','Sc. 2: rent + AED 2M capex']]};
+document.querySelectorAll('.seg').forEach(el=>{
+  const k=el.dataset.ctl;
+  el.innerHTML=CTL[k].map(([v,l])=>`<button type="button" id="b-${k}-${v.replace(/\W+/g,'')}" data-v="${v}" aria-pressed="${state[k]===v}">${l}</button>`).join('');
+  el.addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; state[k]=b.dataset.v;
+    el.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===state[k])); render();});
+});
+
+/* ---------- tiny SVG chart helpers ---------- */
+function tipFor(host){let t=host.querySelector('.tip'); if(!t){t=document.createElement('div');t.className='tip';t.hidden=true;host.appendChild(t);} return t;}
+function showTip(host,html,x,y){const t=tipFor(host);t.innerHTML=html;t.hidden=false;const w=host.clientWidth;const tw=t.offsetWidth;let left=x+12; if(left+tw>w) left=x-tw-12; t.style.left=Math.max(0,left)+'px'; t.style.top=Math.max(0,y-10)+'px';}
+function hideTip(host){const t=host.querySelector('.tip'); if(t) t.hidden=true;}
+function niceMax(v){const p=Math.pow(10,Math.floor(Math.log10(v)));const n=v/p;return ([1,1.2,1.5,2,2.5,3,4,5,6,8,10].find(k=>n<=k))*p;}
+function tickStep(max,n){const p=Math.pow(10,Math.floor(Math.log10(max/n)));const r=max/n/p;return ([1,2,2.5,5,10].find(k=>r<=k))*p;}
+function ticks(max,n=4){const st=tickStep(max,n);const out=[];for(let v=0;v<=max+1e-9;v+=st) out.push(v);return out;}
+
+/* horizontal bar chart: rows [{label,value,color,title}] */
+function hbar(host,rows,{fmtV=pct,ref=[],title='',max=null}={}){
+  const W=520,rowH=30,padL=118,padR=56,padT=title?26:8,H=padT+rows.length*rowH+22;
+  const mx=max||niceMax(Math.max(...rows.map(r=>Math.abs(r.value)),...ref.map(r=>r.v))*1.05);
+  const x=v=>padL+(v/mx)*(W-padL-padR);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${title}">`;
+  if(title) s+=`<text x="0" y="14" style="font-weight:500;fill:var(--ink)">${title}</text>`;
+  ticks(mx,4).forEach(t=>{s+=`<line x1="${x(t)}" x2="${x(t)}" y1="${padT}" y2="${H-20}" stroke="var(--line)"/><text x="${x(t)}" y="${H-6}" text-anchor="middle">${fmtV(t)}</text>`});
+  rows.forEach((r,i)=>{const y=padT+i*rowH+6;const w=Math.max(2,x(r.value)-padL);
+    s+=`<text x="${padL-8}" y="${y+13}" text-anchor="end" style="fill:var(--ink)">${r.label}</text><path d="M${padL} ${y} h${w-4} a4 4 0 0 1 4 4 v10 a4 4 0 0 1 -4 4 h-${w-4} z" fill="${r.color}" data-i="${i}"/><text x="${padL+w+6}" y="${y+13}">${fmtV(r.value)}</text>`;});
+  ref.forEach(r=>{s+=`<line x1="${x(r.v)}" x2="${x(r.v)}" y1="${padT-4}" y2="${H-20}" stroke="var(--ink-2)" stroke-dasharray="3 3"/><text x="${x(r.v)+4}" y="${padT+2}" style="fill:var(--ink-2)">${r.l}</text>`});
+  host.innerHTML=s+'</svg>';
+  host.querySelectorAll('path[data-i]').forEach(p=>{p.addEventListener('mousemove',e=>{const r=rows[+p.dataset.i];const bb=host.getBoundingClientRect();showTip(host,`${r.title||r.label}: <b>${fmtV(r.value)}</b>`,e.clientX-bb.left,e.clientY-bb.top)});p.addEventListener('mouseleave',()=>hideTip(host));});
+}
+
+/* diverging horizontal bars (peer YoY) */
+function divbar(host,rows){
+  const W=520,rowH=26,padL=150,padR=50,H=rows.length*rowH+26;
+  const mx=Math.max(...rows.map(r=>Math.abs(r.value)))*1.1;const mid=padL+(W-padL-padR)/2;const sc=(W-padL-padR)/2/mx;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Sales growth by store">`;
+  s+=`<line x1="${mid}" x2="${mid}" y1="0" y2="${H-20}" stroke="var(--ink-3)"/>`;
+  [-0.2,-0.1,0,0.1,0.2].filter(t=>Math.abs(t)<=mx).forEach(t=>{s+=`<text x="${mid+t*sc}" y="${H-6}" text-anchor="middle">${t===0?'0':sgn(t,0)}</text>`});
+  rows.forEach((r,i)=>{const y=i*rowH+4;const w=Math.abs(r.value)*sc;const x0=r.value<0?mid-w:mid;
+    s+=`<text x="${padL-8}" y="${y+13}" text-anchor="end" style="fill:var(--ink);${r.hl?'font-weight:700':''}">${r.label}</text><rect x="${x0}" y="${y+2}" width="${Math.max(w,1)}" height="15" rx="3" fill="${r.value<0?'var(--s8)':(r.hl?'var(--s3)':'var(--s1)')}"/><text x="${r.value<0?mid+5:x0+w+4}" y="${y+13}" text-anchor="start">${sgn(r.value)}</text>`;});
+  host.innerHTML=s+'</svg>';
+}
+
+/* line chart: series [{name,color,pts:[[i,v]],dash,width}], labels = x labels */
+function lines(host,labels,series,{bands=[],H=300,W=1040,yfmt=v=>fmtK(v)+'k',tipRows=null,every=3}={}){
+  const padL=54,padR=14,padT=12,padB=30;
+  const all=series.flatMap(s=>s.pts.map(p=>p[1]));const mx=niceMax(Math.max(...all)*1.08);
+  const x=i=>padL+i*(W-padL-padR)/(labels.length-1);const y=v=>padT+(1-v/mx)*(H-padT-padB);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly sales chart">`;
+  bands.forEach(b=>{s+=`<rect x="${x(b.from)}" y="${padT}" width="${x(b.to)-x(b.from)}" height="${H-padT-padB}" fill="var(--band)"/><text x="${(x(b.from)+x(b.to))/2}" y="${padT+14}" text-anchor="middle" style="fill:var(--ink-2)">${b.label}</text>`});
+  ticks(mx,5).forEach(t=>{s+=`<line x1="${padL}" x2="${W-padR}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)" stroke-width="${t===0?1.2:.7}"/><text x="${padL-6}" y="${y(t)+4}" text-anchor="end">${yfmt(t)}</text>`});
+  labels.forEach((l,i)=>{if(i%every===0) s+=`<text x="${x(i)}" y="${H-10}" text-anchor="middle">${l}</text>`});
+  series.forEach(se=>{const d=se.pts.map((p,j)=>(j?'L':'M')+x(p[0]).toFixed(1)+' '+y(p[1]).toFixed(1)).join(' ');
+    s+=`<path d="${d}" fill="none" stroke="${se.color}" stroke-width="${se.width||2}" ${se.dash?`stroke-dasharray="${se.dash}"`:''} stroke-linejoin="round" opacity="${se.op||1}"/>`;
+    if(se.end){const p=se.pts[se.pts.length-1];s+=`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="4" fill="${se.color}" stroke="var(--surface)" stroke-width="2"/>`}});
+  s+=`<line class="xh" x1="0" x2="0" y1="${padT}" y2="${H-padB}" stroke="var(--ink-3)" stroke-width="1" visibility="hidden"/>`;
+  s+=`<rect class="hit" x="${padL}" y="${padT}" width="${W-padL-padR}" height="${H-padT-padB}" fill="transparent"/>`;
+  host.innerHTML=s+'</svg>';
+  const svg=host.querySelector('svg'),hit=svg.querySelector('.hit'),xh=svg.querySelector('.xh');
+  hit.addEventListener('mousemove',e=>{const bb=svg.getBoundingClientRect();const sx=(e.clientX-bb.left)*W/bb.width;
+    const i=Math.max(0,Math.min(labels.length-1,Math.round((sx-padL)/((W-padL-padR)/(labels.length-1)))));
+    xh.setAttribute('x1',x(i));xh.setAttribute('x2',x(i));xh.setAttribute('visibility','visible');
+    const rows=(tipRows||series).map(se=>{const p=se.pts.find(q=>q[0]===i);return p?`<div><i style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${se.color};margin-right:6px"></i>${se.name}: <b>${fmtK(p[1])}k</b></div>`:''}).join('');
+    if(!rows){hideTip(host);return;}
+    const hb=host.getBoundingClientRect();showTip(host,`<div style="font-weight:600">${labels[i]}</div>${rows}`,x(i)*bb.width/W+(bb.left-hb.left),e.clientY-hb.top);});
+  hit.addEventListener('mouseleave',()=>{xh.setAttribute('visibility','hidden');hideTip(host)});
+}
+
+/* grouped bars for lease years */
+function groupBars(host,groups){ // groups: [{label, bars:[{name,v,color}]}]
+  const W=1040,H=280,padL=54,padR=10,padT=14,padB=34;const mx=niceMax(Math.max(...groups.flatMap(g=>g.bars.map(b=>b.v)))*1.08);
+  const gw=(W-padL-padR)/groups.length;const y=v=>padT+(1-v/mx)*(H-padT-padB);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Sales by lease year">`;
+  ticks(mx,5).forEach(t=>{s+=`<line x1="${padL}" x2="${W-padR}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)" stroke-width=".7"/><text x="${padL-6}" y="${y(t)+4}" text-anchor="end">${fmtM(t,1)}M</text>`});
+  const meta=[];
+  groups.forEach((g,gi)=>{const n=g.bars.length;const bw=Math.min(46,(gw*0.72)/n);const x0=padL+gi*gw+(gw-bw*n-2*(n-1))/2;
+    g.bars.forEach((b,bi)=>{const bx=x0+bi*(bw+2);const by=y(b.v);const h=y(0)-by;meta.push({g:g.label,...b});
+      s+=`<path data-i="${meta.length-1}" d="M${bx} ${y(0)} v-${h-4} a4 4 0 0 1 4 -4 h${bw-8} a4 4 0 0 1 4 4 v${h-4} z" fill="${b.color}"/>`;
+      if(n===1||b.name==='Base') s+=`<text x="${bx+bw/2}" y="${by-5}" text-anchor="middle" style="fill:var(--ink)">${fmtM(b.v)}</text>`;});
+    s+=`<text x="${padL+gi*gw+gw/2}" y="${H-12}" text-anchor="middle">${g.label}</text>`;});
+  host.innerHTML=s+'</svg>';
+  host.querySelectorAll('path[data-i]').forEach(p=>{p.addEventListener('mousemove',e=>{const m=meta[+p.dataset.i];const bb=host.getBoundingClientRect();showTip(host,`${m.g} · ${m.name}: <b>AED ${fmtM(m.v,3)}M</b>`,e.clientX-bb.left,e.clientY-bb.top)});p.addEventListener('mouseleave',()=>hideTip(host));});
+}
+
+/* ---------- SECTION 1 static ---------- */
+(function(){
+  const cur=B['Current (P&L)'].s1;
+  let h=`<thead><tr><th>Option</th><th>Base/SC/MKT Y1</th><th>Gross psf Y1·Y2·Y3</th><th>Rent Y1</th><th>Rent Y2</th><th>Rent Y3</th><th>3-yr total</th><th>vs current</th></tr></thead><tbody>`;
+  OPTS.forEach(o=>{const y=B[o].s1;const t=y.reduce((a,b)=>a+b.rent,0);const tc=cur.reduce((a,b)=>a+b.rent,0);
+    h+=`<tr class="${o.startsWith('A')?'hl':''}"><td><b>${o.replace(' (P&L)','')}</b> <span class="muted small">${D.options[o]}</span></td><td>${fmt(y[0].rent_base/D.consts.sqft)} / ${fmt(y[0].rent_sc/D.consts.sqft)} / ${fmt(y[0].rent_mkt/D.consts.sqft)}</td><td>${D.option_psf[o].map(v=>v.toFixed(1)).join(' · ')}</td>${y.map(v=>`<td>${fmt(v.rent)}</td>`).join('')}<td><b>${fmt(t)}</b></td><td>${o.startsWith('Current')?'—':sgn(t/tc-1)}</td></tr>`;});
+  $('#rentTbl').innerHTML=h+'</tbody>';
+  const A=B['A · 296'].s1;
+  $('#s1lead').innerHTML=`The landlord's proposal (Option A) raises gross rent from AED 246 to AED 296 per sq ft, from AED ${fmtK(cur[0].rent)}k to AED ${fmtK(A[0].rent)}k in year 1, with base rent rising 5% a year after that. Turnover rent at 12% never applies: sales would need to pass AED ${fmtM(240*D.consts.sqft/0.12,1)}M for it to exceed base rent.`;
+  // history
+  const hr=[['Aug-22 – Aug-23',3345376,468352.64],['Aug-23 – Aug-24',3476676,486734.64],['Aug-24 – Aug-25',3375376,472552.64],['Aug-25 – Aug-26',3778830.96,529036.33]];
+  let t=`<thead><tr><th>Lease year</th><th>Sales</th><th>Rent</th><th>psf</th><th>Rent / sales</th></tr></thead><tbody>`;
+  hr.forEach(r=>t+=`<tr><td>${r[0]}</td><td>${fmt(r[1])}</td><td>${fmt(r[2])}</td><td>${(r[2]/3598).toFixed(0)}</td><td>${pct(r[2]/r[1])}</td></tr>`);
+  t+=`<tr class="sub"><td>Fixed rent in P&amp;L (2026)</td><td>${fmt(D.hist_ly['LY 25-26'])}</td><td>${fmt(885108)}</td><td>246</td><td>${pct(885108/D.hist_ly['LY 25-26'])}</td></tr>`;
+  t+=`<tr class="hl"><td><b>Proposed, year 1 (on LY 25-26 sales)</b></td><td>${fmt(D.hist_ly['LY 25-26'])}</td><td>${fmt(1065008)}</td><td>296</td><td>${pct(1065008/D.hist_ly['LY 25-26'])}</td></tr>`;
+  $('#histRent').innerHTML=t+'</tbody>';
+  let b=`<thead><tr><th>Store</th><th>Sq ft</th><th>Gross psf</th><th>TTM sales</th><th>Sales psf</th><th>Rent / sales</th></tr></thead><tbody>`;
+  D.bench.forEach(r=>b+=`<tr class="${r.store.includes('proposed')?'hl':''}"><td>${r.store}</td><td>${fmt(r.sqft)}</td><td>${r.psf.toFixed(0)}</td><td>${fmtM(r.ttm)}M</td><td>${fmt(r.sales_psf)}</td><td>${pill(r.rts,RTS_B)}</td></tr>`);
+  $('#benchTbl').innerHTML=b+'</tbody>';
+  let a=`<thead><tr><th>Gross rent per sq ft that gives…</th>${SCN.map(s=>`<th>${SCN_L[s]} (${fmtM(D.breakeven[s].sales)}M)</th>`).join('')}</tr></thead><tbody>`;
+  [['rts18','Rent-to-sales of 18%'],['rts20','Rent-to-sales of 20% (healthy ceiling)'],['ten','Store profit of 10% of sales'],['capex_zero','Net profit of zero with the AED 2M renovation'],['zero','Store profit of zero (break-even)']].forEach(([k,l])=>
+    a+=`<tr><td>${l}</td>${SCN.map(s=>`<td>AED ${D.breakeven[s][k].toFixed(0)}</td>`).join('')}</tr>`);
+  a+=`<tr class="hl"><td><b>Landlord proposal</b></td>${SCN.map(()=>`<td><b>AED 296</b></td>`).join('')}</tr>`;
+  $('#affTbl').innerHTML=a+'</tbody>';
+})();
+
+function renderS1(){
+  const P=D.pnl[state.s1scen];
+  const colors={'Current (P&L)':css('--ink-3'),'A · 296':css('--s2'),'B · 256':css('--s1'),'C · 236':css('--s1'),'D · 226':css('--s1')};
+  hbar($('#chRts'),OPTS.map(o=>({label:o.replace(' (P&L)',''),value:P[o].s1[0].rent_to_sales,color:colors[o]})),{title:'Rent-to-sales, lease year 1',ref:[{v:.20,l:'20%'}],max:.30});
+  hbar($('#chRti'),OPTS.map(o=>({label:o.replace(' (P&L)',''),value:P[o].s1[0].rent_to_ni,color:colors[o]})),{title:'Rent-to-income, lease year 1',ref:[{v:.32,l:'32%'}],max:.50});
+  let h=`<thead><tr><th>Option</th><th>Gross rent Y1</th><th>RtS Y1</th><th>RtS Y2</th><th>RtS Y3</th><th>RtI Y1</th><th>RtI Y2</th><th>RtI Y3</th><th>Rent / GM Y1</th></tr></thead><tbody>`;
+  OPTS.forEach(o=>{const y=P[o].s1;h+=`<tr class="${o.startsWith('A')?'hl':''}"><td><b>${o.replace(' (P&L)','')}</b></td><td>${fmt(y[0].rent)}</td>${y.map(v=>`<td>${pill(v.rent_to_sales,RTS_B)}</td>`).join('')}${y.map(v=>`<td>${pill(v.rent_to_ni,RTI_B)}</td>`).join('')}<td>${pct(y[0].rent_to_gm)}</td></tr>`;});
+  $('#ratioTbl').innerHTML=h+'</tbody>';
+}
+
+/* ---------- SECTION 2 static ---------- */
+(function(){
+  const mlab=m=>{const [yy,mm]=m.split('-');return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mm-1]+'-'+yy.slice(2)};
+  const labels=[...D.months,...D.fut_months].map(mlab);const n=D.months.length;
+  const actual=D.actual.map((v,i)=>[i,v]);
+  const fc=[[n-1,D.actual[n-1]],...D.ensemble.forecast.map((v,i)=>[n+i,v])];
+  const idx=m=>labels.indexOf(m);
+  lines($('#chMonthly'),labels,[{name:'Actual',color:css('--s1'),pts:actual,end:true},{name:'Ensemble forecast',color:css('--s2'),pts:fc,dash:'6 4'}],
+    {bands:[{from:idx('Aug-26'),to:idx('Aug-27'),label:'LY1'},{from:idx('Aug-27'),to:idx('Aug-28'),label:'LY2'},{from:idx('Aug-28'),to:idx('Jul-29'),label:'LY3'}],every:3});
+  const DESC={
+    'Seasonal naive × YoY growth':'Last year\'s same month × trailing-12-month growth. The simple benchmark that every other model has to beat.',
+    'Holt-Winters (damped, multiplicative)':'Exponential smoothing of level, a damped trend, and multiplicative monthly seasonality.',
+    'SARIMA (1,0,0)(0,1,0)12 on log sales':'Seasonal ARIMA on log sales with drift. Captures year-on-year momentum and autocorrelation.',
+    'Ridge regression (trend + month)':'Regularised regression of log sales on a time trend and 11 month dummies.',
+    'Random Forest (pooled store panel)':'500 trees that learn year-on-year growth from pooled Cotton On stores, using month, lag-12 sales, store level and chain momentum.',
+    'Gradient Boosting (pooled store panel)':'Boosted shallow trees on the same pooled panel. More conservative on trend than the forest.',
+    'Chain-share (Circle % of like-for-like)':'Forecasts the like-for-like chain, then applies Circle Mall\'s seasonal share, with half of its recent share gain carried forward.',
+    'Footfall × sales-per-visitor':'Forecasts store footfall with Holt-Winters, then multiplies by the latest sales per visitor for each calendar month.'};
+  $('#methods').innerHTML=Object.entries(D.models).map(([k,v])=>`<div class="method"><span class="fam">${v.family}</span><b>${k}</b><p>${DESC[k]||''}</p></div>`).join('');
+  const mx=Math.max(...Object.values(D.models).map(v=>v.weight));
+  let h=`<thead><tr><th>Method</th><th>Family</th><th>Backtest MAPE</th><th>Weight</th><th>LY1 26-27</th><th>LY2 27-28</th><th>LY3 28-29</th></tr></thead><tbody>`;
+  Object.entries(D.models).sort((a,b)=>a[1].mape-b[1].mape).forEach(([k,v])=>h+=`<tr><td>${k}</td><td class="muted">${v.family}</td><td>${v.mape.toFixed(1)}%</td><td>${pct(v.weight,0)}<span class="wbar" style="width:${v.weight/mx*60}px"></span></td>${v.lease_years.map(x=>`<td>${fmtM(x,3)}M</td>`).join('')}</tr>`);
+  h+=`<tr class="key"><td>Weighted ensemble</td><td>—</td><td>${D.ensemble.mape.toFixed(1)}%</td><td>100%</td>${D.ensemble.lease_years.map(x=>`<td>${fmtM(x,3)}M</td>`).join('')}</tr>`;
+  $('#modelTbl').innerHTML=h+'</tbody>';
+  const tl=D.test_months.map(mlab);const ms=Object.entries(D.models).map(([k,v])=>({name:k,color:css('--ink-3'),width:1,op:.45,pts:v.backtest.map((x,i)=>[i,x])}));
+  const main=[{name:'Actual',color:css('--s1'),pts:D.actual.slice(-8).map((x,i)=>[i,x]),width:2.5,end:true},{name:'Ensemble',color:css('--s2'),pts:D.ensemble.backtest.map((x,i)=>[i,x]),width:2.5,dash:'6 4'}];
+  lines($('#chBacktest'),tl,[...ms,...main],{H:260,every:1,tipRows:main});
+  const pr=Object.entries(D.peer_yoy).map(([k,v])=>({label:k==='CIRCLE MALL'?'Circle Mall':k.replace('MIRDIFF CITY CENTRE','Mirdif City Centre').replace('SILICON CENTRAL','Silicon Central').replace('BURJUMAN','BurJuman').replace('DUBAI MALL','Dubai Mall').replace('IBN','Ibn Battuta').replace('D.C.C','Deira City Centre'),value:v,hl:k==='CIRCLE MALL'})).sort((a,b)=>b.value-a.value);
+  divbar($('#chPeers'),pr);
+  const ff=D.footfall.map((v,i)=>[i,v]).filter(p=>p[1]!=null);
+  $('#ffdl').innerHTML=`<dt>Store footfall, TTM</dt><dd>${fmt(D.ff_ttm)} visitors (≈${fmt(D.ff_ttm/12)} a month)</dd><dt>Sales per visitor</dt><dd>AED ${D.sales_per_visitor.toFixed(1)} (conversion × average basket)</dd><dt>Mall traffic</dt><dd>≈7.5M visitors a year, so ≈2% enter the store</dd><dt>Reading</dt><dd>Over the last 12 months, footfall rose 6.2% and sales per visitor rose 7.8% (from AED 23.2 to AED 25.0). Growth is coming from both more visitors and bigger spend. This method has the lowest backtest error (9.2%).</dd>`;
+  lines($('#chFF'),D.months.map(mlab),[{name:'Store footfall',color:css('--s1'),pts:ff,end:true}],{H:260,W:520,every:6,yfmt:v=>(v/1000).toFixed(0)+'k'});
+  // drivers
+  let d=`<thead><tr><th>Driver</th><th>Growth p.a.</th><th>Weight</th><th>Contribution</th><th style="text-align:left">Basis</th></tr></thead><tbody>`;
+  D.drivers.forEach(x=>d+=`<tr><td>${x.name}</td><td>+${x.value.toFixed(1)}%</td><td>${(x.weight*100).toFixed(0)}%</td><td>+${(x.value*x.weight).toFixed(2)} pp</td><td style="text-align:left;white-space:normal;min-width:260px" class="small muted">${x.note}</td></tr>`);
+  D.adjust.forEach(x=>d+=`<tr><td style="white-space:normal">${x.name}</td><td>—</td><td>—</td><td>${x.value.toFixed(2)} pp</td><td style="text-align:left" class="small muted">Deduction</td></tr>`);
+  d+=`<tr class="tot"><td>External growth</td><td></td><td></td><td>+${D.macro_g.toFixed(2)}%</td><td></td></tr>`;
+  $('#drvTbl').innerHTML=d+'</tbody>';
+  const eg2=D.ensemble.lease_years[1]/D.ensemble.lease_years[0]-1;
+  $('#drvNote').innerHTML=`Year 1 uses the ensemble on its own, because the models already carry current momentum. For years 2 and 3, growth is 50% the ensemble's own trend (${sgn(eg2)}) and 50% the external rate (+${D.macro_g.toFixed(1)}%). That gives <b>${sgn(D.g2)}</b> in LY2 and <b>${sgn(D.g3)}</b> in LY3. Bear takes the lowest credible model's year 1 and half the external growth. Bull takes the highest model's year 1 and external growth +2 pp.`;
+  const H=D.hist_ly;const groups=Object.entries(H).map(([k,v])=>({label:k,bars:[{name:'Actual',v,color:css('--ink-3')}]}));
+  ['LY1 26-27','LY2 27-28','LY3 28-29'].forEach((l,i)=>groups.push({label:l,bars:[{name:'Bear',v:D.scenarios.bear[i],color:css('--s8')},{name:'Base',v:D.scenarios.base[i],color:css('--s2')},{name:'Bull',v:D.scenarios.bull[i],color:css('--s3')}]}));
+  groupBars($('#chLY'),groups);
+  let st=`<thead><tr><th>Scenario</th><th>LY1 26-27</th><th>LY2 27-28</th><th>LY3 28-29</th><th>3-yr total</th><th>LY1 vs LY 25-26</th></tr></thead><tbody>`;
+  SCN.forEach(s=>{const v=D.scenarios[s];st+=`<tr class="${s==='base'?'key':''}"><td>${SCN_L[s]}</td>${v.map(x=>`<td>${fmt(x)}</td>`).join('')}<td>${fmt(v.reduce((a,b)=>a+b,0))}</td><td>${sgn(v[0]/H['LY 25-26']-1)}</td></tr>`});
+  $('#scenTbl').innerHTML=st+'</tbody>';
+  const aug_dec=D.actual[n-1]+D.ensemble.forecast.slice(0,4).reduce((a,b)=>a+b,0);
+  $('#planFlag').innerHTML=`<strong>Check the P&amp;L sales plan.</strong> The current P&amp;L assumes Aug–Dec 2026 sales of AED 2.21M, +33% on Aug–Dec 2025 (AED 1.66M). August 2026 came in at AED ${fmtK(D.actual[n-1])}k, +2% on last August. The models project Aug–Dec 2026 at AED ${fmtM(aug_dec)}M, which puts calendar 2026 at about AED ${fmtM(2265227+aug_dec)}M, not AED 4.47M. The P&amp;L's Yr'27–29 sales (AED 4.56–4.75M) are about 5–10% above this base case. This report uses the forecast, not the plan.`;
+})();
+
+/* ---------- SECTION 3 ---------- */
+const LINES=[['sales','Net sales','key'],['gm','Gross margin',''],['ni','Net Income','tot'],['Employee expense','Employee expense','sub'],['rent','Rent (gross)','hl'],['rent_base','  of which base rent','sub'],['rent_sc','  of which service charge','sub'],['rent_mkt','  of which marketing levy','sub'],['Advertising & marketing','Advertising & marketing','sub'],['Other opex','Other opex','sub'],['Shared common','Shared common','sub'],['Shared others','Shared others','sub'],['total_exp','Total expenses','tot'],['store_profit','Store profit','key'],['dep','Depreciation',''],['fin','Finance &amp; extraordinary',''],['net','Net profit / loss','key']];
+function renderPnl(){
+  const y=D.pnl[state.pscen][state.popt][state.pcase];
+  let h=`<thead><tr><th>AED</th><th>LY1 26-27</th><th>%</th><th>LY2 27-28</th><th>%</th><th>LY3 28-29</th><th>%</th><th>3-yr total</th><th>%</th></tr></thead><tbody>`;
+  const ts=y.reduce((a,b)=>a+b.sales,0);
+  LINES.forEach(([k,l,c])=>{const tot=y.reduce((a,b)=>a+b[k],0);
+    h+=`<tr class="${c}"><td>${l.replace(/^  /,'&nbsp;&nbsp;&nbsp;')}</td>${y.map(v=>`<td>${fmt(v[k])}</td><td class="pct">${pct(v[k]/v.sales)}</td>`).join('')}<td>${fmt(tot)}</td><td class="pct">${pct(tot/ts)}</td></tr>`;});
+  h+=`<tr class="sub"><td>Gross rent per sq ft</td>${y.map(v=>`<td>${v.rent_psf.toFixed(2)}</td><td></td>`).join('')}<td></td><td></td></tr>`;
+  h+=`<tr><td>Rent-to-sales</td>${y.map(v=>`<td>${pill(v.rent_to_sales,RTS_B)}</td><td></td>`).join('')}<td>${pill(y.reduce((a,b)=>a+b.rent,0)/ts,RTS_B)}</td><td></td></tr>`;
+  h+=`<tr><td>Rent-to-income</td>${y.map(v=>`<td>${pill(v.rent_to_ni,RTI_B)}</td><td></td>`).join('')}<td>${pill(y.reduce((a,b)=>a+b.rent,0)/y.reduce((a,b)=>a+b.ni,0),RTI_B)}</td><td></td></tr>`;
+  $('#pnlTbl').innerHTML=h+'</tbody>';
+}
+(function(){
+  let h=`<thead><tr><th>Option</th>${SCN.map(s=>`<th>Store profit · ${SCN_L[s]}</th>`).join('')}<th>Net · Sc. 1</th><th>Net · Sc. 2</th><th>Payback</th><th>Avg RtS</th></tr></thead><tbody>`;
+  OPTS.forEach(o=>{const s=D.summary;const sp=s.base[o].sp3/3;const pb=D.consts.capex/sp;
+    h+=`<tr class="${o.startsWith('A')?'hl':''}"><td><b>${o.replace(' (P&L)','')}</b></td>${SCN.map(sc=>`<td>${fmt(s[sc][o].sp3)}</td>`).join('')}<td>${fmt(s.base[o].net3_s1)}</td><td>${fmt(s.base[o].net3_s2)}</td><td><span class="pill ${pb<=3?(pb<=2.6?'good':'warn'):'bad'}">${pb.toFixed(1)} yrs</span></td><td>${pill(s.base[o].rts_avg,RTS_B)}</td></tr>`;});
+  $('#cmpTbl').innerHTML=h+'</tbody>';
+  const S=D.summary, A=S.base['A · 296'], C=S.base['C · 236'], Bo=S.base['B · 256'];
+  const beA=D.pnl.bear['A · 296'].s2;
+  const items=[
+    `<b>Renew. The location has earned it.</b> Circle Mall grew 14.3% in Jan–Aug 2026 while the like-for-like chain fell, and lease-year 25-26 sales reached AED ${fmtM(D.hist_ly['LY 25-26'])}M, a record. The store is profitable under every rent option and every sales scenario before renovation capex.`,
+    `<b>Reject AED 296 as offered.</b> In the base case it takes rent-to-sales to ${pct(D.pnl.base['A · 296'].s1[0].rent_to_sales)} and rent-to-income to ${pct(D.pnl.base['A · 296'].s1[0].rent_to_ni)}. That is above Mirdif (25.1%) and level with Dubai Mall (25.8%), which makes AED 1,840 per sq ft against Circle Mall's AED 1,092. It cuts 3-year store profit by AED ${fmtK(S.base['Current (P&L)'].sp3-A.sp3)}k compared with today's rent.`,
+    `<b>Counter at AED 236 gross (Option C, base AED 180), with AED 256 (Option B) as the walk-away.</b> Option C keeps rent-to-sales near ${pct(C.rts_avg)} and 3-year store profit at AED ${fmtM(C.sp3)}M. The healthy 20% ceiling equals about AED ${D.breakeven.base.rts20.toFixed(0)}/sq ft on base-case sales, and only Options C and D come close to it. Option B (${pct(Bo.rts_avg)}) is acceptable if the landlord concedes on capex.`,
+    `<b>Tie the renovation to the rent.</b> At AED 296, the AED 2M refit pays back in ${(D.consts.capex/(A.sp3/3)).toFixed(1)} years, longer than the 3-year term, and 3-year net profit falls to AED ${fmtK(A.net3_s2)}k (AED ${fmtK(beA.reduce((a,b)=>a+b.net,0))}k in the bear case). Ask for (a) a 5-year term matching the 5-year depreciation, or (b) a landlord fit-out contribution or 3–6 rent-free months to cover the AED 800k book value left at year 3.`,
+    `<b>Keep turnover rent in the structure.</b> Ask that the 12% turnover rent replace the fixed base in a downturn (the higher-of clause means it never applies at these sales levels), or ask for a sales-linked cap on the 5% annual base escalation.`,
+    `<b>Reset the sales plan before sign-off.</b> Budget lease-year 1 at about AED ${fmtM(D.scenarios.base[0])}M, not the P&amp;L's AED 4.5M+. Growth drivers (Dubai population +7.5%, JVC densification) support 4–5% a year, and store footfall is already up 6% a year. Keep marketing at AED 90k+ to hold conversion.`,
+  ];
+  $('#reco').innerHTML=items.map(x=>`<li>${x}</li>`).join('');
+})();
+
+function render(){renderS1();renderPnl();}
+render();
+</script>
