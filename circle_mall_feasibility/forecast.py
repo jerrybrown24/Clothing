@@ -177,6 +177,9 @@ macro_g = gross + sum(a["value"] for a in adjust)
 ens_g2 = ens_ly[1] / ens_ly[0] - 1; ens_g3 = ens_ly[2] / ens_ly[1] - 1
 g2 = 0.5 * ens_g2 + 0.5 * macro_g / 100; g3 = 0.5 * ens_g3 + 0.5 * macro_g / 100
 base = [ens_ly[0], ens_ly[0] * (1 + g2), ens_ly[0] * (1 + g2) * (1 + g3)]
+# Years 4-5 (8 Aug 2029 - 7 Aug 2031): 32 months of history can't support model trends that far
+# out, so these years grow at the external market rate only.
+base += [base[2] * (1 + macro_g / 100), base[2] * (1 + macro_g / 100) ** 2]
 # Scenarios: bear = lowest credible model in Y1 & half the macro growth; bull = highest credible model & macro +2pp
 cred = [k for k in res if w[k] > 0]
 bear_y1 = min(res[k]["lease_years"][0] for k in cred); bull_y1 = max(res[k]["lease_years"][0] for k in cred)
