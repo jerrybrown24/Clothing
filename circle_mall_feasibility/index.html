@@ -267,7 +267,6 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
     <div class="legend"><span><i class="sq" style="background:var(--ink-3)"></i>Actual</span><span><i class="sq" style="background:var(--s2)"></i>Forecast</span></div>
     <div class="chart" id="chLY"></div>
     <div class="tbl"><table id="scenTbl"></table></div>
-    <div class="flag" id="planFlag"></div>
   </div>
 </section>
 
@@ -528,8 +527,6 @@ function groupBars(host,groups){ // groups: [{label, bars:[{name,v,color}]}]
   const f3=B['New · 246'].s1.reduce((a,b)=>a+b.sales,0);
   st+=`<tr class="key"><td>5 years, 8 Aug 2026 – 7 Aug 2031</td><td></td><td>${fmt(f3)}</td><td></td></tr>`;
   $('#scenTbl').innerHTML=st+'</tbody>';
-  const aug_dec=D.actual[n-1]+D.ensemble.forecast.slice(0,4).reduce((a,b)=>a+b,0);
-  $('#planFlag').innerHTML=`<strong>Check the P&amp;L sales plan.</strong> The current P&amp;L assumes Aug–Dec 2026 sales of AED 2.21M, +33% on Aug–Dec 2025 (AED 1.66M). August 2026 came in at AED ${fmtK(D.actual[n-1])}k, +2% on last August. The models project Aug–Dec 2026 at AED ${fmtM(aug_dec)}M, which puts calendar 2026 at about AED ${fmtM(2265227+aug_dec)}M, not AED 4.47M. The P&amp;L's Yr'27–29 sales (AED 4.56–4.75M) are about 5–10% above this forecast. This report uses the forecast, not the plan.`;
 })();
 
 /* ---------- SECTION 3 ---------- */
@@ -550,12 +547,11 @@ function renderPnl(){
   const pat=(d,r)=>{const n=d.ni-(d.total_exp-d.rent)-r-d.dep-d.fin;return n>0?n*(1-TAX):n;};
   const p0=pat(L0,L0.rent);
   const rows=[
-    ["FY'25 (Jan–Dec 2025), same sales",F25.sales,pat(F25,F25.rent),pat(F25,246*sq)],
     ['8 Aug 25 – 7 Aug 26, same sales',L0.sales,p0,pat(L0,246*sq)],
     ...NY.map((d,i)=>[`8 Aug ${26+i} – 7 Aug ${27+i}, ${i===0?'renewal year':'projected'} (AED ${d.rent_psf.toFixed(0)})`,d.sales,p0,pat(d,d.rent)]),
   ];
   let h=`<thead><tr><th>Basis</th><th>Sales</th><th>PAT at earlier rent</th><th>PAT at new rent</th><th>Change</th></tr></thead><tbody>`;
-  rows.forEach((r,i)=>{const c=r[3]/r[2]-1;h+=`<tr class="${i<2?'':'sub'}"><td>${r[0]}</td><td>${fmt(r[1])}</td><td>${fmt(r[2])}</td><td>${fmt(r[3])}</td><td><span class="pill ${c<-0.25?'bad':c<-0.05?'warn':'good'}">${sgn(c,0)}</span></td></tr>`;});
+  rows.forEach((r,i)=>{const c=r[3]/r[2]-1;h+=`<tr class="${i<1?'':'sub'}"><td>${r[0]}</td><td>${fmt(r[1])}</td><td>${fmt(r[2])}</td><td>${fmt(r[3])}</td><td><span class="pill ${c<-0.25?'bad':c<-0.05?'warn':'good'}">${sgn(c,0)}</span></td></tr>`;});
   $('#impactTbl').innerHTML=h+'</tbody>';
   const y=NY[0];
   const dFY=pat(F25,246*sq)/pat(F25,F25.rent)-1, dLY=pat(L0,246*sq)/p0-1, d1=pat(y,y.rent)/p0-1;
