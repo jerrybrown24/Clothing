@@ -213,13 +213,8 @@ footer{margin-top:40px;font-size:12.5px;color:var(--ink-3);display:grid;gap:6px}
   <header>
     <div class="secnum">Competition</div>
     <h2>Competition and market rent</h2>
-    <p class="muted">You've confirmed that other apparel tenants at Circle Mall pay AED 230–240 per sq ft gross and are still on their previous rates. At AED 246, Cotton On would pay more than its direct neighbours for comparable space.</p>
+    <p class="muted" id="compLead"></p>
   </header>
-  <div class="block">
-    <h3>Cotton On vs apparel rents at Circle Mall (8 Aug 2026 – 7 Aug 2027)</h3>
-    <div class="tbl"><table id="compTbl"></table></div>
-    <p class="note" id="compNote"></p>
-  </div>
   <div class="block">
     <h3>Other competitive pressures</h3>
     <ul class="clist" id="compList"></ul>
@@ -353,7 +348,7 @@ const TAX = 0.09;  // UAE corporate tax, applied at store level for PAT
   const pat=(d,r)=>{const n=d.ni-(d.total_exp-d.rent)-r-d.dep-d.fin;return n>0?n*(1-TAX):n;};
   const L0=D.ly0, F25=D.fy.base['New · 246'].s1[0], R246=246*D.consts.sqft;
   const dLY=pat(L0,R246)/pat(L0,L0.rent)-1, dFY=pat(F25,R246)/pat(F25,F25.rent)-1;
-  $('#verdictText').innerHTML = `The renewal is for <b>one year only</b> (8 Aug 2026 – 7 Aug 2027) at <b>AED 246/sq ft</b>. Gross rent rises from AED ${fmtK(L0.rent)}k to AED ${fmtK(R246)}k (${sgn(R246/L0.rent-1,0)}). On the same sales, that cuts PAT by <b>${pct(-dFY,0)}</b> on FY'25 figures and <b>${pct(-dLY,0)}</b> on the last lease year. Other apparel tenants at Circle Mall pay <b>AED 230–240</b> and are still on their previous rates, so Cotton On would pay above market. The store stays profitable, so renew the year, but push for parity at AED 230–235. Don't agree to 5% yearly increases beyond this year.`;
+  $('#verdictText').innerHTML = `The renewal is for <b>one year only</b> (8 Aug 2026 – 7 Aug 2027) at <b>AED 246/sq ft</b>. Gross rent rises from AED ${fmtK(L0.rent)}k to AED ${fmtK(R246)}k (${sgn(R246/L0.rent-1,0)}). On the same sales, that cuts PAT by <b>${pct(-dFY,0)}</b> on FY'25 figures and <b>${pct(-dLY,0)}</b> on the last lease year. Apparel Group's new rentals at Circle Mall are <b>AED 230–240</b>, so Cotton On would pay above market. The store stays profitable, so renew the year, but push for parity at AED 230–235.`;
   const t=[
     [`${fmtM(N.sales)}M`,'Lease-year 1 sales forecast',`${sgn(N.sales/D.hist_ly['LY 25-26']-1)} vs LY 25-26 (${fmtM(D.hist_ly['LY 25-26'])}M)`],
     [`${fmtK(N.rent)}k`,'New gross rent, year 1 (AED 246)',`${sgn(N.rent/D.ly0.rent-1,0)} vs ${fmtK(D.ly0.rent)}k last lease year`],
@@ -574,11 +569,7 @@ function renderPnl(){
   const dFY=pat(F25,246*sq)/pat(F25,F25.rent)-1, dLY=pat(L0,246*sq)/p0-1, d1=pat(y,y.rent)/p0-1;
   const be=((y.total_exp-y.rent)+y.rent)/(y.ni/y.sales);
   // ---- competition (market rent evidence)
-  const mk=[[230,'Apparel tenants, low'],[235,'Apparel tenants, mid'],[240,'Apparel tenants, high'],[246,'Cotton On, renewal']];
-  let c=`<thead><tr><th>Rent</th><th>AED / sq ft</th><th>Annual rent</th><th>Cotton On pays extra</th><th>Rent-to-sales</th><th>Rent-to-income</th><th>Year-1 PAT</th></tr></thead><tbody>`;
-  mk.forEach(([psf,l])=>{const r=psf*sq;c+=`<tr class="${psf===246?'hl':''}"><td>${l}</td><td>${psf}</td><td>${fmt(r)}</td><td>${psf===246?'—':fmt((246-psf)*sq)}</td><td>${pill(r/y.sales,RTS_B)}</td><td>${pill(r/y.ni,RTI_B)}</td><td>${fmt(pat(y,r))}</td></tr>`;});
-  $('#compTbl').innerHTML=c+'</tbody>';
-  $('#compNote').innerHTML=`At AED 246, Cotton On pays AED ${fmtK(6*sq)}k–${fmtK(16*sq)}k a year more than other apparel tenants. That costs AED ${fmtK(6*sq*(1-TAX))}k–${fmtK(16*sq*(1-TAX))}k of PAT. Their rents haven't been raised, so the increase isn't a market-wide reset, and parity is a fair ask. At AED 230–235, rent is about 20% of forecast sales, the healthy ceiling for apparel.`;
+  $('#compLead').innerHTML=`Apparel Group's new rentals at Circle Mall are AED 230–240 per sq ft gross. At AED 246, Cotton On's renewal is AED 6–16 per sq ft above that. That is AED ${fmtK(6*sq)}k–${fmtK(16*sq)}k a year more rent and AED ${fmtK(6*sq*(1-TAX))}k–${fmtK(16*sq*(1-TAX))}k less PAT. At AED 230–235, rent would be about 20% of forecast sales, the healthy ceiling for apparel.`;
   $('#compList').innerHTML=[
     `<b>Online, including Cotton On's own channels.</b> The COG online store sold AED 37–67k a month from Mar–Aug 2026. Namshi's Cotton On marketplace started in June 2026 at AED 31–72k a month. Both reach the same UAE shoppers and will take a growing share of spend.`,
     `<b>Destination malls are weaker.</b> Cotton On's Dubai Mall, Deira City Centre and Ibn Battuta stores fell 19–21% in Jan–Aug 2026, while Circle Mall grew 14%. Circle Mall's strength is its walk-in JVC catchment, not its rent level.`,
@@ -590,15 +581,15 @@ function renderPnl(){
   const pats=NY.map(d=>pat(d,d.rent)), p5=pats.reduce((a,b)=>a+b,0);
   const flat=NY.map((d,i)=>pat(L0,d.rent));    // same sales as last year, rent as projected
   $('#reco').innerHTML=`
-    <p><b>Renew for the one year offered, but at market rent, not AED 246. Don't sign up to 5% a year beyond this year.</b></p>
+    <p><b>Renew for the one year offered, but at market rent, not AED 246.</b></p>
     <p><b>What is being committed.</b> The renewal covers one year, 8 Aug 2026 – 7 Aug 2027, at AED ${fmtK(246*sq)}k. Years 2–5 in the projection only show what happens with a renewal every year at rent up 5% a year. They are not a commitment, and the short term gives the business a decision point every August.</p>
     <p><b>The rent increase is severe.</b> Rent goes from AED ${fmtK(L0.rent)}k to AED ${fmtK(246*sq)}k, and from ${pct(L0.rent_to_sales)} to ${pct(y.rent_to_sales)} of sales. On the same sales, PAT falls ${pct(-dFY,0)} on FY'25 figures and ${pct(-dLY,0)} on the last lease year. The forecast narrows that to ${pct(-d1,0)} in year 1 only because it assumes ${sgn(y.sales/L0.sales-1)} sales growth. Over five years at +5% rent, rent grows faster than sales (about +4% a year), so rent-to-sales creeps up to ${pct(NY[4].rent_to_sales)}. If sales and other costs stayed at last year's level, PAT would fall every year, from AED ${fmtK(flat[0])}k to AED ${fmtK(flat[4])}k by year 5.</p>
-    <p><b>The market doesn't support AED 246.</b> Other apparel tenants pay AED 230–240 and haven't been increased. Cotton On is being asked to pay a premium of AED ${fmtK(6*sq)}k–${fmtK(16*sq)}k a year for comparable space, in a mall where it already earns less per sq ft than at its other Dubai stores.</p>
+    <p><b>The market doesn't support AED 246.</b> Apparel Group's new rentals at Circle Mall are AED 230–240. Cotton On is being asked to pay a premium of AED ${fmtK(6*sq)}k–${fmtK(16*sq)}k a year for comparable space, in a mall where it already earns less per sq ft than at its other Dubai stores.</p>
     <p><b>Closing isn't justified.</b> At AED 246 the store still makes about AED ${fmtK(pats[0])}k PAT in the renewal year. Sales would need to fall about ${pct(1-be/L0.sales,0)} before it made a loss, and it is the one store growing while the chain declines.</p>
     <p>Proposed approach:</p>
     <ol>
-      <li><b>Ask for parity: AED 230–235 per sq ft for the renewal year</b>, in line with other apparel tenants. That saves AED ${fmtK(11*sq)}k–${fmtK(16*sq)}k a year and brings rent to about 20% of sales.</li>
-      <li><b>Keep the term to one year, or add a break option.</b> Don't accept a fixed 5% yearly escalation for any extension. Ask for increases capped at 3%, or linked to sales, with turnover rent (14% of sales) as an alternative.</li>
+      <li><b>Ask for parity: AED 230–235 per sq ft for the renewal year</b>, in line with Apparel Group's new rentals. That saves AED ${fmtK(11*sq)}k–${fmtK(16*sq)}k a year and brings rent to about 20% of sales.</li>
+      <li><b>Keep the term to one year, or add a break option.</b> For any extension, ask for increases linked to sales, with turnover rent (14% of sales) as an alternative.</li>
       <li><b>Do not go above AED 246.</b> Every extra AED 10/sq ft costs about AED ${fmtK(10*sq*(1-TAX))}k of PAT a year.</li>
       <li><b>Use the year to decide the next one.</b> Budget AED ${fmtM(y.sales)}M sales, track it monthly, and start the 2027 renewal talks by February 2027. If sales are running below about AED 4.0M by then, negotiate hard or look at alternatives.</li>
     </ol>`;
