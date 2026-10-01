@@ -1,0 +1,648 @@
+<title>Buy-Now Property Marketplace Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: research dossier. Sticky contents rail on wide screens, single reading column (~68ch) beside it; stacks to one column on phones. */
+:root{
+  --bg:#f6f7f8; --surface:#ffffff; --sunk:#eceff1;
+  --ink:#16222b; --muted:#56656f; --line:#d5dbdf;
+  --accent:#0d6b63; --accent-soft:#dcefed;
+  --brass:#9a6a12; --brass-soft:#f5ebd6;
+  --good:#1f7a3f; --good-soft:#e1f2e6;
+  --warn:#a35a00; --warn-soft:#fbeedb;
+  --bad:#b3261e; --bad-soft:#f9e2e0;
+  --info:#285c9c; --info-soft:#e0eaf6;
+  --display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1519; --surface:#161e23; --sunk:#1d272d;
+    --ink:#e4eaed; --muted:#9aa9b2; --line:#2c3a42;
+    --accent:#4cc2b6; --accent-soft:#163734;
+    --brass:#e0b45e; --brass-soft:#352a14;
+    --good:#6cc98a; --good-soft:#16301f;
+    --warn:#f0a94d; --warn-soft:#38270f;
+    --bad:#f08a82; --bad-soft:#3a1a18;
+    --info:#86b3ea; --info-soft:#172739;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1519; --surface:#161e23; --sunk:#1d272d;
+  --ink:#e4eaed; --muted:#9aa9b2; --line:#2c3a42;
+  --accent:#4cc2b6; --accent-soft:#163734;
+  --brass:#e0b45e; --brass-soft:#352a14;
+  --good:#6cc98a; --good-soft:#16301f;
+  --warn:#f0a94d; --warn-soft:#38270f;
+  --bad:#f08a82; --bad-soft:#3a1a18;
+  --info:#86b3ea; --info-soft:#172739;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 64px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;font-size:13.5px}
+nav.toc p{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:t}
+nav.toc li{counter-increment:t}
+nav.toc a{display:flex;gap:10px;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none}
+nav.toc a::before{content:counter(t,decimal-leading-zero);font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:2px}
+nav.toc a:hover{background:var(--sunk)}
+main{min-width:0}
+header.cover{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:8px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);margin:0 0 12px}
+h1{font-family:var(--display);font-weight:650;font-size:clamp(30px,4.6vw,46px);line-height:1.1;margin:0 0 14px;text-wrap:balance;letter-spacing:-.01em}
+.lede{font-size:18px;color:var(--muted);max-width:66ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:18px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+section{padding-block:36px 8px;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+h2{font-family:var(--display);font-weight:650;font-size:28px;line-height:1.2;margin:0 0 6px;text-wrap:balance}
+h2 .n{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);display:block;letter-spacing:.06em;margin-bottom:6px}
+h3{font-family:var(--display);font-weight:650;font-size:20px;margin:28px 0 8px;text-wrap:balance}
+p,li{max-width:70ch}
+.sub{color:var(--muted);margin:0 0 20px}
+sup a{font-family:var(--mono);font-size:10.5px;text-decoration:none;padding:0 1px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* verdict */
+.verdict{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px 24px;margin-top:22px;display:grid;gap:14px}
+.verdict .tag{display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--warn-soft);color:var(--warn)}
+.verdict h3{margin:0;font-size:22px}
+.verdict p{margin:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:22px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.kpi b{display:block;font-family:var(--mono);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink)}
+.kpi span{display:block;font-size:13px;color:var(--muted);line-height:1.4;margin-top:4px}
+
+/* SWOT */
+.swot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:8px}
+.q{border-radius:10px;padding:18px 20px;border:1px solid var(--line);background:var(--surface);min-width:0}
+.q h3{margin:0 0 4px;font-size:19px;display:flex;align-items:baseline;gap:10px}
+.q h3 i{font-style:normal;font-family:var(--mono);font-size:12px;width:24px;height:24px;display:inline-grid;place-items:center;border-radius:6px}
+.q .scope{font-size:12.5px;color:var(--muted);margin:0 0 10px;font-family:var(--mono)}
+.q ul{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14.5px;line-height:1.5}
+.q.s h3 i{background:var(--good-soft);color:var(--good)}
+.q.w h3 i{background:var(--warn-soft);color:var(--warn)}
+.q.o h3 i{background:var(--info-soft);color:var(--info)}
+.q.t h3 i{background:var(--bad-soft);color:var(--bad)}
+.q.s{border-top:3px solid var(--good)} .q.w{border-top:3px solid var(--warn)} .q.o{border-top:3px solid var(--info)} .q.t{border-top:3px solid var(--bad)}
+.so{margin-top:16px;background:var(--sunk);border-radius:10px;padding:16px 20px}
+.so h3{margin:0 0 8px;font-size:17px}
+.so ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14.5px}
+
+/* tables */
+.tbl{overflow-x:auto;margin:14px 0 6px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:640px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+thead th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--sunk);font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td b{font-weight:600}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.p-hi{background:var(--bad-soft);color:var(--bad)}
+.p-md{background:var(--warn-soft);color:var(--warn)}
+.p-lo{background:var(--good-soft);color:var(--good)}
+.p-info{background:var(--info-soft);color:var(--info)}
+.note{font-size:13px;color:var(--muted)}
+
+/* chart */
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:14px 0}
+.chart h4{margin:0 0 4px;font-size:15px;font-weight:600}
+.chart .cap{margin:0 0 14px;font-size:13px;color:var(--muted)}
+.bars{display:grid;gap:10px}
+.bar{display:grid;grid-template-columns:minmax(120px,210px) minmax(0,1fr) 64px;align-items:center;gap:12px;font-size:13.5px}
+.bar .lbl{line-height:1.3}
+.bar .track{height:16px;background:var(--sunk);border-radius:4px;overflow:hidden}
+.bar .fill{height:100%;background:var(--accent);border-radius:4px}
+.bar .fill.alt{background:var(--brass)}
+.bar .v{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;font-size:13px}
+.bar.total{border-top:1px solid var(--line);padding-top:10px;font-weight:600}
+
+/* funnel */
+.funnel{display:grid;gap:10px;margin:16px 0}
+.tier{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px}
+.tier .big{font-family:var(--mono);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent)}
+.tier .big small{display:block;font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:400}
+.tier h4{margin:0 0 2px;font-size:15px}
+.tier p{margin:0;font-size:14px;color:var(--muted)}
+
+/* why list */
+.why{display:grid;gap:12px;margin-top:10px}
+.why article{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 20px}
+.why h3{margin:0 0 4px;font-size:17px}
+.why p{margin:0;font-size:14.5px}
+.why .so-what{margin-top:8px;font-size:14px;color:var(--accent);font-weight:500}
+
+/* journey */
+.journey{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.journey > div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
+.journey h4{margin:0 0 8px;font-size:15px}
+.journey ol{margin:0;padding-left:20px;font-size:14px;display:grid;gap:5px}
+
+/* checklist */
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}
+.dd > div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
+.dd h4{margin:0 0 8px;font-size:15px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.dd ul{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:14px}
+.dd li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:8px;line-height:1.45}
+.dd input{margin:3px 0 0;accent-color:var(--accent)}
+
+/* feasibility scorecard */
+.score td.meter{width:160px}
+.meterbar{display:flex;gap:3px}
+.meterbar span{height:8px;flex:1;border-radius:2px;background:var(--sunk)}
+.meterbar span.on{background:var(--accent)}
+
+/* timeline */
+.phases{display:grid;gap:14px;margin-top:14px;counter-reset:ph}
+.phase{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.phase .when{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.phase .when b{display:block;font-size:15px;color:var(--brass);font-weight:600;margin-bottom:2px}
+.phase h3{margin:0 0 6px;font-size:18px}
+.phase ul{margin:0 0 10px;padding-left:18px;font-size:14.5px;display:grid;gap:4px}
+.gate{font-size:13.5px;background:var(--accent-soft);color:var(--ink);border-radius:8px;padding:8px 12px}
+.gate b{color:var(--accent)}
+
+.callout{border-left:3px solid var(--brass);background:var(--brass-soft);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-size:14.5px}
+.callout p{margin:0}
+ol.src{font-size:13px;padding-left:26px;display:grid;gap:4px;color:var(--muted)}
+ol.src a{word-break:break-word}
+footer{margin-top:28px;font-size:12.5px;color:var(--muted)}
+
+@media (max-width:900px){
+  .wrap{grid-template-columns:minmax(0,1fr);gap:8px}
+  nav.toc{position:static;border-bottom:1px solid var(--line);padding-bottom:14px}
+  nav.toc ol{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .swot,.journey,.dd{grid-template-columns:minmax(0,1fr)}
+  .phase,.tier{grid-template-columns:minmax(0,1fr);gap:8px}
+  .bar{grid-template-columns:minmax(0,1fr) 60px}
+  .bar .lbl{grid-column:1 / -1}
+  nav.toc ol{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <p>Contents</p>
+  <ol>
+    <li><a href="#summary">Executive summary</a></li>
+    <li><a href="#swot">SWOT analysis</a></li>
+    <li><a href="#market">Addressable market</a></li>
+    <li><a href="#competitors">Competitor landscape</a></li>
+    <li><a href="#why">Why it hasn't been done</a></li>
+    <li><a href="#challenges">Execution challenges</a></li>
+    <li><a href="#feasibility">Feasibility</a></li>
+    <li><a href="#diligence">Due diligence</a></li>
+    <li><a href="#plan">Plan &amp; milestones</a></li>
+    <li><a href="#sources">Sources</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="cover">
+  <p class="eyebrow">Founder research brief · UAE PropTech</p>
+  <h1>A "Buy Now" marketplace for UAE homes and rentals</h1>
+  <p class="lede">An Amazon-style property marketplace where a buyer or tenant picks a unit, pays through one checkout, and the company handles everything after: the developer or seller, DLD registration, trustee, mortgage, Ejari and handover.</p>
+  <div class="meta"><span>Prepared 1 Oct 2026</span><span>Market data: DLD, ADREC, company filings, 2025 to H1 2026</span><span>FX: USD 1 = AED 3.6725</span></div>
+</header>
+
+<!-- 1 -->
+<section id="summary">
+  <h2><span class="n">01</span>Executive summary</h2>
+  <div class="verdict">
+    <div><span class="tag">Verdict: feasible, if you change what "Buy Now" means</span></div>
+    <h3>Start with off-plan in Dubai, stay asset-light, never hold client money.</h3>
+    <p>The idea is not unique, but nobody owns it yet. Portals (Property Finder, Bayut) sell advertising to brokers. Huspy and PRYPCO own mortgages and agent tooling. Oliva, a small 2025-era startup, already offers remote end-to-end purchase for overseas investors. Nobody offers a true <b>checkout</b> across many developers plus resale and rentals.</p>
+    <p>The window opened in October 2025, when Dubai (DLD "Digital Sale" on DubaiNow) and Abu Dhabi (ADREC "Digital Buy &amp; Sell Journey") made fully online transfer legally possible.<sup><a href="#s19">19</a>,<a href="#s20">20</a></sup> The hard parts are regulation (brokers may not hold client funds), resale inventory (every unit needs a willing, pre-priced seller), and a market cycle that Fitch expects to correct by up to 15%.<sup><a href="#s22">22</a>,<a href="#s27">27</a></sup></p>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><b>AED 917bn</b><span>Dubai real estate transactions, 2025 (record, +20%)<sup><a href="#s1">1</a></sup></span></div>
+    <div class="kpi"><b>AED 687bn</b><span>Dubai property sales, 2025<sup><a href="#s2">2</a></sup></span></div>
+    <div class="kpi"><b>AED 142bn</b><span>Abu Dhabi transactions, 2025 (+44%)<sup><a href="#s6">6</a></sup></span></div>
+    <div class="kpi"><b>1.38m</b><span>Dubai Ejari tenancy contracts, 2025, worth AED 126bn<sup><a href="#s7">7</a></sup></span></div>
+    <div class="kpi"><b>≈ AED 29bn</b><span>Est. annual UAE fee pool (commissions + referrals). Our estimate, see §03</span></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="swot">
+  <h2><span class="n">02</span>SWOT analysis</h2>
+  <p class="sub">Assessed for a new, asset-light "managed transaction" marketplace launching in Dubai in 2027.</p>
+  <div class="swot">
+    <div class="q s">
+      <h3><i>S</i>Strengths</h3>
+      <p class="scope">Internal · what the model has going for it</p>
+      <ul>
+        <li><b>Clear consumer pain.</b> Today's journey is fragmented across portal, agent, developer, bank, trustee centre, DLD and DEWA. One checkout and one accountable party is a real product difference.</li>
+        <li><b>Buyer pays nothing on off-plan.</b> Developers pay agents 3–7% of price, so a marketplace can be free to buyers and still earn about AED 65–87k per average deal.<sup><a href="#s26">26</a></sup></li>
+        <li><b>Off-plan inventory behaves like SKUs.</b> Fixed price lists, floor plans, payment plans and live availability make a "Reserve now" button realistic.</li>
+        <li><b>Government rails now exist.</b> UAE Pass e-signature, DubaiNow Digital Sale, ADREC digital journey, Ejari online and DLD-supervised escrow give you the plumbing without building it.</li>
+        <li><b>Asset-light.</b> No balance-sheet property risk if you act as a licensed broker and orchestrator, not a principal buyer.</li>
+        <li><b>Fixed pricing transparency</b> (all-in cost shown upfront: 4% DLD fee, trustee fee, agency fee, VAT) is rare today and builds trust.<sup><a href="#s25">25</a></sup></li>
+      </ul>
+    </div>
+    <div class="q w">
+      <h3><i>W</i>Weaknesses</h3>
+      <p class="scope">Internal · what you lack on day one</p>
+      <ul>
+        <li><b>No supply.</b> Developers already sell through 1,000+ brokerages and their own apps. You start with zero developer agreements and zero resale listings.</li>
+        <li><b>No traffic.</b> Portals own buyer intent. Your early customer acquisition will likely run through the very portals you compete with, plus paid search.</li>
+        <li><b>"Pay my company" is not legally simple.</b> Dubai brokers are not allowed to hold client money; funds go to developer escrow or the seller via the trustee process.<sup><a href="#s22">22</a></sup> Needs a payments partner or licence.</li>
+        <li><b>Mortgages break "instant".</b> About 52% of Dubai sales by count were mortgage-backed in 2025.<sup><a href="#s4">4</a></sup> Pre-approval and valuation take days to weeks.</li>
+        <li><b>High ticket, low frequency.</b> Average deal AED 1.8–3.7m; customers buy once every few years. Repeat purchase and brand recall are hard.</li>
+        <li><b>Operations-heavy.</b> Each deal needs licensed people for snagging, handover, disputes and paperwork. Margins depend on ops efficiency.</li>
+      </ul>
+    </div>
+    <div class="q o">
+      <h3><i>O</i>Opportunities</h3>
+      <p class="scope">External · tailwinds you can ride</p>
+      <ul>
+        <li><b>Record volumes.</b> Dubai H1 2026 sales AED 286bn across 86,000 deals, second-best half on record.<sup><a href="#s5">5</a></sup></li>
+        <li><b>Remote foreign buyers.</b> Foreigners are 85–88% of Dubai transactions by count; India, UK, Pakistan, Russia and China lead.<sup><a href="#s29">29</a></sup> They value a single trusted remote checkout most.</li>
+        <li><b>Trust gap.</b> RERA logged about 3,800 property complaints in 2025, roughly 400 involving suspected fraud; portals are under pressure over misleading "verified" listings.<sup><a href="#s30">30</a></sup></li>
+        <li><b>Rentals.</b> 513,000 new Dubai leases in 2025.<sup><a href="#s7">7</a></sup> "Rent now" with Ejari plus monthly payments (Keyper-style partner) is an underserved, frequent-use wedge.</li>
+        <li><b>Adjacent revenue.</b> Mortgage referral, conveyancing, Golden Visa, furnishing, moving, DEWA setup, home insurance, property management.</li>
+        <li><b>Policy push.</b> Dubai Real Estate Strategy 2033 targets AED 1 trillion in transactions and AED 60bn in tokenised property by 2033.<sup><a href="#s32">32</a></sup></li>
+        <li><b>Regional expansion.</b> Abu Dhabi's fully digital journey; Saudi Arabia later (Huspy and Stake are already moving there).</li>
+      </ul>
+    </div>
+    <div class="q t">
+      <h3><i>T</i>Threats</h3>
+      <p class="scope">External · what can hurt you</p>
+      <ul>
+        <li><b>Well-funded incumbents.</b> Property Finder took USD 525m from Permira and Blackstone plus USD 250m Ares debt in 2025; it can add a checkout faster than you can build traffic.<sup><a href="#s8">8</a></sup></li>
+        <li><b>Developers going direct.</b> Emaar's apps already let buyers browse, reserve and pay online. Tier-1 developers may refuse to pay a marketplace more than a broker.</li>
+        <li><b>Government as competitor.</b> DLD and ADREC now offer free digital transfer. The "we handle DLD" message weakens over time.</li>
+        <li><b>Market cycle.</b> Fitch forecast up to a 15% price correction through 2026, with about 120,000 completions in 2026 alone.<sup><a href="#s27">27</a></sup> Off-plan launches and commissions fall first in a downturn.</li>
+        <li><b>Regulatory change and AML.</b> Brokers are DNFBPs under Federal Decree-Law 10 of 2025: KYC on every buyer, mandatory reports for cash ≥ AED 55,000 or any crypto, fines up to AED 5m per violation.<sup><a href="#s24">24</a></sup></li>
+        <li><b>Broker backlash.</b> Brokerages are the portals' and developers' main customers; they will lobby against a channel that cuts them out.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="so">
+    <h3>What the SWOT implies</h3>
+    <ul>
+      <li><b>S + O:</b> Lead with free-to-buyer off-plan checkout for remote foreign buyers, the segment with the most pain and the least need for a mortgage on day one.</li>
+      <li><b>W + O:</b> Solve "pay my company" by orchestrating payments straight into DLD escrow and the trustee process through a licensed payments partner, never into your own account.</li>
+      <li><b>S + T:</b> Be the trust layer (verified units, all-in pricing, one accountable party) rather than a cheaper portal. That is defensible against Property Finder's traffic advantage.</li>
+      <li><b>W + T:</b> Do not touch iBuying (buying homes onto your balance sheet). Zillow lost over USD 1bn doing it.<sup><a href="#s28">28</a></sup></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="market">
+  <h2><span class="n">03</span>UAE addressable market</h2>
+  <p class="sub">Your revenue is a share of transaction fees, not of property value. So size the fee pool, not the AED 917bn headline.</p>
+
+  <h3>Market volume (official data)</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Segment</th><th class="r">Value</th><th class="r">Deals</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td><b>Dubai: all transactions, 2025</b></td><td class="r">AED 917bn</td><td class="r">≈270,000</td><td>Sales, mortgages, gifts; record year<sup><a href="#s1">1</a></sup></td></tr>
+      <tr><td>Dubai: property sales, 2025</td><td class="r">AED 687bn</td><td class="r">—</td><td>DLD sales value<sup><a href="#s2">2</a></sup></td></tr>
+      <tr><td>&nbsp;&nbsp;Residential off-plan</td><td class="r">AED 286bn</td><td class="r">132,000</td><td>Avg ticket ≈ AED 2.17m<sup><a href="#s3">3</a></sup></td></tr>
+      <tr><td>&nbsp;&nbsp;Residential secondary</td><td class="r">AED 262bn</td><td class="r">71,000</td><td>Avg ticket ≈ AED 3.69m<sup><a href="#s3">3</a></sup></td></tr>
+      <tr><td>Dubai: sales, H1 2026</td><td class="r">AED 286bn</td><td class="r">86,005</td><td>Ready AED 147bn now exceeds off-plan AED 140bn<sup><a href="#s5">5</a></sup></td></tr>
+      <tr><td><b>Abu Dhabi: all transactions, 2025</b></td><td class="r">AED 142bn</td><td class="r">42,814</td><td>Of which sales AED 99.4bn / 25,604 deals<sup><a href="#s6">6</a></sup></td></tr>
+      <tr><td><b>Dubai rentals (Ejari), 2025</b></td><td class="r">AED 126bn</td><td class="r">1.38m</td><td>513k new leases, 514k renewals<sup><a href="#s7">7</a></sup></td></tr>
+      <tr><td>Dubai mortgages, 2025</td><td class="r">AED 179bn</td><td class="r">—</td><td>≈25% of sales by value, 52% by count<sup><a href="#s4">4</a></sup></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Sharjah, Ajman, RAK and other emirates are excluded; they would add a modest amount to every figure below.</p>
+
+  <h3>The fee pool: where the money actually is</h3>
+  <div class="chart" role="img" aria-label="Bar chart of estimated annual UAE property fee pool by source in AED billions, compared with UAE portal revenue">
+    <h4>Estimated annual UAE fee pool, AED bn</h4>
+    <p class="cap">Teal: transaction fees (our estimates from 2025 volumes). Brass: what the two big portals earn in the UAE today.</p>
+    <div class="bars">
+      <div class="bar"><span class="lbl">Off-plan developer commissions, Dubai (≈4% × AED 286bn)</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="v">11.4</span></div>
+      <div class="bar"><span class="lbl">Secondary agency fees, Dubai (2% each side × AED 262bn)</span><span class="track"><span class="fill" style="width:92%"></span></span><span class="v">10.5</span></div>
+      <div class="bar"><span class="lbl">Abu Dhabi sales fees (≈3% blended × AED 99bn)</span><span class="track"><span class="fill" style="width:26%"></span></span><span class="v">3.0</span></div>
+      <div class="bar"><span class="lbl">New-lease agency fees, Dubai (5% of est. AED 57bn new rent)</span><span class="track"><span class="fill" style="width:25%"></span></span><span class="v">2.8</span></div>
+      <div class="bar"><span class="lbl">Mortgage referral fees (≈0.75% × AED 179bn)</span><span class="track"><span class="fill" style="width:12%"></span></span><span class="v">1.3</span></div>
+      <div class="bar"><span class="lbl">Portal revenue, UAE 2024 (Property Finder + dubizzle/Bayut)</span><span class="track"><span class="fill alt" style="width:10%"></span></span><span class="v">1.2</span></div>
+      <div class="bar total"><span class="lbl">Total transaction fee pool (TAM)</span><span class="track" aria-hidden="true"></span><span class="v">≈29</span></div>
+    </div>
+  </div>
+  <div class="callout"><p><b>Key insight.</b> Portals earn about AED 1.2bn a year in the UAE (Property Finder UAE revenue USD 117m in 2024; Dubizzle Group USD 222m, 89% UAE).<sup><a href="#s8">8</a>,<a href="#s10">10</a></sup> The transaction fee pool is roughly 25 times larger. That is why every portal is moving toward the transaction (Mortgage Finder cashback, investments in Keyper and Stake), and why your idea targets the right pool of money.</p></div>
+
+  <h3>TAM → SAM → SOM</h3>
+  <div class="funnel">
+    <div class="tier"><div class="big">AED 29bn<small>TAM · ≈USD 7.9bn</small></div><div><h4>All UAE transaction fees (Dubai + Abu Dhabi)</h4><p>Developer commissions, agency fees on resale and new leases, and mortgage referral fees, from 2025 volumes.</p></div></div>
+    <div class="tier"><div class="big">AED 13.5bn<small>SAM · ≈USD 3.7bn</small></div><div><h4>Dubai residential you can serve with a digital checkout</h4><p>Off-plan from the top 15–20 developers (assume 70% of off-plan value: AED 8.0bn) + buyer-side resale fees on freehold ready units in mature communities (assume 50%: AED 2.6bn) + new-lease fees (AED 2.8bn).</p></div></div>
+    <div class="tier"><div class="big">AED 160m<small>SOM · year 3 · ≈USD 45m</small></div><div><h4>1% of Dubai residential sales value, at ≈3% net take</h4><p>About AED 5.5bn GMV, or roughly 2,000 deals a year (≈170 a month). For scale, Huspy facilitates about USD 7bn a year across the UAE and Spain after five years.<sup><a href="#s11">11</a></sup> Ambitious, but bounded by a real comparable.</p></div></div>
+  </div>
+  <p class="note">TAM/SAM/SOM rates and shares are our planning assumptions, built from the official volumes above and typical market fee rates (developer 3–7%, resale 2% per side, leases 5%).<sup><a href="#s26">26</a></sup> Validate each in due diligence.</p>
+
+  <h3>Unit economics of one deal</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Deal type</th><th class="r">Avg price</th><th class="r">Gross fee</th><th>Who pays</th><th class="r">Net after 1% buyer cashback</th></tr></thead>
+    <tbody>
+      <tr><td>Off-plan (Dubai)</td><td class="r">AED 2.17m</td><td class="r">AED 87k (4%)</td><td>Developer</td><td class="r">AED 65k</td></tr>
+      <tr><td>Resale, buyer side</td><td class="r">AED 3.69m</td><td class="r">AED 74k (2%)</td><td>Buyer</td><td class="r">n/a (fee is the price)</td></tr>
+      <tr><td>New lease (est. AED 110k rent)</td><td class="r">—</td><td class="r">AED 5.5k (5%)</td><td>Tenant</td><td class="r">—</td></tr>
+      <tr><td>Mortgage referral (AED 1.6m loan)</td><td class="r">—</td><td class="r">AED 8–16k</td><td>Bank</td><td class="r">—</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Rent figure is illustrative. Remember VAT of 5% applies to agency commission, and 9% UAE corporate tax applies above AED 375k profit.</p>
+</section>
+
+<!-- 4 -->
+<section id="competitors">
+  <h2><span class="n">04</span>Competitor landscape</h2>
+  <p class="sub">You were right that nobody does exactly this. But many players each own one piece of it, and three of them could assemble the whole thing.</p>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Player</th><th>Type</th><th>What they own</th><th>Scale / funding</th><th>Threat</th></tr></thead>
+    <tbody>
+      <tr><td><b>Property Finder</b></td><td>Portal</td><td>Buyer traffic, broker subscriptions, Mortgage Finder (1% cashback launched 2026), stakes in Keyper and Stake<sup><a href="#s17">17</a></sup></td><td>UAE revenue USD 117m (2024), &gt;60% EBITDA; USD 525m equity + USD 250m debt (2025)<sup><a href="#s8">8</a></sup></td><td><span class="pill p-hi">High</span></td></tr>
+      <tr><td><b>Bayut / dubizzle</b></td><td>Portal</td><td>#1 UAE property classifieds, Property Monitor data, TruBroker</td><td>Group revenue USD 222m (2024); IPO at ≈USD 2bn postponed Oct 2025<sup><a href="#s9">9</a>,<a href="#s10">10</a></sup></td><td><span class="pill p-hi">High</span></td></tr>
+      <tr><td><b>Huspy</b></td><td>Mortgage + agent platform</td><td>Mortgage brokerage, freelance-agent platform, transaction support</td><td>USD 59m Series B (Jul 2025); ≈USD 7bn transactions/yr; UAE, Spain, KSA<sup><a href="#s11">11</a></sup></td><td><span class="pill p-hi">High</span></td></tr>
+      <tr><td><b>PRYPCO</b></td><td>Fintech / proptech</td><td>Mortgages (≈AED 10bn), Golden Visa, fractional "Blocks", PRYPCO One agent app (9,000+ agents)</td><td>General Catalyst-led pre-Series A (2025); founder linked to DAMAC<sup><a href="#s12">12</a>,<a href="#s13">13</a></sup></td><td><span class="pill p-md">Medium</span></td></tr>
+      <tr><td><b>Oliva</b></td><td>Digital brokerage</td><td>Closest to your idea: remote end-to-end purchase for international investors, KYC + e-sign, data scoring</td><td>Early stage. Free on off-plan, 2% + VAT on resale<sup><a href="#s14">14</a></sup></td><td><span class="pill p-hi">Direct</span></td></tr>
+      <tr><td><b>Developer apps</b> (Emaar One / Vyom, DAMAC, Sobha)</td><td>Direct sales</td><td>Online reserve-and-pay for their own units only</td><td>Single-brand inventory</td><td><span class="pill p-md">Medium</span></td></tr>
+      <tr><td><b>DLD DubaiNow Digital Sale / ADREC</b></td><td>Government</td><td>Free online contract, e-signature, title deed. Dubai version limited to cash, single owner, both parties with Emirates ID and UAE bank account<sup><a href="#s19">19</a>,<a href="#s20">20</a></sup></td><td>Launched Oct 2025</td><td><span class="pill p-info">Enabler</span></td></tr>
+      <tr><td><b>Large brokerages</b> (Betterhomes, Driven, Allsopp &amp; Allsopp, fäm)</td><td>Agencies</td><td>Developer relationships, listings, agents on the ground</td><td>Hundreds of agents each</td><td><span class="pill p-md">Medium</span></td></tr>
+      <tr><td><b>Keyper</b></td><td>Rental fintech</td><td>Monthly rent payments, landlords paid upfront</td><td>USD 11m Series A + USD 30m Franklin Templeton facility (2026)<sup><a href="#s16">16</a></sup></td><td><span class="pill p-lo">Partner</span></td></tr>
+      <tr><td><b>Stake / SmartCrowd</b></td><td>Fractional investing</td><td>Small-ticket investors, tokenisation pilots</td><td>Stake: USD 31m Series B led by Emirates NBD (2026)<sup><a href="#s15">15</a></sup></td><td><span class="pill p-lo">Low</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Analogues outside the UAE</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Company</th><th>Market</th><th>Model</th><th>Lesson for you</th></tr></thead>
+    <tbody>
+      <tr><td><b>Nawy</b></td><td>Egypt</td><td>Off-plan marketplace + "Nawy Now" move-now-pay-later financing; GMV USD 38m (2020) → USD 1.4bn (2024); USD 52m Series A + USD 24m debt (2025)<sup><a href="#s18">18</a></sup></td><td>The closest working proof that an off-plan-first marketplace can scale in a developer-led market.</td></tr>
+      <tr><td><b>Zillow Offers</b></td><td>USA</td><td>iBuying: bought homes, resold them</td><td>Lost over USD 1bn in 3.5 years; could not price homes in a turning market.<sup><a href="#s28">28</a></sup> Do not be the principal.</td></tr>
+      <tr><td><b>Opendoor</b></td><td>USA</td><td>iBuying at scale</td><td>Survived by being disciplined on price, but needs huge capital and is cyclical.</td></tr>
+      <tr><td><b>Purplebricks</b></td><td>UK</td><td>Low fixed-fee online agent</td><td>Grew fast on advertising, then collapsed; sold for £1 million in 2023. Cheap fees alone are not a moat.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 5 -->
+<section id="why">
+  <h2><span class="n">05</span>Why this hasn't been executed yet</h2>
+  <div class="why">
+    <article><h3>1. A home is not a SKU</h3><p>Amazon works because a seller commits stock at a fixed price. Resale homes have one owner, negotiable prices, tenants inside, and sellers who change their mind. A "Buy now" button on resale only works if the seller has pre-signed a mandate at a fixed price.</p><p class="so-what">So what: off-plan is SKU-like today; resale needs a "pre-priced, pre-verified" listing product first.</p></article>
+    <article><h3>2. Brokers may not hold the money</h3><p>Dubai brokers are not allowed to keep client funds; off-plan payments go into DLD-supervised developer escrow under Law 8 of 2007, and resale funds go seller-ward through the trustee centre.<sup><a href="#s21">21</a>,<a href="#s22">22</a></sup> A company taking the buyer's whole payment needs a Central Bank payments licence or a regulated partner.</p><p class="so-what">So what: design checkout as payment routing into escrow, not payment to you.</p></article>
+    <article><h3>3. The portals' customers are brokers</h3><p>Property Finder and Bayut earn most revenue from broker subscriptions and listing fees. A checkout that cuts brokers out would attack their own customers. This is a classic innovator's dilemma, so they add mortgage and data products instead.</p><p class="so-what">So what: this is your opening, and the reason a startup can do what incumbents won't.</p></article>
+    <article><h3>4. Developers control distribution</h3><p>Brokerages drive an estimated ~70% of off-plan sales, and developers reward them with 3–7% commission and launch bonuses.<sup><a href="#s26">26</a></sup> A new channel has to prove volume before a tier-1 developer gives it inventory access.</p><p class="so-what">So what: start with tier-2 developers who need distribution, then use volume to win tier-1.</p></article>
+    <article><h3>5. The rails were not digital until late 2025</h3><p>Before October 2025, transfer required in-person trustee visits and manager's cheques. The DLD Digital Sale and ADREC digital journey arrived in October 2025, and Dubai's version still excludes mortgaged deals and non-residents without Emirates ID.<sup><a href="#s19">19</a>,<a href="#s20">20</a></sup></p><p class="so-what">So what: this is the "why now". The full online loop is newly possible but still incomplete.</p></article>
+    <article><h3>6. Mortgages and AML add friction</h3><p>Half of deals by count need bank approval and valuation, and every buyer needs KYC, source-of-funds checks and possible reports to the FIU via goAML.<sup><a href="#s4">4</a>,<a href="#s24">24</a></sup> Instant purchase is impossible for those buyers.</p><p class="so-what">So what: "Buy now" should mean "reserve now, close in days", with a clear tracker.</p></article>
+  </div>
+</section>
+
+<!-- 6 -->
+<section id="challenges">
+  <h2><span class="n">06</span>Challenges you will face in execution</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Challenge</th><th>Why it's hard</th><th>Severity</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td><b>Licensing</b></td><td>DET trade licence + RERA brokerage registration, a licensed manager who passed RERA certification, physical office (no virtual offices); fines AED 50–200k for unlicensed brokerage<sup><a href="#s23">23</a></sup></td><td><span class="pill p-md">Medium</span></td><td>Budget 2–4 months; hire an experienced RERA-certified broker-manager as early employee or co-founder.</td></tr>
+      <tr><td><b>Handling payments</b></td><td>Holding funds needs a CBUAE licence (retail payments / stored value) or a regulated partner; refunds and cancellations add exposure</td><td><span class="pill p-hi">High</span></td><td>Route money straight to developer escrow / trustee via a licensed PSP; collect only your fee. Get a legal opinion before building.</td></tr>
+      <tr><td><b>Developer supply</b></td><td>Inventory APIs rarely exist; price lists change daily; launch allocations go to top brokers</td><td><span class="pill p-hi">High</span></td><td>Sign 3–5 tier-2 developers first; build a manual inventory-sync ops team before APIs.</td></tr>
+      <tr><td><b>Resale supply</b></td><td>Sellers list with multiple agents; Form A mandates; tenants in place; fake and stale listings</td><td><span class="pill p-hi">High</span></td><td>Phase 2. Offer sellers a guaranteed-buyer-pool product with exclusive pre-priced mandates and inspection reports.</td></tr>
+      <tr><td><b>Customer acquisition cost</b></td><td>Portals own search intent; paid search in Dubai real estate is expensive</td><td><span class="pill p-hi">High</span></td><td>Target overseas buyer corridors (India, UK, Pakistan) via diaspora communities, referral partners, content; track CAC per closed deal from day one.</td></tr>
+      <tr><td><b>AML / KYC</b></td><td>DNFBP duties, goAML registration, REAR for cash ≥ AED 55k or any crypto, fines up to AED 5m<sup><a href="#s24">24</a></sup></td><td><span class="pill p-md">Medium</span></td><td>Build KYC into checkout (UAE Pass, passport e-KYC); appoint a compliance officer; avoid crypto at launch.</td></tr>
+      <tr><td><b>Mortgage deals</b></td><td>Pre-approval, valuation, bank timelines; 4% DLD fee and costs paid in cash</td><td><span class="pill p-md">Medium</span></td><td>Partner with 3–4 banks; show a pre-approval step before "Reserve".</td></tr>
+      <tr><td><b>Off-plan delivery risk</b></td><td>Delays, cancellations, developer disputes land on you reputationally</td><td><span class="pill p-md">Medium</span></td><td>Only list RERA-registered projects with escrow; publish developer track records; clear T&amp;Cs on who is liable.</td></tr>
+      <tr><td><b>Market cycle</b></td><td>Fitch: up to 15% correction; 2026 completions ≈120k units<sup><a href="#s27">27</a></sup>. H1 2026 already shows ready sales overtaking off-plan<sup><a href="#s5">5</a></sup></td><td><span class="pill p-md">Medium</span></td><td>Keep resale and rentals in the roadmap so revenue doesn't depend only on off-plan launches; stay asset-light.</td></tr>
+      <tr><td><b>Incumbent response</b></td><td>Property Finder or Huspy could launch a checkout within a year</td><td><span class="pill p-md">Medium</span></td><td>Speed, ops quality and trust brand; consider them as future acquirers, not only rivals.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 7 -->
+<section id="feasibility">
+  <h2><span class="n">07</span>Feasibility</h2>
+  <p class="sub">Scored by product line. Five bars is easy to execute and attractive; one bar is hard or unattractive.</p>
+  <div class="tbl score"><table>
+    <thead><tr><th>Product line</th><th>Regulatory</th><th>Supply</th><th>Demand</th><th>Economics</th><th>Call</th></tr></thead>
+    <tbody>
+      <tr><td><b>Off-plan "Reserve now" (Dubai)</b></td>
+        <td class="meter"><div class="meterbar" aria-label="4 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="3 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="4 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="5 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div></td>
+        <td><span class="pill p-lo">Launch first</span></td></tr>
+      <tr><td><b>Rentals "Rent now" + Ejari</b></td>
+        <td class="meter"><div class="meterbar" aria-label="4 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="2 of 5"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="5 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="2 of 5"><span class="on"></span><span class="on"></span><span></span><span></span><span></span></div></td>
+        <td><span class="pill p-md">Phase 2</span></td></tr>
+      <tr><td><b>Resale "Buy now" (pre-priced listings)</b></td>
+        <td class="meter"><div class="meterbar" aria-label="3 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="1 of 5"><span class="on"></span><span></span><span></span><span></span><span></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="4 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="4 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div></td>
+        <td><span class="pill p-md">Phase 2–3</span></td></tr>
+      <tr><td><b>iBuying (company buys and resells)</b></td>
+        <td class="meter"><div class="meterbar" aria-label="3 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="3 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="3 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div></td>
+        <td class="meter"><div class="meterbar" aria-label="1 of 5"><span class="on"></span><span></span><span></span><span></span><span></span></div></td>
+        <td><span class="pill p-hi">Avoid</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>What "Buy now" should mean in practice</h3>
+  <div class="journey">
+    <div>
+      <h4>Today (typical Dubai off-plan purchase)</h4>
+      <ol>
+        <li>Browse a portal, enquire, get called by several agents</li>
+        <li>Agent sends PDFs, price list may be stale</li>
+        <li>Visit sales centre or video call</li>
+        <li>Sign EOI, transfer booking deposit</li>
+        <li>Sign SPA, pay down payment + 4% DLD fee</li>
+        <li>Oqood registration chased by agent</li>
+        <li>Instalments tracked by buyer in spreadsheets</li>
+        <li>Handover, snagging, DEWA, Ejari or resale: on your own</li>
+      </ol>
+    </div>
+    <div>
+      <h4>Your product</h4>
+      <ol>
+        <li>Verified unit page with live price, all-in cost and payment plan</li>
+        <li>KYC with UAE Pass or passport e-KYC, in minutes</li>
+        <li><b>Reserve now</b>: deposit routed directly to developer escrow</li>
+        <li>SPA e-signed; Oqood/DLD fee paid in the same checkout</li>
+        <li>Order tracker: every instalment, construction progress, documents</li>
+        <li>Optional mortgage, Golden Visa, furnishing, insurance add-ons</li>
+        <li>Handover concierge: snagging, DEWA, title deed</li>
+        <li>One-click "lease it out" or "resell" when ready</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="diligence">
+  <h2><span class="n">08</span>Due diligence checklist</h2>
+  <p class="sub">Tick these off before committing capital. Each box is a question you should be able to answer in writing.</p>
+  <div class="dd">
+    <div><h4>Legal &amp; regulatory <span class="pill p-hi">Critical</span></h4><ul>
+      <li><input type="checkbox" id="dd1"><label for="dd1">Written legal opinion: can a RERA broker run a checkout that routes funds to escrow? Which CBUAE licence or partner is needed?</label></li>
+      <li><input type="checkbox" id="dd2"><label for="dd2">Licence path and cost: DET trade licence, RERA brokerage, office, manager certification, timeline</label></li>
+      <li><input type="checkbox" id="dd3"><label for="dd3">AML programme: goAML registration, KYC/EDD policy, REAR triggers, compliance officer</label></li>
+      <li><input type="checkbox" id="dd4"><label for="dd4">Data protection (PDPL, Federal Decree-Law 45 of 2021) and consumer-protection obligations</label></li>
+      <li><input type="checkbox" id="dd5"><label for="dd5">Off-plan cancellation rules (Law 13 of 2008, Art. 11) and who bears refund risk</label></li>
+      <li><input type="checkbox" id="dd6"><label for="dd6">Advertising rules: Trakheesi permits for every listing</label></li>
+    </ul></div>
+    <div><h4>Supply &amp; partners <span class="pill p-hi">Critical</span></h4><ul>
+      <li><input type="checkbox" id="dd7"><label for="dd7">3–5 developer LOIs: commission %, inventory access, booking-online acceptance, payout timing</label></li>
+      <li><input type="checkbox" id="dd8"><label for="dd8">Payments partner able to route to developer escrow and trustee accounts</label></li>
+      <li><input type="checkbox" id="dd9"><label for="dd9">Trustee centre partnership for resale closings</label></li>
+      <li><input type="checkbox" id="dd10"><label for="dd10">2–4 bank or mortgage-broker referral agreements</label></li>
+      <li><input type="checkbox" id="dd11"><label for="dd11">Rental partner for monthly payments (e.g. Keyper) and Ejari typing</label></li>
+    </ul></div>
+    <div><h4>Customer &amp; demand <span class="pill p-md">High</span></h4><ul>
+      <li><input type="checkbox" id="dd12"><label for="dd12">40–60 interviews: recent buyers (half overseas), tenants, sellers</label></li>
+      <li><input type="checkbox" id="dd13"><label for="dd13">15–20 interviews with brokers and 8–10 with developer sales directors</label></li>
+      <li><input type="checkbox" id="dd14"><label for="dd14">Smoke test: landing page + paid ads in 2 corridors; measure cost per qualified lead</label></li>
+      <li><input type="checkbox" id="dd15"><label for="dd15">Willingness test: would buyers reserve online without a site visit? At what price point?</label></li>
+    </ul></div>
+    <div><h4>Market, competition &amp; finance <span class="pill p-md">High</span></h4><ul>
+      <li><input type="checkbox" id="dd16"><label for="dd16">Pull DLD open data (Dubai Pulse / DXB Interact) to confirm segment sizes and developer shares</label></li>
+      <li><input type="checkbox" id="dd17"><label for="dd17">Mystery-shop Oliva, Huspy, PRYPCO, Emaar One and 3 brokerages end-to-end</label></li>
+      <li><input type="checkbox" id="dd18"><label for="dd18">Financial model: CAC, conversion, ops cost per deal, payout lag, 9% corporate tax, 5% VAT</label></li>
+      <li><input type="checkbox" id="dd19"><label for="dd19">Downside case: 15% price drop and 40% fewer off-plan launches</label></li>
+      <li><input type="checkbox" id="dd20"><label for="dd20">Professional indemnity insurance quote</label></li>
+    </ul></div>
+  </div>
+  <p class="note">Checkboxes are for your own working use in this browser and are not saved.</p>
+</section>
+
+<!-- 9 -->
+<section id="plan">
+  <h2><span class="n">09</span>Plan, milestones and actions</h2>
+  <p class="sub">24 months, gated. Do not start a phase until the previous gate is met.</p>
+  <div class="phases">
+    <div class="phase">
+      <div class="when"><b>Phase 0</b>Months 0–2</div>
+      <div><h3>Validate and de-risk</h3>
+        <ul>
+          <li>Run the interviews and smoke test from §08</li>
+          <li>Get the payments and licensing legal opinion</li>
+          <li>Mystery-shop the 6 closest competitors</li>
+          <li>Approach 10 tier-2 developers; aim for 3 LOIs</li>
+          <li>Recruit a RERA-certified broker-manager co-founder or early hire</li>
+        </ul>
+        <div class="gate"><b>Gate:</b> legal path confirmed · 3 developer LOIs · cost per qualified lead under AED 500 in at least one corridor</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="when"><b>Phase 1</b>Months 2–5</div>
+      <div><h3>Set up and build the MVP</h3>
+        <ul>
+          <li>DET licence, RERA brokerage registration, office, goAML registration, bank account</li>
+          <li>Sign payments partner and 2 mortgage partners</li>
+          <li>Build MVP: verified unit pages, all-in price calculator, e-KYC, "Reserve now" with escrow routing, order tracker</li>
+          <li>Manual ops desk for inventory sync and SPA/Oqood paperwork</li>
+          <li>Raise pre-seed to cover 18 months (size it from your Phase 0 model)</li>
+        </ul>
+        <div class="gate"><b>Gate:</b> licensed · 3 developers live with ≥ 300 units · first payment routed to escrow end-to-end in a test deal</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="when"><b>Phase 2</b>Months 5–9</div>
+      <div><h3>Launch off-plan in Dubai</h3>
+        <ul>
+          <li>Go live for 2 overseas corridors plus UAE residents</li>
+          <li>Close the first 25 deals; measure CAC, time-to-SPA, NPS</li>
+          <li>Add 5 more developers, including one tier-1 pilot</li>
+          <li>Launch mortgage pre-approval inside checkout</li>
+        </ul>
+        <div class="gate"><b>Gate:</b> 25 closed deals (≈AED 55m GMV, ≈AED 2m revenue) · CAC below 30% of net fee · NPS above 50</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="when"><b>Phase 3</b>Months 9–15</div>
+      <div><h3>Add resale and rentals</h3>
+        <ul>
+          <li>Pilot "Buy now" resale: exclusive, pre-priced, inspected listings in 3 communities; close via DLD Digital Sale and trustee partner</li>
+          <li>Launch "Rent now": verified rentals, online Ejari, monthly payments with a partner</li>
+          <li>Post-handover services: leasing, property management, resale</li>
+          <li>Raise seed round on traction</li>
+        </ul>
+        <div class="gate"><b>Gate:</b> 40 deals per month across lines · first 50 resale and 200 rental closings · repeat or referral share above 20%</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="when"><b>Phase 4</b>Months 15–24</div>
+      <div><h3>Scale</h3>
+        <ul>
+          <li>Abu Dhabi launch on the ADREC digital journey</li>
+          <li>Developer API integrations replacing manual sync</li>
+          <li>Add more overseas corridors with local referral partners</li>
+          <li>Prepare Series A; evaluate Saudi Arabia</li>
+        </ul>
+        <div class="gate"><b>Gate:</b> ≈170 deals per month run-rate (year-3 SOM pace) · contribution margin positive per deal</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Your next 30 days</h3>
+  <ol>
+    <li>Book a UAE real-estate and fintech lawyer for the payments/licensing opinion.</li>
+    <li>Interview 20 recent Dubai buyers, half of them overseas.</li>
+    <li>Sign up as a buyer on Oliva, Huspy and PRYPCO and document every step.</li>
+    <li>Contact 10 tier-2 developers' channel-sales heads to test commission and online booking appetite.</li>
+    <li>Build a one-page financial model using the unit economics in §03.</li>
+  </ol>
+</section>
+
+<!-- 10 -->
+<section id="sources">
+  <h2><span class="n">10</span>Sources</h2>
+  <p class="sub">Official sources (DLD, ADREC, WAM, Dubai Media Office) and established outlets were preferred. Items marked "industry blog" are brokerage or startup publications and should be treated as indicative only.</p>
+  <ol class="src">
+    <li id="s1"><a href="https://gulfnews.com/business/property/dubais-real-estate-market-hits-record-dh917b-in-2025-1.500406141">Gulf News: Dubai's real estate market hits record Dh917b in 2025</a></li>
+    <li id="s2"><a href="https://dxbinteract.com/news/dubai-property-market-records-2025-686-billion-sales">DXB Interact: Dubai property market records 2025 AED 686bn sales</a></li>
+    <li id="s3"><a href="https://www.bhomes.com/en/blog/market-reports/what-really-drove-dubais-property-market-in-2025">Betterhomes: What really drove Dubai's property market in 2025</a> (industry blog)</li>
+    <li id="s4"><a href="https://realestateclubdubai.com/blog/market-analysis/dubai-cash-vs-mortgage-buyers-2026-transaction-split-data">Real Estate Club Dubai: cash vs mortgage buyers</a> (industry blog); see also <a href="https://cavendishmaxwell.com/news/dubais-property-boom-leans-on-cash-as-mortgage-lending-lags">Cavendish Maxwell</a></li>
+    <li id="s5"><a href="https://www.emirates247.com/business/dubai-property-transactions-reach-aed4199-billion-in-first-half-of-2026/3800">Emirates 24|7: Dubai property transactions reach AED419.9bn in H1 2026</a></li>
+    <li id="s6"><a href="https://www.wam.ae/en/article/byu3sru-abu-dhabi-real-estate-hits-record-aed142-billion">WAM: Abu Dhabi real estate hits record AED142bn in 2025</a></li>
+    <li id="s7"><a href="https://gulfnews.com/business/property/dubai-rental-contracts-reach-dh126-billion-in-2025-on-strong-demand-1.500453384">Gulf News: Dubai rental contracts reach Dh126bn in 2025</a></li>
+    <li id="s8"><a href="https://www.onlinemarketplaces.com/articles/property-finder-secures-250-million-debt-financing-from-ares-credit-funds/">Online Marketplaces: Property Finder secures USD 250m from Ares</a></li>
+    <li id="s9"><a href="https://gulfnews.com/business/markets/dubizzle-group-postpones-planned-ipo-1.500317270">Gulf News: Dubizzle Group postpones planned IPO</a></li>
+    <li id="s10"><a href="https://enterpriseam.com/uae/2025/10/14/dubizzle-pulls-the-trigger-on-its-long-awaited-dubai-ipo/">Enterprise: Dubizzle IPO details and financials</a></li>
+    <li id="s11"><a href="https://techcrunch.com/2025/07/07/uae-proptech-huspy-raises-59m-to-scale-in-europe/">TechCrunch: Huspy raises USD 59m</a></li>
+    <li id="s12"><a href="https://gulfbusiness.com/en/2025/real-estate/generalcatalyst-backs-prypco-in-pre-seriesa-round/">Gulf Business: General Catalyst backs PRYPCO</a></li>
+    <li id="s13"><a href="https://gulfbusiness.com/en/2025/real-estate/prypco-launches-super-app-for-real-estate-agents">Gulf Business: PRYPCO launches PRYPCO One</a></li>
+    <li id="s14"><a href="https://joinoliva.com/en/about-us">Oliva: About us</a></li>
+    <li id="s15"><a href="https://www.wamda.com/en/2026/02/stake-closes-31-million-series-b-led-emirates-nbd">Wamda: Stake closes USD 31m Series B</a></li>
+    <li id="s16"><a href="https://gulfbusiness.com/en/2026/real-estate/uae-proptech-startup-keyper-raises-11m-series-a/">Gulf Business: Keyper raises USD 11m Series A</a></li>
+    <li id="s17"><a href="https://gulfbusiness.com/en/2026/real-estate-2/property-finder-introduces-mortgage-cashback-scheme-for-uae-first-time-homebuyers/">Gulf Business: Property Finder mortgage cashback</a></li>
+    <li id="s18"><a href="https://partechpartners.com/news/nawy-the-largest-proptech-in-africa-raises-a-52m-series-a-to-take-on-mena">Partech: Nawy raises USD 52m Series A</a></li>
+    <li id="s19"><a href="https://dubailand.gov.ae/en/news-media/dubai-land-department-unveils-digital-sale-service-on-dubai-now-app-at-gitex-global-2025">Dubai Land Department: Digital Sale service on DubaiNow</a></li>
+    <li id="s20"><a href="https://www.wam.ae/en/article/bm6n7kr-adrec-launches-digital-buy-sell-journey">WAM: ADREC launches Digital Buy &amp; Sell Journey</a></li>
+    <li id="s21"><a href="https://dlp.dubai.gov.ae/Legislation%20Reference/2007/Law%20No.%20%288%29%20of%202007%20Concerning%20Escrow%20Accounts%20for%20Real%20Estate%20Development%20in%20the%20Emirate%20of%20Dubai.html">Dubai Legislation Portal: Law No. 8 of 2007 on escrow accounts</a></li>
+    <li id="s22"><a href="https://gulfnews.com/amp/story/business%2Fproperty%2Ftrust-accounts-for-dubai-real-estate-brokers-is-it-necessary-1.62747321">Gulf News: Trust accounts for Dubai real estate brokers</a></li>
+    <li id="s23"><a href="https://joinoliva.com/en/learn/blog/dubai-real-estate-brokerage-regulations-2026">Oliva: Dubai brokerage regulations 2026</a> (industry blog)</li>
+    <li id="s24"><a href="https://amluae.com/aml-regulations-for-dnfbps-in-uae/">AML UAE: AML regulations for DNFBPs</a> (advisory firm)</li>
+    <li id="s25"><a href="https://www.propertyfinder.ae/blog/dld-fees-dubai/">Property Finder: DLD fees in Dubai</a></li>
+    <li id="s26"><a href="https://joinoliva.com/en/learn/blog/off-plan-sales-commission-developer-payments">Oliva: Off-plan sales commission</a> (industry blog)</li>
+    <li id="s27"><a href="https://enterpriseam.com/uae/2025/05/30/fitch-forecasts-15-correction-for-dubai-home-prices/">Enterprise: Fitch forecasts 15% correction</a>; <a href="https://economymiddleeast.com/news/dubai-real-estate-prices-to-drop-on-2026-supply-spike-says-fitch">Economy Middle East</a></li>
+    <li id="s28"><a href="https://www.mikedp.com/articles/2021/11/3/zillow-exits-ibuying-five-key-takeaways">Mike DelPrete: Zillow exits iBuying</a></li>
+    <li id="s29"><a href="https://realestateclubdubai.com/blog/market-analysis/dubai-international-property-buyers-2026-nationalities-52-percent">Real Estate Club Dubai: Who's buying Dubai property</a> (industry blog)</li>
+    <li id="s30"><a href="https://gulfnews.com/business/property/dubai-property-portals-urged-to-crack-down-on-misleading-verified-listings-1.500593234">Gulf News: Portals urged to crack down on misleading verified listings</a></li>
+    <li id="s31"><a href="https://www.mikedp.com/articles/2022/11/7/one-year-later-zillow-offers-amp-opendoor">Mike DelPrete: One year later, Zillow Offers and Opendoor</a></li>
+    <li id="s32"><a href="https://www.arabianbusiness.com/industries/real-estate/dubai-real-estate-dld-launches-new-property-tokenisation-project-in-middle-easts-first">Arabian Business: DLD tokenisation project</a></li>
+  </ol>
+  <footer>Estimates (fee pool, SAM, SOM, unit economics) are planning assumptions derived from the cited volumes and typical fee rates, not reported figures. This brief is research, not legal or investment advice.</footer>
+</section>
+</main>
+</div>
