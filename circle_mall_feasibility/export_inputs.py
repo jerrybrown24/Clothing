@@ -18,13 +18,15 @@ sheets["1 Store & lease setup"] = pd.DataFrame([
     ["GLA", 3598, "sq ft", "P&L sheet 'P & L' (Total Sqft)"],
     ["Lease anniversary", "8 Aug (lease year 8 Aug - 7 Aug)", "", "Sheet1 (2) start/end dates"],
     ["Old rent basis", 0.14, "% of sales (turnover rent)", "Sheet1 (2) Rent %; P&L FY'25 rent / sales"],
-    ["New rent - base", 190, "AED / sq ft / yr", "P&L sheet 'P & L' (Base Rent)"],
-    ["New rent - service charge", 41, "AED / sq ft / yr", "P&L sheet 'P & L' (Sc/ Sq ft)"],
-    ["New rent - marketing levy", 15, "AED / sq ft / yr", "P&L sheet 'P & L' (MKT/Sqft)"],
-    ["New rent - gross", 246, "AED / sq ft / yr", "Sum of the above"],
-    ["Renewal term", "1 year: 8 Aug 2026 - 7 Aug 2027", "", "User instruction"],
-    ["Projection horizon", 5, "lease years (to 7 Aug 2031)", "User instruction"],
-    ["Rent growth (projected years)", 0.05, "per year on gross rent", "User instruction"],
+    ["Scenario 1 rent, years 1 / 2 / 3", "246 / 290 / 304", "AED / sq ft / yr gross", "User instruction"],
+    ["Scenario 2 rent, years 1 / 2 / 3", "276 / 290 / 304", "AED / sq ft / yr gross", "User instruction"],
+    ["Service charge (held flat)", 41, "AED / sq ft / yr", "P&L sheet 'P & L' (Sc/ Sq ft)"],
+    ["Marketing levy (held flat)", 15, "AED / sq ft / yr", "P&L sheet 'P & L' (MKT/Sqft)"],
+    ["Renewal start", "8 Aug 2026", "", "User instruction"],
+    ["Horizon", 3, "lease years (to 7 Aug 2029)", "User instruction"],
+    ["Sales year 1", "Model forecast", "weighted ensemble of 8 methods", "Section 2"],
+    ["Sales year 2", 0.0, "no like-for-like growth (Al Khail Avenue mall opening)", "User instruction"],
+    ["Sales year 3", -0.10, "10% decline on year 2 (Al Khail Avenue mall)", "User instruction"],
     ["Turnover rent clause", 0.12, "higher of base rent or 12% of sales", "Scenario / Circle Mall Rent sheets (TOR%)"],
     ["Tax rate used for PAT", 0.09, "UAE corporate tax, store level", "Assumption (UAE CT 9%)"],
     ["Data cut-off", "Aug-2026", "Sep-26 excluded (partial month)", "COG file"],
@@ -110,7 +112,7 @@ sheets["10 Online channels"] = on.pivot_table(index="MONTH_ID", columns="STORE_L
 # 11. External drivers --------------------------------------------------------------------
 drv = [[d["name"], d["value"] / 100, d["weight"], d["value"] * d["weight"] / 100, d["note"]] for d in R["drivers"]]
 drv += [[a["name"], a["value"] / 100, "", a["value"] / 100, "Deduction (analyst judgement)"] for a in R["adjust"]]
-drv += [["External growth rate (total)", R["macro_g"] / 100, "", R["macro_g"] / 100, "Used for years 2-3 (50% blend) and years 4-5 (100%)"]]
+drv += [["External growth rate (total)", R["macro_g"] / 100, "", R["macro_g"] / 100, "Reference only: not used for years 2-3, which follow the Al Khail Avenue assumption"]]
 sheets["11 External growth drivers"] = pd.DataFrame(drv, columns=["Driver", "Growth p.a.", "Weight", "Contribution", "Basis / source"])
 
 # 12-14. Derived outputs --------------------------------------------------------------------
@@ -118,17 +120,21 @@ mods = [[k, v["family"], v["mape"] / 100, v["weight"], *v["lease_years"]] for k,
 mods.append(["Weighted ensemble", "", R["ensemble"]["mape"] / 100, 1.0, *R["ensemble"]["lease_years"]])
 sheets["12 Model backtest (derived)"] = pd.DataFrame(mods, columns=["Method", "Family", "Backtest MAPE Jan-Aug 26", "Ensemble weight",
                                                                    "LY 26-27", "LY 27-28", "LY 28-29"])
-sheets["13 Monthly forecast (derived)"] = pd.DataFrame({"Month": R["fut_months_ext"], "Forecast net sales (AED)": R["forecast_monthly"]})
-P = R["pnl"]["base"]["New · 246"]["s1"]; L0 = R["ly0"]
+L0 = R["ly0"]
 cols = ["sales", "gm", "ni", "Employee expense", "rent", "Advertising & marketing", "Other opex", "Shared common", "Shared others",
         "total_exp", "store_profit", "dep", "fin", "net", "rent_psf", "rent_to_sales", "rent_to_ni"]
 names = ["Net sales", "Gross margin", "Net Income (Income)", "Employee expense", "Rent (gross)", "Advertising & marketing", "Other opex",
          "Shared common", "Shared others", "Total expense", "Store / cash profit", "Depreciation", "Finance", "Net profit (pre-tax)",
          "Rent / sq ft", "Rent-to-sales", "Rent-to-income"]
-ly = pd.DataFrame({"Line": names, "8 Aug 25 - 7 Aug 26 (actual, old rent)": [L0[c] for c in cols],
-                   **{f"8 Aug {26+i} - 7 Aug {27+i} ({'renewal' if i == 0 else 'projected'})": [P[i][c] for c in cols] for i in range(5)}})
-pat = ["PAT (9% tax)", L0["net"] * 0.91, *[p["net"] * 0.91 for p in P]]
-sheets["14 Lease-year P&L (derived)"] = pd.concat([ly, pd.DataFrame([pat], columns=ly.columns)])
+patf = lambda d: d["net"] * 0.91 if d["net"] > 0 else d["net"]
+for sc in ("S1", "S2"):
+    P = R["pnl"]["base"][sc]["s1"]
+    ly = pd.DataFrame({"Line": names, "8 Aug 25 - 7 Aug 26 (actual, old rent)": [L0[c] for c in cols],
+                       **{f"Year {i+1}: 8 Aug {26+i} - 7 Aug {27+i}": [P[i][c] for c in cols] for i in range(3)}})
+    sheets[f"14{'ab'[sc == 'S2']} Lease-year P&L {sc} (derived)"] = pd.concat([ly, pd.DataFrame([["PAT (9% tax)", patf(L0), *[patf(p) for p in P]]], columns=ly.columns)])
+sheets["13 Monthly forecast (derived)"] = pd.DataFrame({"Month": R["fut_months_ext"], "Adopted forecast net sales (AED)": R["forecast_monthly"]})
+sheets["13b Lease-year sales (derived)"] = pd.DataFrame({"Lease year": ["8 Aug 26 - 7 Aug 27", "8 Aug 27 - 7 Aug 28", "8 Aug 28 - 7 Aug 29"],
+    "Adopted sales": R["scenarios"]["base"][:3], "Model + market trend (reference)": R["scenarios"]["trend"][:3]})
 
 # write ----------------------------------------------------------------------------------
 out = "Circle_Mall_Inputs.xlsx"

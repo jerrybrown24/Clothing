@@ -13,13 +13,17 @@ R = json.load(open("results.json"))
 SQFT = 3598
 TOR = 0.12
 KEYS = ["Employee expense", "Advertising & marketing", "Other opex", "Shared common", "Shared others"]
-M = pd.period_range("2025-01", "2031-08", freq="M")
-NY = 5                                            # lease years projected (year 1 = the 1-year renewal)
+M = pd.period_range("2025-01", "2029-08", freq="M")
+NY = 3                                            # lease years shown (year 1 = the renewal)
 # rent options (Scenario / Circle Mall Rent sheets). base, SC, MKT per sqft per lease year
-GROWTH = 0.05                                     # assumed rental growth, every year, on gross rent
+# Two rent scenarios, gross AED / sq ft / year for years 1-3 (user input). Service charge (41) and
+# marketing levy (15) are held at today's level; base rent is the remainder.
+SC, MKT = 41, 15
+SCEN_PSF = {"S1": [246, 290, 304], "S2": [276, 290, 304]}
 OPTIONS = {
-    "New · 246":       dict(label="New rent, +5% a year", psf=[tuple(round(c * (1 + GROWTH) ** k, 4) for c in (190, 41, 15)) for k in range(NY)]),
-    "Earlier · 14%":   dict(label="Earlier turnover rent", tor_only=0.14),
+    "S1": dict(label="Scenario 1: 246 / 290 / 304", psf=[(g - SC - MKT, SC, MKT) for g in SCEN_PSF["S1"]]),
+    "S2": dict(label="Scenario 2: 276 / 290 / 304", psf=[(g - SC - MKT, SC, MKT) for g in SCEN_PSF["S2"]]),
+    "Earlier · 14%": dict(label="Earlier turnover rent", tor_only=0.14),
 }
 CAPEX = 2_000_000; CAPEX_LIFE = 5
 
@@ -35,11 +39,9 @@ Y26 = dict(sales=rows["Sales"], gm=rows["Gross Margin"], ni=rows["Net Income"], 
 AUGDEC26 = dict(sales=2209715.49, gm=1635655.72, ni=1415861.99, dep=0.0, fin=1115.0,
                 **dict(zip(KEYS, [151647.0, 31481.69, 110781.10, 74543.30, 30687.36])))
 YR = {2027: [382176.05, 91379.44, 280819.93, 203661.90, 93040.68],
-      2030: [405568.28, 96972.60, 298008.36, 216127.63, 98735.52],
-      2031: [413679.65, 98912.05, 303968.53, 220450.18, 100710.23],
       2028: [389819.57, 93207.03, 286436.33, 207735.13, 94901.50],
       2029: [397615.96, 95071.17, 292165.06, 211889.84, 96799.53]}
-DEPFIN = {2027: (15213.98, 4878.21), 2028: (0, 0), 2029: (0, 0), 2030: (0, 0), 2031: (0, 0)}
+DEPFIN = {2027: (15213.98, 4878.21), 2028: (0, 0), 2029: (0, 0)}
 GM_PCT = 3377686.51 / 4564441.23          # 74.0%  (P&L Yr'27+)
 NI_PCT = 2921242.39 / 4564441.23          # 64.0%
 
@@ -56,15 +58,25 @@ def lease_idx(p, after_8th):
     y = p.year if (p.month > 8 or (p.month == 8 and after_8th)) else p.year - 1
     return y - 2026
 
+def seg_scale(scen):
+    """Scale factor per lease year so each 8 Aug - 7 Aug total hits the adopted sales assumption.
+    Applied per day-split segment (not per month) so the anniversary month is split correctly."""
+    tgt = R["scenarios"][scen]
+    return [(tgt[0] - POST * act[AUG26]) / (ens_ly[0] - POST * act[AUG26]), tgt[1] / ens_ly[1], tgt[2] / ens_ly[2]]
+
+def seg_sales(scen):
+    """[(period, weight, lease_idx, sales)] for every day-split segment."""
+    f = seg_scale(scen); out = []
+    for p, w, k in segments():
+        if p.year == 2025: v = act[p] * fy25_scale * w
+        elif p <= AUG26: v = act[p] * w
+        else: v = ens[p] * w * f[min(k, 2)]
+        out.append((p, w, k, v))
+    return out
+
 def monthly_sales(scen):
-    tgt = R["scenarios"][scen]; out = {}
-    f = [(tgt[0] - POST * act[AUG26]) / (ens_ly[0] - POST * act[AUG26]), tgt[1] / ens_ly[1], tgt[2] / ens_ly[2]]
-    for p in M:
-        k = lease_idx(p, True)
-        if p.year == 2025: out[p] = act[p] * fy25_scale
-        elif p <= AUG26: out[p] = act[p]
-        elif k <= 2 and p in ens.index: out[p] = ens[p] * f[min(k, 2)]
-        else: out[p] = out[p - 12] * tgt[min(k, NY - 1)] / tgt[min(k, NY - 1) - 1]   # same month last year x growth
+    out = {}
+    for p, w, k, v in seg_sales(scen): out[p] = out.get(p, 0.0) + v
     return out
 
 def ly_rent(opt, ly_sales):
@@ -83,13 +95,11 @@ def segments():
         else: yield p, 1.0, lease_idx(p, True)
 
 def monthly_pnl(scen, opt, capex):
-    sales = monthly_sales(scen)
-    segs = list(segments())
-    ly_s = [sum(sales[p] * w for p, w, k in segs if k == j) for j in range(NY)]
+    segs = seg_sales(scen)
+    ly_s = [sum(v for p, w, k, v in segs if k == j) for j in range(NY)]
     lr = ly_rent(opt, ly_s)
     rows = []
-    for p, w, k in segs:
-        s = sales[p] * w
+    for p, w, k, s in segs:
         r = dict(p=p, k=k, sales=s)
         if p.year == 2025:
             r.update(gm=s * FY25["gm"] / FY25["sales"], ni=s * FY25["ni"] / FY25["sales"],
@@ -144,7 +154,7 @@ for scen in ("base",):
 # breakeven: max gross rent/sqft (LY1) for store profit = 0 / 10% of sales, and rent-to-sales 18/20%
 be = {}
 for scen in ("base",):
-    y = out[scen]["New · 246"]["s1"][0]
+    y = out[scen]["S1"]["s1"][0]
     s = y["sales"]; head_room = y["store_profit"] + y["rent"]      # store profit before rent
     be[scen] = dict(sales=s, zero=head_room / SQFT, ten=(head_room - 0.10 * s) / SQFT,
                     capex_zero=(head_room - CAPEX / CAPEX_LIFE - y["dep"] - y["fin"]) / SQFT,
@@ -155,7 +165,8 @@ bench = [
     dict(store="Dubai Mall", sqft=3401, psf=474.13, ttm=R["ttm"]["DUBAI MALL"]),
     dict(store="Mirdif City Centre", sqft=6757, psf=261.78, ttm=R["ttm"]["MIRDIFF CITY CENTRE"]),
     dict(store="Circle Mall · earlier (14% TOR)", sqft=3598, psf=0.14 * R["ttm"]["CIRCLE MALL"] / 3598, ttm=R["ttm"]["CIRCLE MALL"]),
-    dict(store="Circle Mall · new rent", sqft=3598, psf=246.00, ttm=R["ttm"]["CIRCLE MALL"]),
+    dict(store="Circle Mall · Scenario 1, year 1", sqft=3598, psf=246.00, ttm=R["ttm"]["CIRCLE MALL"]),
+    dict(store="Circle Mall · Scenario 2, year 1", sqft=3598, psf=276.00, ttm=R["ttm"]["CIRCLE MALL"]),
 ]
 for b in bench:
     b["rent"] = b["sqft"] * b["psf"]; b["sales_psf"] = b["ttm"] / b["sqft"]; b["rts"] = b["rent"] / b["ttm"]
@@ -172,12 +183,13 @@ for scen in out:
                                 rts_avg=sum(y["rent"] for y in d["s1"]) / sum(y["sales"] for y in d["s1"]))
 _ms = monthly_sales("base")
 R["fut_months_ext"] = [str(p) for p in M if p > AUG26]
-R["forecast_monthly"] = [float(_ms[p]) for p in M if p > AUG26]   # final forecast by month, Sep-26 .. Aug-31
+R["forecast_monthly"] = [float(_ms[p]) for p in M if p > AUG26]   # adopted forecast by month, Sep-26 .. Aug-29
 R.update(pnl=out, breakeven=be, bench=bench, summary=summary,
          options={k: v["label"] for k, v in OPTIONS.items()},
          option_psf={k: [a + b + c for a, b, c in v["psf"]] if "psf" in v else None for k, v in OPTIONS.items()},
          fy=fy, ly0=ly0,
          consts=dict(sqft=SQFT, gm_pct=GM_PCT, ni_pct=NI_PCT, tor=TOR, capex=CAPEX, capex_life=CAPEX_LIFE))
 json.dump(R, open("results.json", "w"), indent=1)
-for y in out["base"]["New · 246"]["s1"]:
+for o in ("S1", "S2"):
+  for y in out["base"][o]["s1"]:
     print(f"sales {y['sales']:>12,.0f} rent {y['rent']:>10,.0f} psf {y['rent_psf']:6.2f} RtS {y['rent_to_sales']:.1%} store {y['store_profit']:>10,.0f} net {y['net']:>10,.0f}")

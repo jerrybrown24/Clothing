@@ -179,7 +179,10 @@ g2 = 0.5 * ens_g2 + 0.5 * macro_g / 100; g3 = 0.5 * ens_g3 + 0.5 * macro_g / 100
 base = [ens_ly[0], ens_ly[0] * (1 + g2), ens_ly[0] * (1 + g2) * (1 + g3)]
 # Years 4-5 (8 Aug 2029 - 7 Aug 2031): 32 months of history can't support model trends that far
 # out, so these years grow at the external market rate only.
-base += [base[2] * (1 + macro_g / 100), base[2] * (1 + macro_g / 100) ** 2]
+trend = list(base)                     # model + market trend (reference only)
+# Adopted sales assumption (management input): Al Khail Avenue mall opening near Circle Mall.
+# Year 1 = model forecast, Year 2 = no like-for-like growth, Year 3 = -10% on Year 2.
+base = [base[0], base[0], base[0] * 0.90]
 # Scenarios: bear = lowest credible model in Y1 & half the macro growth; bull = highest credible model & macro +2pp
 cred = [k for k in res if w[k] > 0]
 bear_y1 = min(res[k]["lease_years"][0] for k in cred); bull_y1 = max(res[k]["lease_years"][0] for k in cred)
@@ -204,7 +207,7 @@ out = dict(
     models=res, ensemble=dict(backtest=[float(v) for v in ens_bt], forecast=[float(v) for v in ens_fc],
                               mape=mape(test.values, ens_bt), lease_years=ens_ly),
     drivers=drivers, adjust=adjust, macro_g=macro_g, g2=g2, g3=g3,
-    scenarios=dict(bear=bear, base=base, bull=bull), hist_ly=hist_ly, peer_yoy=peer_yoy, ttm=ttm,
+    scenarios=dict(bear=bear, base=base, bull=bull, trend=trend), hist_ly=hist_ly, peer_yoy=peer_yoy, ttm=ttm,
     ff_ttm=ff_ttm, sales_per_visitor=conv, footfall=[float(v) if pd.notna(v) else None for v in F[CM].reindex(y.index).values],
     chain_lfl=[float(v) for v in chain.values], peers=peers,
 )
@@ -214,6 +217,6 @@ for k, v in res.items():
     print(f"{k:45s} {v['mape']:6.1f} {v['weight']:5.2f}  " + "  ".join(f"{x/1e6:8.3f}" for x in v["lease_years"]))
 print("ENSEMBLE mape", round(out["ensemble"]["mape"], 1), [round(x/1e6, 3) for x in ens_ly])
 print("macro g", macro_g, "g2 g3", g2, g3)
-print("base", [round(x/1e6,3) for x in base], "bear", [round(x/1e6,3) for x in bear], "bull", [round(x/1e6,3) for x in bull])
+print("base", [round(x/1e6,3) for x in base], "trend", [round(x/1e6,3) for x in trend], "bear", [round(x/1e6,3) for x in bear], "bull", [round(x/1e6,3) for x in bull])
 print({k: round(v*100,1) for k,v in peer_yoy.items()})
 print({k: round(v/1e6,2) for k,v in ttm.items()}, conv)
