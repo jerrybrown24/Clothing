@@ -1,0 +1,303 @@
+<title>Off-plan and Ready Flowcharts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a vertical flowchart spine on the left (step boxes joined by arrows, diamonds for decisions), with the challenge and best practice for each step aligned on the same row to the right. Stacks on phones. */
+:root{
+  --bg:#f4f6f8; --surface:#ffffff; --sunk:#e9edf1;
+  --ink:#14202b; --muted:#566370; --line:#cfd7df;
+  --op:#1f4f8f; --op-soft:#e1eaf6;
+  --rs:#0b6b5c; --rs-soft:#ddf0eb;
+  --bad:#a8361f; --bad-soft:#fbe6df;
+  --good:#1f7a3f; --good-soft:#e2f2e6;
+  --dec:#8a5a0b; --dec-soft:#f5ebd6;
+  --display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e141a; --surface:#151d25; --sunk:#1c2630;
+    --ink:#e3e9ee; --muted:#9aa8b5; --line:#2e3c49;
+    --op:#7fb0ef; --op-soft:#16263b;
+    --rs:#5fcbb5; --rs-soft:#12302b;
+    --bad:#f29a85; --bad-soft:#3a1e17;
+    --good:#6cc98a; --good-soft:#15301e;
+    --dec:#e0b45e; --dec-soft:#33280f;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e141a; --surface:#151d25; --sunk:#1c2630;
+  --ink:#e3e9ee; --muted:#9aa8b5; --line:#2e3c49;
+  --op:#7fb0ef; --op-soft:#16263b;
+  --rs:#5fcbb5; --rs-soft:#12302b;
+  --bad:#f29a85; --bad-soft:#3a1e17;
+  --good:#6cc98a; --good-soft:#15301e;
+  --dec:#e0b45e; --dec-soft:#33280f;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14.5px;line-height:1.5}
+a{color:var(--op)}
+:focus-visible{outline:2px solid var(--op);outline-offset:2px;border-radius:4px}
+.page{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 72px}
+header.cover{display:grid;gap:10px;padding-bottom:18px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0}
+h1{font-family:var(--display);font-weight:650;font-size:clamp(28px,4vw,40px);line-height:1.1;margin:0;text-wrap:balance}
+.lede{font-size:16.5px;color:var(--muted);max-width:72ch;margin:0}
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.jump a{text-decoration:none;font-weight:600;font-size:13.5px;border-radius:999px;padding:6px 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.jump a.op{border-color:var(--op);color:var(--op)}
+.jump a.rs{border-color:var(--rs);color:var(--rs)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--muted);margin-top:4px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+section.chart{margin-top:30px;scroll-margin-top:16px}
+.chart-head{border-radius:12px 12px 0 0;padding:14px 18px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px;align-items:baseline}
+.chart.op .chart-head{background:var(--op-soft)}
+.chart.rs .chart-head{background:var(--rs-soft)}
+.chart-head h2{margin:0;font-family:var(--display);font-size:24px}
+.chart-head p{margin:0;font-size:13px;color:var(--muted);max-width:60ch}
+.chart-body{background:var(--surface);border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:8px 18px 22px}
+
+.cols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr);gap:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 0 6px;border-bottom:1px solid var(--line)}
+.cols .c{color:var(--bad)} .cols .b{color:var(--good)}
+
+.phase{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin:18px 0 4px;display:flex;align-items:center;gap:10px}
+.phase::after{content:"";flex:1;height:1px;background:var(--line)}
+.chart.op .phase{color:var(--op)} .chart.rs .phase{color:var(--rs)}
+
+.row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start;position:relative;padding-bottom:22px}
+/* connector arrow below each node */
+.row .node{position:relative}
+.row:not(.last) .node::after{content:"";position:absolute;left:24px;bottom:-22px;height:22px;width:2px;background:var(--line)}
+.row:not(.last) .node::before{content:"";position:absolute;left:19px;bottom:-22px;border:6px solid transparent;border-top:7px solid var(--line);border-bottom:0;z-index:1}
+
+.node{border-radius:10px;padding:10px 12px 11px;border:1.5px solid var(--line);background:var(--surface);min-width:0}
+.chart.op .node.step{border-color:var(--op)}
+.chart.rs .node.step{border-color:var(--rs)}
+.node .top{display:flex;gap:8px;align-items:baseline}
+.node .n{font-family:var(--mono);font-size:11px;font-weight:600;min-width:22px;height:22px;border-radius:50%;display:inline-grid;place-items:center;flex:none}
+.chart.op .node .n{background:var(--op-soft);color:var(--op)}
+.chart.rs .node .n{background:var(--rs-soft);color:var(--rs)}
+.node h3{margin:0;font-size:14.5px;line-height:1.3}
+.node ul{margin:6px 0 0;padding-left:18px;font-size:13px;display:grid;gap:2px;color:var(--ink)}
+.meta{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.meta span{font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:999px;background:var(--sunk);color:var(--muted)}
+.meta span.money{color:var(--ink);font-weight:600}
+
+.node.decision{border:1.5px dashed var(--dec);background:var(--dec-soft)}
+.node.decision .n{background:var(--dec);color:var(--surface);border-radius:3px;transform:rotate(45deg)}
+.node.decision .n b{transform:rotate(-45deg);display:block}
+.node.decision h3{color:var(--ink)}
+.branch{display:grid;gap:6px;margin-top:8px}
+.branch div{font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:6px 9px}
+.branch b{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dec);display:block}
+
+.node.end{text-align:left;border-radius:999px;padding:10px 16px;font-weight:600}
+.chart.op .node.end{background:var(--op-soft);border-color:var(--op)}
+.chart.rs .node.end{background:var(--rs-soft);border-color:var(--rs)}
+
+.cell{border-radius:10px;padding:10px 12px;font-size:13px;min-width:0}
+.cell.c{background:var(--bad-soft)}
+.cell.b{background:var(--good-soft)}
+.cell .lbl{display:none;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-bottom:2px}
+.cell.c .lbl{color:var(--bad)} .cell.b .lbl{color:var(--good)}
+.cell .src{display:block;margin-top:4px;font-size:11.5px;color:var(--muted)}
+.cell.empty{background:transparent}
+
+.note{font-size:12.5px;color:var(--muted);max-width:90ch;margin-top:26px}
+ol.src{font-size:12.5px;color:var(--muted);padding-left:24px;display:grid;gap:3px}
+
+@media (max-width:860px){
+  .cols{display:none}
+  .row{grid-template-columns:minmax(0,1fr);gap:6px;padding-bottom:26px}
+  .row:not(.last) .node::after,.row:not(.last) .node::before{display:none}
+  .row:not(.last)::after{content:"↓";position:absolute;left:18px;bottom:2px;color:var(--muted);font-size:16px}
+  .cell .lbl{display:block}
+  .cell.empty{display:none}
+}
+@media (max-width:640px){ .page{padding-inline:16px} }
+</style>
+
+<div class="page">
+<header class="cover">
+  <p class="eyebrow">Superapp buyer journeys · Dubai</p>
+  <h1>Off-plan and ready purchases, step by step</h1>
+  <p class="lede">Two flowcharts. Follow the boxes top to bottom; diamonds are decisions. Each row shows what can go wrong at that step and how the app should handle it.</p>
+  <div class="jump"><a class="op" href="#offplan">Off-plan flowchart</a><a class="rs" href="#ready">Ready flowchart</a></div>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--op)"></i>Off-plan step</span>
+    <span><i class="sw" style="background:var(--rs)"></i>Ready step</span>
+    <span><i class="sw" style="background:var(--dec)"></i>Decision</span>
+    <span><i class="sw" style="background:var(--bad)"></i>Challenge</span>
+    <span><i class="sw" style="background:var(--good)"></i>Best practice</span>
+  </div>
+</header>
+
+<section class="chart op" id="offplan">
+  <div class="chart-head"><h2>Off-plan (buying from a developer)</h2><p>Money goes to the project escrow account and is released as the building goes up. Typical time to keys: 2–4 years.</p></div>
+  <div class="chart-body" data-flow="offplan"></div>
+</section>
+
+<section class="chart rs" id="ready">
+  <div class="chart-head"><h2>Ready (buying from an owner)</h2><p>Money and title swap on one day at a trustee centre, or in-app via DubaiNow when eligible. Typical time to keys: 1–3 weeks cash, 4–8 weeks with a mortgage.</p></div>
+  <div class="chart-body" data-flow="ready"></div>
+</section>
+
+<p class="note">Fees and rules change. Figures shown (4% DLD fee, AED 580 title deed, trustee AED 4,000 + VAT, mortgage registration 0.25% + AED 290, 50% off-plan LTV, 80% / 70% ready expat LTV) were current at the time of research; confirm with DLD and banks before quoting customers.</p>
+<ol class="src">
+  <li><a href="https://dlp.dubai.gov.ae/Legislation%20Reference/2007/Law%20No.%20%288%29%20of%202007%20Concerning%20Escrow%20Accounts%20for%20Real%20Estate%20Development%20in%20the%20Emirate%20of%20Dubai.html">Dubai Law No. 8 of 2007 (escrow)</a> · <a href="https://www.tamimi.com/law-update/september/articles/key-issues-investors-need-know-buying-real-estate-off-plan-part-1-know-rights-real-estate-investors-dubai-guide/">Al Tamimi on off-plan buyer rights</a></li>
+  <li><a href="https://www.propertyfinder.ae/blog/dld-fees-dubai/">Property Finder: DLD fees</a> · <a href="https://tamimi.com/law-update-articles/the-new-uae-mortgage-regulations">Al Tamimi: UAE mortgage regulations</a></li>
+  <li><a href="https://atblegal.com/blog/real-estate-law/uae-spa-exit-resale">ATB Legal: Form F and resale deposits</a> · <a href="https://dubailand.gov.ae/en/eservices/buy-or-sell-property-via-dubai-now/">DLD: Buy or sell via DubaiNow</a></li>
+  <li>Challenges from Reddit: <a href="https://www.reddit.com/r/dubai/comments/1ctxzob/worst_experience_buying_property/">Worst experience buying property</a>, <a href="https://www.reddit.com/r/dubairealestate/comments/1ssryxb/agent_insisting_to_cancel_contract_before_transfer/">Agent insisting to cancel contract</a>, <a href="https://www.reddit.com/r/dubai/comments/1olhhp9/regret_in_buying_a_damac_property/">Regret in buying a DAMAC property</a>, <a href="https://www.reddit.com/r/dubairealestate/comments/1kwh5zy/what_is_the_worst_about_buying_a_property_in_dubai/">What is the worst about buying in Dubai</a>, <a href="https://www.reddit.com/r/dubairealestate/comments/1t54fx2/traffic_is_back_and_so_are_the_lies/">Traffic is back and so are the lies</a></li>
+  <li>News: <a href="https://www.khaleejtimes.com/business/realty/dubai-want-to-invest-in-off-plan-property-red-flags-risks-to-watch-out-for-to-secure-dream-home">Khaleej Times: off-plan red flags</a> · <a href="https://gulfnews.com/business/property/dubai-property-portals-urged-to-crack-down-on-misleading-verified-listings-1.500593234">Gulf News: misleading verified listings</a></li>
+</ol>
+</div>
+
+<script>
+(function(){
+  // Each item: {phase} | {t, d:[details], m:[meta chips], money, c, b, src} | {dec, yes, no, c, b} | {end}
+  const FLOWS = {
+    offplan: [
+      {phase:'Plan and choose'},
+      {t:'Set budget and payment route', d:['Cash with a payment plan, or a handover mortgage','Off-plan mortgages are capped at 50% of value','Add 4% DLD fee + admin and future service charges'], m:['Buyer'],
+        c:'Buyers budget for the price only and are surprised by the 4% DLD fee, service charges and the large handover payment.',
+        b:'All-in cost calculator on every unit, with the full payment schedule and estimated service charges.'},
+      {t:'Shortlist a project and verify it', d:['RERA project number and escrow account number','Project status and % complete on Dubai REST','Developer delivery track record','Madmoun QR on every ad'], m:['Buyer','Platform checks'],
+        c:'Launch hype, misleading "verified" ads and inflated rental-yield claims.',
+        b:'Show DLD-sourced project data and the developer\'s past delivery delays on the unit page.', src:'Gulf News; r/dubairealestate "Traffic is back and so are the lies"'},
+      {t:'Pick unit and payment plan', d:['Floor plan, view, size, specification','Construction-linked, time-linked or post-handover plan','Check DLD fee waiver or other incentives'], m:['Buyer'],
+        c:'Price lists and availability change daily; units shown as available are already sold.',
+        b:'Live inventory sync with the developer; lock the price for a short hold when the buyer starts checkout.'},
+      {phase:'Reserve'},
+      {t:'KYC and AML checks', d:['Passport, Emirates ID or visa, proof of address','Source of funds','PEP and sanctions screening; report cash ≥ AED 55k or any crypto'], m:['Buyer','Platform'],
+        c:'Overseas buyers have no Emirates ID or UAE Pass; source-of-funds requests arrive late and stall the deal.',
+        b:'Passport e-KYC with video check, and a document checklist shown before the buyer commits.'},
+      {t:'Pay booking deposit', d:['Usually 5–10% of price','Paid only into the project escrow account','Booking form or EOI signed'], m:['Buyer → Project escrow'], money:'5–10%',
+        c:'Money sent to an agent or a developer\'s general account; unclear refund terms if the SPA isn\'t signed.',
+        b:'Checkout pays straight to the registered escrow account and shows the receipt and refund terms in-app.'},
+      {phase:'Contract and register'},
+      {t:'Sign the SPA', d:['Issued 2–4 weeks after booking','Price, payment schedule, completion date','Delay compensation, cancellation and resale terms','E-signed by buyer and developer'], m:['Buyer + Developer'],
+        c:'SPAs are long and one-sided on delays and cancellation; buyers sign without reading.',
+        b:'Plain-language SPA summary with key clauses flagged; optional lawyer review add-on.'},
+      {t:'Pay down payment and 4% DLD fee', d:['First instalment into escrow','4% DLD fee + admin (some developers waive it)'], m:['Buyer → Escrow','Buyer → DLD'], money:'4% + plan',
+        c:'Confusion over who pays the DLD fee and whether waivers apply.',
+        b:'Confirm the fee split in the SPA and show it as a separate line at checkout.'},
+      {t:'Oqood registration', d:['Developer registers the SPA with DLD','Oqood certificate issued in buyer\'s name','Proves interim ownership before a title deed exists'], m:['Developer → DLD'],
+        c:'Buyers don\'t know whether their unit is registered.',
+        b:'Show the Oqood certificate in-app and link to verification on Dubai REST.'},
+      {phase:'Construction'},
+      {t:'Pay instalments into escrow', d:['Per the payment plan','Escrow releases money only against engineer-certified progress','5% held for one year after completion'], m:['Buyer → Escrow'], money:'Per plan',
+        c:'Payment stress when markets dip; missed instalments trigger penalties and possible cancellation.',
+        b:'Reminders, auto-pay, and early visibility of resale and financing options.', src:'r/dubairealestate off-plan instalment thread'},
+      {t:'Track construction', d:['Project % complete from DLD','Developer updates and site photos','Expected completion date'], m:['Platform'],
+        c:'Delays of 6 months to 2+ years are common; developers go quiet.',
+        b:'Push construction updates and DLD % complete; alert buyers when progress stalls.', src:'r/dubai "Regret in buying a DAMAC property"; Khaleej Times'},
+      {dec:'Sell before handover?', yes:'Assignment: check the developer\'s paid threshold (often 30–40%), get the developer NOC and pay its fee, new buyer pays 4% DLD on the resale price and takes over the plan.', no:'Continue to handover.',
+        c:'Each developer has different resale thresholds and fees; buyers pay the seller before the NOC is issued.',
+        b:'Show resale eligibility and fees from day one; release the seller\'s money only after the NOC.'},
+      {dec:'Finance the handover payment with a mortgage?', yes:'Pre-approval 3–6 months before completion, bank valuation, final offer letter, bank pays into escrow, mortgage registered (0.25% of loan + AED 290).', no:'Pay the final balance in cash.',
+        c:'Valuation comes in below price; bank won\'t lend on the project.',
+        b:'Start financing early; partner banks pre-approve the project; show likely valuation from DLD data.'},
+      {phase:'Handover'},
+      {t:'Completion notice and final payment', d:['Building completion certificate issued','Final balance paid into escrow','Service charge account opened'], m:['Buyer → Escrow'], money:'Balance',
+        c:'Final payment due on short notice; service charges higher than buyers were told.',
+        b:'Advance notice of the completion date and the RERA service-charge figure shown before purchase.', src:'r/dubairealestate "What is the worst about buying"'},
+      {t:'Inspection and snagging', d:['Snagging window set in the SPA','Independent inspection report','Defects listed for the developer to fix'], m:['Buyer + Inspector'],
+        c:'Defects at handover; buyers miss the snagging deadline and pay for repairs themselves.',
+        b:'Book an independent snagging inspection automatically and track the deadline.'},
+      {t:'Keys and utilities', d:['Keys and access cards','DEWA activation','Move-in permit; Ejari if leasing'], m:['Buyer'],
+        c:'Several separate counters and portals to visit.',
+        b:'One in-app checklist that books DEWA, permits and movers.'},
+      {t:'Title deed issued', d:['Oqood converted to a title deed','Mortgage noted on the deed if financed','Golden Visa eligible if value ≥ AED 2m'], m:['DLD → Buyer'],
+        c:'Deed issuance delayed after handover.',
+        b:'Track deed status and notify the buyer when it is issued.'},
+      {end:'Live in it, lease it, or list it as a holiday home'}
+    ],
+    ready: [
+      {phase:'Prepare'},
+      {t:'Set budget', d:['Cash: price + about 7–8% in costs','Mortgage: at least 20% down (80% LTV up to AED 5m, 70% above)','Fees cannot be financed and are paid in cash'], m:['Buyer'],
+        c:'Buyers don\'t budget for 4% DLD, 2% agency + VAT, trustee and mortgage fees.',
+        b:'All-in cost calculator on every listing.'},
+      {t:'Mortgage pre-approval (if financing)', d:['Salary certificate, bank statements, ID','Free, 3–7 days, valid 60–90 days'], m:['Buyer → Bank'],
+        c:'Buyers make offers without pre-approval, then can\'t complete; pre-approval expires.',
+        b:'Pre-approval inside the app before booking viewings; track the expiry date.'},
+      {t:'Search verified listings', d:['Trakheesi permit and Madmoun QR','Live listing agreement (Form A)','Price compared with recent DLD transactions'], m:['Buyer'],
+        c:'Bait listings: the unit is "just sold" and the agent pushes pricier alternatives.',
+        b:'List only units with a live Form A; delist automatically when an MOU is signed.', src:'Khaleej Times; Gulf News'},
+      {t:'Viewing and due diligence', d:['Title deed and owner checked on Dubai REST','Service charges and arrears','Tenancy status and notice periods','Modifications match Municipality records'], m:['Buyer','Platform checks'],
+        c:'Problems found late: unpaid service charges, a tenant in place, unapproved changes.',
+        b:'Seller provides a ready-to-sell pack checked before the listing goes live.'},
+      {phase:'Agree'},
+      {t:'Offer and negotiation', d:['Buy now at the asking price, or make an offer','Offers time-limited and logged'], m:['Buyer ↔ Seller'],
+        c:'Sellers back out or raise the price after agreeing; rude or unresponsive agents.',
+        b:'Timed offers with a full log; the deal becomes binding only at Form F.', src:'r/dubai "Seller\'s agent is extremely rude"'},
+      {t:'Broker agreements', d:['Form A: seller and broker','Form B: buyer and broker','Form I: between brokers if two agencies'], m:['Brokers'],
+        c:'Commission disputes between brokers delay the MOU.',
+        b:'Commission split fixed in-app before the MOU.'},
+      {t:'Sign Form F (MOU)', d:['Signed on the DLD system','Price, completion date, default terms','Valuation opt-out clause for mortgage buyers','10% security cheque, held and not cashed'], m:['Buyer → Held by broker'], money:'10% cheque',
+        c:'Deposit disputes when a deal fails; agents stop answering.',
+        b:'Deposit held by a regulated party with release rules written in the MOU.', src:'r/dubai "Worst experience buying property"'},
+      {phase:'Clear'},
+      {t:'Seller gets the developer NOC', d:['Confirms service charges are paid','Fee about AED 500–5,000','Needed before transfer'], m:['Seller → Developer'],
+        c:'NOC held up by unpaid service charges.',
+        b:'Pre-check arrears when listing; prompt the seller to apply on the day the MOU is signed.'},
+      {dec:'Does the seller have a mortgage?', yes:'Seller\'s bank issues a liability letter; the buyer (or buyer\'s bank) pays off the loan at transfer; bank releases the title.', no:'Continue.',
+        c:'Liability letters and release take a week or more.',
+        b:'Request the liability letter at MOU signing and show its status.'},
+      {dec:'Is the buyer using a mortgage?', yes:'Bank valuation (about AED 2,500–3,500), final offer letter, life and property insurance, mortgage registration at transfer (0.25% of loan + AED 290).', no:'Prepare manager\'s cheques or a bank transfer.',
+        c:'Valuation below price leaves a cash gap; deals fall apart.',
+        b:'Show likely valuation from DLD comps before the offer; insist on the opt-out clause.'},
+      {t:'Prepare for transfer', d:['Book trustee appointment','IDs, title deed, NOC, Form F, POA if a party is abroad','Payment list: seller, seller\'s bank, DLD, trustee, agency'], m:['Platform'],
+        c:'POAs rejected; wrong or missing cheques delay the day; agents push to cancel and "do it manually".',
+        b:'Check POAs early; generate the payment list automatically; one transfer coordinator.', src:'r/dubairealestate "Agent insisting to cancel contract"'},
+      {dec:'Eligible for DubaiNow Digital Sale?', yes:'Cash deal, single owner, mortgage-free, residential freehold, both parties with Emirates ID, UAE Pass and UAE bank account: complete in-app.', no:'Transfer at a trustee centre.',
+        c:'Most overseas and mortgaged deals don\'t qualify.',
+        b:'Check eligibility automatically and route each deal to the right channel.'},
+      {phase:'Transfer and move in'},
+      {t:'Transfer day', d:['Seller paid (and seller\'s bank if mortgaged)','4% DLD fee + AED 580 title deed','Trustee AED 4,000 + VAT; agency 2% + VAT','Security cheque returned'], m:['Buyer + Bank → Seller','Buyer → DLD'], money:'Price + fees',
+        c:'Long waits and last-minute fee surprises.',
+        b:'Fees confirmed in-app a day before; status updates during the appointment.'},
+      {t:'Title deed issued', d:['Same day','Mortgage registered on the deed if financed'], m:['DLD → Buyer'],
+        c:'Buyers can\'t find or verify the deed later.',
+        b:'Store the deed in-app and link to Dubai REST.'},
+      {t:'Handover', d:['Keys and access cards','DEWA moved to buyer','Service charge account and move-in permit','Existing tenancy and Ejari continue if tenanted'], m:['Seller → Buyer'],
+        c:'Seller delays moving out; DEWA and access cards not handed over.',
+        b:'Vacant-possession date in Form F and a photo handover checklist signed in-app.'},
+      {end:'Live in it, lease it, or apply for a Golden Visa if value ≥ AED 2m'}
+    ]
+  };
+
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  function cells(item){
+    const src = item.src ? `<span class="src">Source: ${esc(item.src)}</span>` : '';
+    return `<div class="cell c"><span class="lbl">Challenge</span>${esc(item.c)}${src}</div><div class="cell b"><span class="lbl">Best practice</span>${esc(item.b)}</div>`;
+  }
+  document.querySelectorAll('[data-flow]').forEach(box => {
+    const items = FLOWS[box.dataset.flow];
+    let n = 0, d = 0, html = '<div class="cols"><span>Step</span><span class="c">Challenge</span><span class="b">Best practice</span></div>';
+    items.forEach((it, i) => {
+      const last = i === items.length - 1 ? ' last' : '';
+      if (it.phase){ html += `<div class="phase">${esc(it.phase)}</div>`; return; }
+      if (it.end){ html += `<div class="row last"><div class="node end">${esc(it.end)}</div><div class="cell empty"></div><div class="cell empty"></div></div>`; return; }
+      if (it.dec){
+        d++;
+        html += `<div class="row${last}"><div class="node decision"><div class="top"><span class="n"><b>?</b></span><h3>${esc(it.dec)}</h3></div>
+          <div class="branch"><div><b>Yes</b>${esc(it.yes)}</div><div><b>No</b>${esc(it.no)}</div></div></div>${cells(it)}</div>`;
+        return;
+      }
+      n++;
+      const meta = (it.m||[]).map(x=>`<span>${esc(x)}</span>`).join('') + (it.money ? `<span class="money">${esc(it.money)}</span>` : '');
+      html += `<div class="row${last}"><div class="node step"><div class="top"><span class="n">${n}</span><h3>${esc(it.t)}</h3></div>
+        <ul>${it.d.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="meta">${meta}</div></div>${cells(it)}</div>`;
+    });
+    box.innerHTML = html;
+  });
+})();
+</script>
