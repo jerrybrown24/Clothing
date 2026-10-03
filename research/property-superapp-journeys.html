@@ -1,0 +1,1175 @@
+<title>Property Superapp Journey Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: operating manual. Sticky stream switcher on top; each stream is one chapter: header facts → mind map (full width) → process flow beside its numbered challenge cards. */
+:root{
+  --bg:#f5f7f7; --surface:#ffffff; --sunk:#eaeeef;
+  --ink:#15222a; --muted:#56656e; --line:#d3dadd;
+  --accent:#0d6b63; --accent-soft:#dcefed;
+  --brass:#946410; --brass-soft:#f4ead5;
+  --bad:#ad2a20; --bad-soft:#f8e3e0;
+  --good:#1f7a3f; --good-soft:#e1f2e6;
+  --display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1519; --surface:#161e23; --sunk:#1d272d;
+    --ink:#e4eaed; --muted:#9aa9b2; --line:#2c3a42;
+    --accent:#4cc2b6; --accent-soft:#163734;
+    --brass:#e0b45e; --brass-soft:#352a14;
+    --bad:#f08a82; --bad-soft:#3a1a18;
+    --good:#6cc98a; --good-soft:#16301f;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1519; --surface:#161e23; --sunk:#1d272d;
+  --ink:#e4eaed; --muted:#9aa9b2; --line:#2c3a42;
+  --accent:#4cc2b6; --accent-soft:#163734;
+  --brass:#e0b45e; --brass-soft:#352a14;
+  --bad:#f08a82; --bad-soft:#3a1a18;
+  --good:#6cc98a; --good-soft:#16301f;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15.5px;line-height:1.55}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.page{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:28px 72px}
+header.cover{padding-bottom:22px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);margin:0 0 10px}
+h1{font-family:var(--display);font-weight:650;font-size:clamp(30px,4.4vw,44px);line-height:1.1;margin:0 0 12px;text-wrap:balance}
+.lede{font-size:17.5px;color:var(--muted);max-width:72ch;margin:0}
+.howto{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px;font-size:13px;color:var(--muted)}
+.howto b{color:var(--ink);font-weight:600}
+.cx{font-family:var(--mono);font-size:11px;font-weight:600;background:var(--bad-soft);color:var(--bad);padding:1px 6px;border-radius:4px;white-space:nowrap}
+
+nav.streams{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding-block:10px;margin-inline:-20px;padding-inline:20px}
+nav.streams .row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding-bottom:2px}
+nav.streams a{flex:none;font-size:12.5px;text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;white-space:nowrap}
+nav.streams a span{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-right:5px}
+nav.streams a.p span{color:var(--accent)}
+nav.streams a.s span{color:var(--brass)}
+nav.streams a:hover{border-color:var(--accent)}
+nav.streams .sep{flex:none;width:1px;background:var(--line);margin-inline:4px}
+
+h2{font-family:var(--display);font-weight:650;font-size:27px;line-height:1.2;margin:0 0 6px;text-wrap:balance}
+h3{font-family:var(--display);font-weight:650;font-size:19px;margin:0 0 10px;text-wrap:balance}
+p{max-width:72ch}
+.sub{color:var(--muted);margin:0 0 18px}
+section.block{padding-block:40px 12px;border-bottom:1px solid var(--line)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-block:12px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:720px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--sunk);font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+td.k{font-family:var(--mono);font-size:12px;white-space:nowrap}
+.tier{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.tier.p{background:var(--accent-soft);color:var(--accent)}
+.tier.s{background:var(--brass-soft);color:var(--brass)}
+
+figure{margin:0}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto}
+.diagram pre.mermaid{margin:0;background:transparent;text-align:center;font-size:13px}
+figcaption{font-size:12.5px;color:var(--muted);margin-top:8px}
+.label{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 0 8px}
+
+/* stream chapter */
+.stream{padding-block:44px 16px;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+.stream-head{display:grid;gap:4px;margin-bottom:14px}
+.stream-head .tag{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase}
+.stream.p .stream-head .tag{color:var(--accent)}
+.stream.s .stream-head .tag{color:var(--brass)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 12px;min-width:0}
+.fact b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:2px}
+.fact span{font-size:13.5px;line-height:1.4}
+.split{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;align-items:start}
+.challenges{display:grid;gap:10px}
+.ch{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.ch h4{margin:0 0 6px;font-size:14px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.ch h4 .step{font-weight:600}
+.ch p{margin:0;font-size:13.5px;line-height:1.5}
+.ch .bad{color:var(--ink)}
+.ch .bad::before{content:"What goes wrong: ";font-weight:600;color:var(--bad)}
+.ch .fix{margin-top:6px}
+.ch .fix::before{content:"Best practice: ";font-weight:600;color:var(--good)}
+.ch .src{margin-top:6px;font-size:12px;color:var(--muted)}
+.docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
+.docs > div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.docs h4{margin:0 0 8px;font-size:14.5px}
+.docs ul{margin:0;padding-left:18px;font-size:13.5px;display:grid;gap:4px}
+.note{font-size:12.5px;color:var(--muted)}
+ol.src{font-size:12.5px;padding-left:26px;display:grid;gap:3px;color:var(--muted)}
+ol.src a{word-break:break-word}
+
+@media (max-width:1000px){ .split{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:640px){ h2{font-size:23px} .page{padding-inline:16px} nav.streams{margin-inline:-16px;padding-inline:16px} }
+</style>
+
+<div class="page">
+<header class="cover">
+  <p class="eyebrow">Real estate superapp · UAE · Journey and revenue design</p>
+  <h1>Every touchpoint from listing to keys, mapped by revenue stream</h1>
+  <p class="lede">Four primary streams earn the transaction fee. Eight secondary streams earn on everything around it. Each stream below has a mind map, a process flow, and the challenges people actually report between steps, with the best practice the app should build in.</p>
+  <div class="howto">
+    <span><b>Mind map</b> = everything the stream touches</span>
+    <span><b>Flow</b> = the order things happen</span>
+    <span><span class="cx">C3</span> on an arrow = a challenge between those two steps, explained in the card with the same number</span>
+  </div>
+</header>
+
+<nav class="streams" aria-label="Revenue streams">
+  <div class="row">
+    <a href="#overview"><span>00</span>Superapp overview</a>
+    <a href="#dd"><span>DD</span>DLD registration &amp; due diligence</a>
+    <i class="sep"></i>
+    <a class="p" href="#p1"><span>P1</span>Off-plan</a>
+    <a class="p" href="#p2"><span>P2</span>Ready purchase</a>
+    <a class="p" href="#p3"><span>P3</span>Listing &amp; selling</a>
+    <a class="p" href="#p4"><span>P4</span>Rentals</a>
+    <i class="sep"></i>
+    <a class="s" href="#s1"><span>S1</span>Mortgages</a>
+    <a class="s" href="#s2"><span>S2</span>Conveyancing</a>
+    <a class="s" href="#s3"><span>S3</span>Property mgmt</a>
+    <a class="s" href="#s4"><span>S4</span>Holiday homes</a>
+    <a class="s" href="#s5"><span>S5</span>Golden Visa</a>
+    <a class="s" href="#s6"><span>S6</span>Home services</a>
+    <a class="s" href="#s7"><span>S7</span>Rent financing</a>
+    <a class="s" href="#s8"><span>S8</span>B2B &amp; data</a>
+    <a href="#sources"><span>&nbsp;</span>Sources</a>
+  </div>
+</nav>
+
+<!-- OVERVIEW -->
+<section class="block" id="overview">
+  <h2>The superapp lifecycle</h2>
+  <p class="sub">One account follows the customer through the whole property lifecycle. Every exit (resell, re-let, move) feeds a new entry, which is what makes it a superapp and not a portal.</p>
+  <figure>
+    <div class="diagram">
+<pre class="mermaid">
+flowchart LR
+  A["Acquire: search, ads, referrals, diaspora partners"] --> B["Discover: verified listings, Madmoun QR, all-in cost"]
+  B --> V["Verify: KYC, AML, title and project checks"]
+  V --> T{"Transaction type"}
+  T -->|"Off-plan · P1"| O["Reserve, SPA, Oqood"]
+  T -->|"Ready · P2"| R["Offer, Form F MOU, trustee transfer"]
+  T -->|"Rent · P4"| L["Tenancy contract, Ejari"]
+  O --> F["Finance: S1 mortgage, S7 rent financing"]
+  R --> F
+  L --> F
+  F --> K["Register: DLD title deed, Oqood, Ejari"]
+  K --> H["Handover or move-in: S6 snagging, moving, DEWA"]
+  H --> U["Own or live: S3 management, S4 holiday home, S5 Golden Visa"]
+  U --> X{"Exit"}
+  X -->|"Resell or re-let · P3"| B
+  X -->|"Move or upgrade"| A
+</pre>
+    </div>
+    <figcaption>The loop: every stream sits on one step of the lifecycle; P3 turns today's owners into tomorrow's supply.</figcaption>
+  </figure>
+
+  <div class="label">Revenue streams at a glance</div>
+  <div class="tbl"><table>
+    <thead><tr><th>Stream</th><th>Tier</th><th>Who pays</th><th>Typical rate</th><th>When you get paid</th></tr></thead>
+    <tbody>
+      <tr><td><b>P1 Off-plan sales</b></td><td><span class="tier p">Primary</span></td><td>Developer</td><td>3–7% of price; launch and volume bonuses</td><td>After SPA signed and Oqood registered (often a minimum % paid by buyer)</td></tr>
+      <tr><td><b>P2 Ready purchase</b> (buyer side)</td><td><span class="tier p">Primary</span></td><td>Buyer</td><td>2% + 5% VAT</td><td>At trustee transfer, by manager's cheque or bank transfer</td></tr>
+      <tr><td><b>P3 Listing &amp; selling</b> (owner side)</td><td><span class="tier p">Primary</span></td><td>Seller / landlord</td><td>Up to 2% + VAT on sale; leasing fee on rent; paid boosts</td><td>At transfer or at tenancy signing</td></tr>
+      <tr><td><b>P4 Rentals</b> (tenant side)</td><td><span class="tier p">Primary</span></td><td>Tenant</td><td>5% of annual rent + VAT</td><td>At tenancy contract signing</td></tr>
+      <tr><td>S1 Mortgages</td><td><span class="tier s">Secondary</span></td><td>Bank</td><td>≈0.5–1% of loan (referral)</td><td>After disbursement</td></tr>
+      <tr><td>S2 Conveyancing concierge</td><td><span class="tier s">Secondary</span></td><td>Buyer or seller</td><td>Fixed fee per transfer</td><td>At transfer</td></tr>
+      <tr><td>S3 Property management</td><td><span class="tier s">Secondary</span></td><td>Landlord</td><td>≈5–8% of annual rent</td><td>Monthly or per cheque collected</td></tr>
+      <tr><td>S4 Holiday homes</td><td><span class="tier s">Secondary</span></td><td>Owner</td><td>≈15–25% of booking revenue</td><td>Monthly payout</td></tr>
+      <tr><td>S5 Golden Visa &amp; residency</td><td><span class="tier s">Secondary</span></td><td>Owner</td><td>Fixed service fee + government fees</td><td>On application</td></tr>
+      <tr><td>S6 Home services marketplace</td><td><span class="tier s">Secondary</span></td><td>Vendor (or customer)</td><td>10–20% take rate</td><td>Per job</td></tr>
+      <tr><td>S7 Rent financing &amp; payments</td><td><span class="tier s">Secondary</span></td><td>Financing partner</td><td>Revenue share per contract</td><td>Per financed lease</td></tr>
+      <tr><td>S8 B2B, ads &amp; data</td><td><span class="tier s">Secondary</span></td><td>Developers, agents, banks</td><td>Subscriptions, featured launches, reports</td><td>Monthly / per campaign</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">P1, P2 and P4 rates are standard market practice. Secondary-stream rates are typical market ranges and planning assumptions; confirm them with partners.</p>
+</section>
+
+<!-- DUE DILIGENCE -->
+<section class="block" id="dd">
+  <h2>DLD registration and due diligence</h2>
+  <p class="sub">Everything that must be checked, registered or paid before a deal is legally complete. The app should run these checks automatically and show the result on the unit page.</p>
+  <figure>
+    <div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Registration and due diligence))
+    Developer side
+      Register project with DLD and RERA
+      Escrow account at DLD-accredited bank
+      Law 8 of 2007 escrow law
+      Before selling one of three
+        20% of construction done
+        20% of construction value in escrow
+        20% bank guarantee to RERA
+      Buyer money only into escrow
+      Releases against engineer-certified progress
+      5% retained 1 year after completion
+      Oqood interim registration per unit
+    Broker and platform side
+      DET trade licence
+      RERA brokerage registration and office
+      Agent BRN cards
+      Trakheesi ad permit per listing
+      Madmoun QR on every ad
+      Forms A, B, I and F
+      goAML registration
+      AML compliance officer
+    Buyer due diligence
+      Title deed or Oqood verified on Dubai REST
+      Seller identity matches deed
+      POA valid and attested
+      Mortgage on the unit and liability letter
+      Service charges paid
+      Developer NOC available
+      Tenancy status and Ejari
+      Modifications match Municipality records
+      Project status and escrow number
+      Developer delivery track record
+      DLD valuation vs asking price
+    KYC and AML
+      Passport, Emirates ID or visa
+      Proof of address
+      Source of funds
+      PEP and sanctions screening
+      Cash 55k or more triggers report
+      Any crypto payment triggers report
+    Government fees
+      DLD transfer 4%
+      Title deed admin fee
+      Trustee AED 4,000 plus VAT
+      Mortgage registration 0.25% of loan
+      Ejari registration fee
+      DEWA deposit 2,000 or 4,000
+    Government rails
+      UAE Pass e-signature
+      DubaiNow Digital Sale
+      Dubai REST app
+      Ejari online
+      ADREC digital journey Abu Dhabi
+</pre>
+    </div>
+    <figcaption>What a "verified" unit should mean: every leaf above checked and shown, not just a permit number.</figcaption>
+  </figure>
+
+  <div class="label">Documents and checks by transaction type</div>
+  <div class="docs">
+    <div><h4>Off-plan purchase</h4><ul>
+      <li>Buyer: passport, Emirates ID or visa (if resident), proof of address, source of funds</li>
+      <li>Check: RERA project number, escrow account number and bank, project % complete on Dubai REST</li>
+      <li>Booking form / EOI, receipt into escrow</li>
+      <li>SPA signed by both parties</li>
+      <li>Oqood certificate in buyer's name</li>
+      <li>Fees: 4% DLD + admin; who pays (some developers waive)</li>
+      <li>For resale before handover: developer NOC, paid threshold (often 30–40%), assignment fee</li>
+    </ul></div>
+    <div><h4>Ready (secondary) purchase</h4><ul>
+      <li>Form A (seller–broker), Form B (buyer–broker), Form I (broker–broker)</li>
+      <li>Form F MOU on DLD system, with 10% security cheque and finance opt-out clause</li>
+      <li>Title deed, seller passport / EID, POA if seller is abroad</li>
+      <li>Developer NOC (seller pays; needs service charges cleared)</li>
+      <li>If seller has a mortgage: bank liability letter and buyout</li>
+      <li>If buyer has a mortgage: pre-approval, valuation, final offer letter</li>
+      <li>Trustee appointment, manager's cheques, new title deed</li>
+    </ul></div>
+    <div><h4>Rental</h4><ul>
+      <li>Tenant: passport, visa, Emirates ID</li>
+      <li>Landlord: title deed, passport / EID, Form A if via agent</li>
+      <li>Unified tenancy contract signed digitally</li>
+      <li>Security deposit 5% unfurnished, 10% furnished</li>
+      <li>Ejari with DEWA premise number; renewal registered every year from 2026</li>
+      <li>DEWA activation, move-in permit from building management</li>
+      <li>Rent increase checked against the Smart Rental Index</li>
+    </ul></div>
+    <div><h4>Listing a unit</h4><ul>
+      <li>Owner ID and title deed (or Oqood)</li>
+      <li>Form A listing agreement, exclusive or non-exclusive</li>
+      <li>Trakheesi permit and Madmoun QR before publishing</li>
+      <li>Tenancy disclosure if occupied</li>
+      <li>Delist within 3 working days once sold or rented (DLD directive)</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- P1 OFF-PLAN -->
+<section class="stream p" id="p1">
+  <div class="stream-head">
+    <span class="tag">Primary · P1</span>
+    <h2>Off-plan sales</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Developer, buyer pays no agency fee</span></div>
+      <div class="fact"><b>Rate</b><span>3–7% of price; 4% average ≈ AED 87k on AED 2.17m</span></div>
+      <div class="fact"><b>Buy-now step</b><span>Online reservation, deposit routed to project escrow</span></div>
+      <div class="fact"><b>Cycle</b><span>SPA in 2–4 weeks; handover 2–4 years</span></div>
+    </div>
+  </div>
+  <figure>
+    <div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Off-plan sales))
+    Revenue
+      Developer commission 3 to 7%
+      Launch bonuses
+      Volume tiers
+      Upsell mortgage at handover
+      Upsell leasing and holiday home
+    Supply
+      Developer agreements
+      RERA project number
+      Escrow account number
+      Live price list and availability
+      Floor plans and specs
+      Payment plans
+        Construction-linked
+        Time-linked
+        Post-handover
+    Buyer touchpoints
+      Discover and compare projects
+      All-in cost calculator
+      KYC and source of funds
+      EOI or booking 5 to 10%
+      SPA e-sign
+      Down payment plus 4% DLD
+      Oqood certificate
+      Instalment tracker
+      Construction updates
+      Completion notice
+      Inspection and snagging
+      Handover and keys
+      Title deed issued
+    Protections
+      Payments only to escrow
+      Escrow law Law 8 of 2007
+      Cancellation rules Law 13 of 2008
+      Snagging window in SPA
+      10-year structural liability
+    Exit options
+      Assignment after 30 to 40% paid
+      Developer NOC and fee
+      Resell after handover
+      Lease out
+</pre>
+    </div>
+  </figure>
+  <div class="label">Process flow and the challenges between steps</div>
+  <div class="split">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["Developer onboarded: RERA project no., escrow account, price list"] --> B["Unit page: plan, payment plan, all-in cost, Madmoun QR"]
+  B -->|"C1"| C["Buyer compares and shortlists"]
+  C -->|"C2"| D["KYC and AML: passport, EID or visa, source of funds"]
+  D --> E["Reserve now: 5 to 10% booking into project escrow"]
+  E -->|"C3"| F["SPA issued and e-signed"]
+  F --> G["Down payment plus 4% DLD fee"]
+  G -->|"C4"| H["Oqood registered with DLD"]
+  H --> I["Instalments into escrow, tracker and alerts"]
+  I -->|"C5"| J{"Sell before handover?"}
+  J -->|"Yes, threshold paid"| K["Assignment: developer NOC, fee, 4% DLD on resale"]
+  J -->|"No"| L["Completion notice: final payment or handover mortgage"]
+  L -->|"C6"| M["Inspection and snagging report"]
+  M --> N["Handover: keys, DEWA, service charge account"]
+  N --> O["Title deed issued"]
+  H -.->|"commission invoice"| R["Revenue: developer pays 3 to 7%"]
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Listing → shortlist</span></h4><p class="bad">Stale price lists, units shown that are already sold, launch hype and misleading "verified" ads.</p><p class="fix">Sync availability daily from the developer, show the Madmoun QR, publish each developer's delivery record.</p><p class="src">Gulf News on misleading verified listings; r/dubairealestate "Traffic is back and so are the lies"</p></div>
+      <div class="ch"><h4><span class="cx">C2</span><span class="step">Shortlist → KYC</span></h4><p class="bad">Overseas buyers have no Emirates ID or UAE Pass; source-of-funds requests arrive late and stall the booking.</p><p class="fix">Passport e-KYC with video check; show the document list before the buyer commits; pre-clear funds.</p></div>
+      <div class="ch"><h4><span class="cx">C3</span><span class="step">Reservation → SPA</span></h4><p class="bad">SPA takes 2–4 weeks; one-sided clauses on delays and cancellation; unclear who pays the 4% DLD fee.</p><p class="fix">Plain-language SPA summary, flag key clauses, optional lawyer review, confirm DLD fee split before payment.</p></div>
+      <div class="ch"><h4><span class="cx">C4</span><span class="step">Payment → Oqood</span></h4><p class="bad">Buyers don't know if their unit is registered or if money reached escrow.</p><p class="fix">Show the Oqood certificate and escrow receipt in the app; link to Dubai REST verification.</p></div>
+      <div class="ch"><h4><span class="cx">C5</span><span class="step">Construction → handover</span></h4><p class="bad">Delays of 6 months to 2+ years are common; little communication; buyers question whether to keep paying instalments.</p><p class="fix">Track project % from DLD, push construction updates, show exit value and assignment rules early.</p><p class="src">r/dubai "Regret in buying a DAMAC property"; r/dubairealestate off-plan instalment thread; Khaleej Times red flags</p></div>
+      <div class="ch"><h4><span class="cx">C6</span><span class="step">Completion → keys</span></h4><p class="bad">Defects at handover; service charges much higher than buyers were told; snagging deadline missed.</p><p class="fix">Book independent snagging (S6) automatically; show the RERA service-charge figure on day one; deadline reminders.</p><p class="src">r/dubairealestate "What is the worst about buying a property in Dubai"</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- P2 READY -->
+<section class="stream p" id="p2">
+  <div class="stream-head">
+    <span class="tag">Primary · P2</span>
+    <h2>Ready property purchase</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Buyer, 2% + VAT</span></div>
+      <div class="fact"><b>Typical deal</b><span>AED 3.69m average resale; ≈AED 74k fee</span></div>
+      <div class="fact"><b>Buy-now step</b><span>Accept asking price, sign Form F online</span></div>
+      <div class="fact"><b>Cycle</b><span>Cash 1–3 weeks; mortgage 4–8 weeks</span></div>
+    </div>
+  </div>
+  <figure>
+    <div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Ready purchase))
+    Revenue
+      Buyer fee 2% plus VAT
+      Mortgage referral
+      Conveyancing fee
+      Snagging, moving, furnishing
+    Search
+      Verified listing with Madmoun
+      Price vs DLD transactions
+      Service charge per sq ft
+      Tenancy status
+      Virtual tour and floor plan
+    Offer
+      Buy now at asking price
+      Make offer with deadline
+      Counter offers logged
+    Contracts
+      Form B buyer and broker
+      Form F MOU on DLD system
+      10% security cheque
+      Finance opt-out clause
+      Completion date
+    Seller side checks
+      Title deed and identity
+      POA validity
+      Developer NOC
+      Seller mortgage liability letter
+    Finance
+      Pre-approval before offer
+      Bank valuation
+      Final offer letter
+      LTV up to 80% below AED 5m
+      Fees paid in cash
+    Transfer
+      Trustee appointment
+      Or DubaiNow Digital Sale for cash
+      Manager's cheques
+      4% DLD and trustee fee
+      Mortgage registration 0.25%
+      New title deed
+    Handover
+      Keys and access cards
+      DEWA transfer
+      Move-in permit
+      Service charge account
+</pre>
+    </div>
+  </figure>
+  <div class="label">Process flow and the challenges between steps</div>
+  <div class="split">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["Search verified listings"] -->|"C1"| B["Viewing: in person or video"]
+  B --> C{"Mortgage needed?"}
+  C -->|"Yes"| D["Pre-approval: 3 to 7 days, valid 60 to 90"]
+  C -->|"No"| E["Proof of funds"]
+  D --> F["Buy now or make offer"]
+  E --> F
+  F -->|"C2"| G["Form B signed, Form F MOU on DLD system"]
+  G --> H["10% security cheque, opt-out clause"]
+  H -->|"C3"| I["Seller gets developer NOC"]
+  I --> J{"Seller has mortgage?"}
+  J -->|"Yes"| K["Liability letter, buyer or bank pays off loan"]
+  J -->|"No"| L["Ready to transfer"]
+  K --> L
+  D -.->|"C4"| V["Bank valuation, final offer letter"]
+  V --> L
+  L -->|"C5"| M["Trustee appointment or DubaiNow Digital Sale"]
+  M --> N["Funds released: seller, seller's bank, DLD 4%, fees"]
+  N --> O["Title deed in buyer's name, mortgage registered"]
+  O -->|"C6"| P["Handover: keys, DEWA, move-in permit"]
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Search → viewing</span></h4><p class="bad">Bait listings: the unit is "just sold" when you arrive, and the agent offers pricier alternatives.</p><p class="fix">Only list units with a live Form A and Madmoun QR; auto-hide on MOU; penalise agents with stale ads.</p><p class="src">Khaleej Times on fake ads; Joinoliva scam guide</p></div>
+      <div class="ch"><h4><span class="cx">C2</span><span class="step">Offer → MOU</span></h4><p class="bad">Sellers back out or raise the price after agreeing; rude or unresponsive seller agents.</p><p class="fix">Make the offer binding only through Form F with clear default penalties; time-boxed offers; keep the full offer log.</p><p class="src">r/dubai "Seller's agent is extremely rude"</p></div>
+      <div class="ch"><h4><span class="cx">C3</span><span class="step">MOU → NOC</span></h4><p class="bad">NOC delayed because the seller owes service charges; deposit cheque disputes when the deal fails, and agents stop answering.</p><p class="fix">Pre-check service charges before listing; hold the deposit with a regulated party; written timeline for every step.</p><p class="src">r/dubai "Worst experience buying property"</p></div>
+      <div class="ch"><h4><span class="cx">C4</span><span class="step">Pre-approval → final offer</span></h4><p class="bad">Valuation comes in below price; the gap must be paid in cash; pre-approval expires.</p><p class="fix">Show DLD transaction comps before the offer; insist on a valuation opt-out clause; track pre-approval expiry.</p></div>
+      <div class="ch"><h4><span class="cx">C5</span><span class="step">Ready → transfer day</span></h4><p class="bad">Many manager's cheques to coordinate; POA problems; agents pushing to cancel the contract and "do it manually".</p><p class="fix">Generate the cheque and payment list automatically; verify POA early; one transfer-day coordinator.</p><p class="src">r/dubairealestate "Agent insisting to cancel contract before transfer"</p></div>
+      <div class="ch"><h4><span class="cx">C6</span><span class="step">Title deed → keys</span></h4><p class="bad">Seller delays move-out; DEWA and access cards not transferred; hidden repairs.</p><p class="fix">Handover checklist with photos signed in-app; vacant possession date in Form F.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- P3 LISTING & SELLING -->
+<section class="stream p" id="p3">
+  <div class="stream-head">
+    <span class="tag">Primary · P3</span>
+    <h2>Listing and selling (owners and landlords)</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Seller or landlord</span></div>
+      <div class="fact"><b>Rate</b><span>Up to 2% + VAT on sale; leasing fee on rent; paid boosts</span></div>
+      <div class="fact"><b>Why it matters</b><span>Resale "Buy now" needs pre-priced, pre-verified supply</span></div>
+      <div class="fact"><b>Bidding</b><span>Fixed "Buy now" price or timed offers</span></div>
+    </div>
+  </div>
+  <figure>
+    <div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Listing and selling))
+    Revenue
+      Seller fee on sale
+      Landlord leasing fee
+      Featured and boosted listings
+      Ready-to-sell pack fee
+    Owner onboarding
+      Owner ID and title deed
+      Oqood for off-plan resale
+      POA for overseas owners
+      Joint owners consent
+    Pricing
+      DLD transaction comps
+      Smart Rental Index for rents
+      Valuation report
+      Buy now price
+    Mandate
+      Form A
+      Exclusive or open
+      Commission and term
+    Compliance
+      Trakheesi permit
+      Madmoun QR
+      Accurate photos and size
+      Delist in 3 working days
+    Ready-to-sell pack
+      Service charge statement
+      Developer NOC pre-check
+      Mortgage liability letter
+      Tenancy and Ejari status
+      Modifications approved
+    Marketing
+      Superapp listing
+      Syndicate to portals
+      Overseas buyer campaigns
+    Offers and bidding
+      Buy now
+      Timed best and final
+      Offer log visible to seller
+    Closing
+      Form F or tenancy contract
+      Transfer or Ejari
+      Payout to seller or landlord
+</pre>
+    </div>
+  </figure>
+  <div class="label">Process flow and the challenges between steps</div>
+  <div class="split">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["Owner signs up: ID, title deed or Oqood"] -->|"C1"| B["Ownership and POA verified"]
+  B --> C["Price guidance: DLD comps or rental index"]
+  C -->|"C2"| D["Form A mandate signed"]
+  D --> E["Trakheesi permit and Madmoun QR"]
+  E --> F["Ready-to-sell pack: NOC check, service charges, liability letter"]
+  F -->|"C3"| G["Publish and syndicate"]
+  G --> H{"Sale or rent?"}
+  H -->|"Sale"| I["Buy now price or timed offers"]
+  H -->|"Rent"| J["Tenant applications and screening"]
+  I -->|"C4"| K["Accept: Form F MOU, then P2 transfer"]
+  J --> L["Tenancy contract and Ejari, see P4"]
+  K --> M["Payout at transfer"]
+  L --> M
+  M -->|"C5"| N["Delist within 3 working days"]
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Sign-up → verified</span></h4><p class="bad">Overseas owners with expired or narrow POAs; joint owners who haven't agreed.</p><p class="fix">Check POA scope and attestation at onboarding; collect consent from every owner on the deed.</p></div>
+      <div class="ch"><h4><span class="cx">C2</span><span class="step">Pricing → mandate</span></h4><p class="bad">Owners list with several agents at different prices; no one has exclusivity, so no one invests in the listing.</p><p class="fix">Offer an exclusive with clear service levels (pack, photos, buyer reach) and a lower fee in return.</p></div>
+      <div class="ch"><h4><span class="cx">C3</span><span class="step">Pack → publish</span></h4><p class="bad">Problems found late: unpaid service charges, unapproved modifications, tenant in place with 12-month notice rules.</p><p class="fix">Run every check before publishing; disclose tenancy and notice terms on the listing.</p><p class="src">Mondaq and Khaleej Times on eviction notice rules</p></div>
+      <div class="ch"><h4><span class="cx">C4</span><span class="step">Offers → MOU</span></h4><p class="bad">Sellers withdraw when prices rise; buyers gazump with side deals.</p><p class="fix">Timed offers with a deadline; offer log shared with the seller; default terms explained before signing.</p></div>
+      <div class="ch"><h4><span class="cx">C5</span><span class="step">Closed → delisted</span></h4><p class="bad">Ads stay live for weeks after the unit is gone, which damages trust in the whole platform.</p><p class="fix">Auto-delist on Form F or Ejari registration.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- P4 RENTALS -->
+<section class="stream p" id="p4">
+  <div class="stream-head">
+    <span class="tag">Primary · P4</span>
+    <h2>Rentals (tenant journey)</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Tenant, 5% of annual rent + VAT</span></div>
+      <div class="fact"><b>Volume</b><span>513k new Dubai leases in 2025</span></div>
+      <div class="fact"><b>Rent-now step</b><span>Reserve with holding deposit, sign and pay online</span></div>
+      <div class="fact"><b>Repeat</b><span>Renewal every year; move every 2–3 years</span></div>
+    </div>
+  </div>
+  <figure>
+    <div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Rentals))
+    Revenue
+      Tenant agency fee 5%
+      Landlord leasing fee
+      Rent financing share
+      Moving and DEWA setup
+      Renter's insurance
+    Search
+      Verified available units
+      Rent vs Smart Rental Index
+      Cheques accepted
+      Furnished or unfurnished
+    Reserve
+      Viewing
+      Offer: rent and number of cheques
+      Holding deposit
+    Contract
+      Unified tenancy contract
+      Security deposit 5 or 10%
+      Post-dated cheques 1 to 12
+      Or monthly via financing partner
+    Registration
+      Ejari
+      Tenant passport, visa, EID
+      Landlord title deed
+      DEWA premise number
+    Move in
+      DEWA activation and deposit
+      Move-in permit
+      Internet and chiller
+      Condition report with photos
+    During tenancy
+      Maintenance requests
+      Rent reminders
+      Landlord sale notices
+    Renewal or exit
+      90 days notice of changes
+      Annual Ejari renewal
+      12-month notice to evict for sale or own use
+      Move-out inspection
+      Deposit refund
+      Rental Dispute Centre
+</pre>
+    </div>
+  </figure>
+  <div class="label">Process flow and the challenges between steps</div>
+  <div class="split">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["Search verified rentals"] -->|"C1"| B["Viewing"]
+  B --> C["Offer: rent, cheques, start date"]
+  C -->|"C2"| D["Holding deposit, landlord accepts"]
+  D --> E["Tenancy contract e-signed"]
+  E --> F["Pay: security deposit, agency 5%, cheques or monthly plan"]
+  F -->|"C3"| G["Ejari registered"]
+  G --> H["DEWA, move-in permit, internet"]
+  H -->|"C4"| I["Move in with photo condition report"]
+  I --> J["Tenancy: rent, maintenance"]
+  J -->|"C5"| K{"Renew?"}
+  K -->|"Yes"| L["Rent index check, 90-day notice, Ejari renewal"]
+  K -->|"No"| M["Notice, move-out inspection"]
+  M -->|"C6"| N["Deposit refund or RDC case"]
+  L --> J
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Search → viewing</span></h4><p class="bad">"Already rented" bait listings; manipulated photos; agents who vanish after taking the fee.</p><p class="fix">Show only units with live Form A; auto-delist on Ejari; photos taken by the platform.</p><p class="src">Khaleej Times on rental scams; Business Today on r/dubai rental post; r/dubairentals frustrations thread</p></div>
+      <div class="ch"><h4><span class="cx">C2</span><span class="step">Offer → accepted</span></h4><p class="bad">Landlords demand 1–4 cheques; tenants can't pay a year upfront.</p><p class="fix">Monthly payments through a rent-financing partner (S7) while the landlord gets paid upfront.</p><p class="src">r/DubaiCentral "The Dubai rental struggle"</p></div>
+      <div class="ch"><h4><span class="cx">C3</span><span class="step">Payment → Ejari</span></h4><p class="bad">Landlord withholds keys or the contract after receiving cheques; Ejari blocked by mismatched modification records.</p><p class="fix">Release cheques only against a signed contract; register Ejari in-app at signing.</p><p class="src">r/dubai "Landlord will not let me move in"; Al Kabban on 2025 Ejari changes</p></div>
+      <div class="ch"><h4><span class="cx">C4</span><span class="step">Utilities → move-in</span></h4><p class="bad">DEWA deposit and move-in permits surprise new tenants; some landlords disconnect DEWA in disputes.</p><p class="fix">Show all move-in costs upfront; book DEWA and permits as one step.</p><p class="src">r/dubai "Tenant nightmare: landlord disconnected DEWA"</p></div>
+      <div class="ch"><h4><span class="cx">C5</span><span class="step">Tenancy → renewal</span></h4><p class="bad">Rent hikes above the index; landlord sells mid-lease; renewal disputes running for months.</p><p class="fix">Built-in rent-index check, 90-day notice reminder, sale notice alerts, tenancy transfers to new owner.</p><p class="src">r/dubai "My nightmare renewing my tenancy"; r/dubairealestate "Landlord sold the apartment"</p></div>
+      <div class="ch"><h4><span class="cx">C6</span><span class="step">Move-out → refund</span></h4><p class="bad">Security deposits held back for months; RDC case costs 3.5% of annual rent.</p><p class="fix">Dated photo reports at move-in and move-out; deposit status tracker; mediation before RDC.</p><p class="src">Gulf News on withheld deposits; DLD case note</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S1 MORTGAGES -->
+<section class="stream s" id="s1">
+  <div class="stream-head">
+    <span class="tag">Secondary · S1</span>
+    <h2>Mortgages</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Bank referral fee; free for the buyer</span></div>
+      <div class="fact"><b>Rate</b><span>≈0.5–1% of loan</span></div>
+      <div class="fact"><b>Feeds</b><span>P2 ready purchases and P1 handover payments</span></div>
+      <div class="fact"><b>Check</b><span>Licensing for mortgage advice in your legal opinion</span></div>
+    </div>
+  </div>
+  <figure><div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Mortgages))
+    Revenue
+      Bank referral fee
+      Cashback offer to buyer
+      Refinance and buyout later
+    Eligibility
+      Salary and debt burden
+      LTV up to 80% below AED 5m
+      70% above AED 5m
+      Residents and non-residents
+    Documents
+      Passport, visa, EID
+      Salary certificate
+      6 months bank statements
+      Self-employed: trade licence, audited accounts
+    Steps
+      Compare banks
+      Pre-approval 3 to 7 days
+      Valuation AED 2,500 to 3,500
+      Final offer letter
+      Life and property insurance
+      DLD mortgage registration 0.25%
+      Disbursement at transfer
+    Risks
+      Valuation below price
+      Pre-approval expiry
+      Fees must be paid in cash
+</pre>
+  </div></figure>
+  <div class="split" style="margin-top:14px">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["Affordability check in app"] --> B["Upload documents once"]
+  B -->|"C1"| C["Compare bank offers"]
+  C --> D["Pre-approval"]
+  D -->|"C2"| E["Property chosen, valuation"]
+  E --> F["Final offer letter"]
+  F --> G["Mortgage registered at DLD with transfer"]
+  G --> H["Disbursement, referral fee paid"]
+  H --> I["Rate review and refinance reminders"]
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Documents → offers</span></h4><p class="bad">Buyers resubmit the same papers to several banks; self-employed files rejected late.</p><p class="fix">One upload shared with selected banks; flag weak files before applying.</p></div>
+      <div class="ch"><h4><span class="cx">C2</span><span class="step">Pre-approval → valuation</span></h4><p class="bad">Valuation shortfalls force extra cash or a dead deal.</p><p class="fix">Show likely valuation from DLD comps before the offer; valuation opt-out in Form F.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S2 CONVEYANCING -->
+<section class="stream s" id="s2">
+  <div class="stream-head">
+    <span class="tag">Secondary · S2</span>
+    <h2>Conveyancing concierge</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Buyer or seller</span></div>
+      <div class="fact"><b>Rate</b><span>Fixed fee per transfer</span></div>
+      <div class="fact"><b>Best for</b><span>Overseas parties, mortgaged sellers, FSBO deals</span></div>
+    </div>
+  </div>
+  <figure><div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Conveyancing))
+    Revenue
+      Fixed transfer fee
+      POA and attestation add-on
+    Documents
+      Title deed and IDs
+      Form F MOU
+      Developer NOC
+      Liability letter
+      Final offer letter
+    Overseas parties
+      POA drafted
+      Notarised and attested
+      Translation
+    Transfer day
+      Trustee booking
+      Payment schedule
+      Manager's cheques or transfers
+      DLD fee and trustee fee
+    After transfer
+      Title deed delivered
+      Service charge account changed
+      DEWA moved
+</pre>
+  </div></figure>
+  <div class="split" style="margin-top:14px">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["MOU signed"] --> B["Document checklist opened"]
+  B -->|"C1"| C["POA, NOC, liability letter collected"]
+  C --> D["Payment schedule built"]
+  D -->|"C2"| E["Trustee booked or Digital Sale"]
+  E --> F["Transfer completed, deed issued"]
+  F --> G["Utilities and service charge moved"]
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Checklist → documents</span></h4><p class="bad">POAs rejected; NOC and bank letters arrive late.</p><p class="fix">Start POA and NOC on day one; template POAs DLD accepts.</p></div>
+      <div class="ch"><h4><span class="cx">C2</span><span class="step">Schedule → transfer</span></h4><p class="bad">Wrong cheque amounts or missing cheques delay transfer day.</p><p class="fix">Auto-generated payment list checked by both banks a day before.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S3 PROPERTY MANAGEMENT -->
+<section class="stream s" id="s3">
+  <div class="stream-head">
+    <span class="tag">Secondary · S3</span>
+    <h2>Long-term property management</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Landlord</span></div>
+      <div class="fact"><b>Rate</b><span>≈5–8% of annual rent</span></div>
+      <div class="fact"><b>Feeds from</b><span>P1 handovers and P2 investor purchases</span></div>
+    </div>
+  </div>
+  <figure><div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Property management))
+    Revenue
+      Management fee
+      Leasing fee on new tenant
+      Maintenance margin
+    Onboarding
+      Management agreement
+      Keys and inventory
+      Unit condition report
+    Leasing
+      Listing and Madmoun
+      Tenant screening
+      Contract and Ejari
+    Collection
+      Cheques or monthly plan
+      Bounced cheque follow-up
+    Upkeep
+      Maintenance requests
+      Annual service contracts
+      Inspections
+    Owner reporting
+      Statements
+      Service charge payments
+      Renewal with rent index
+</pre>
+  </div></figure>
+  <div class="split" style="margin-top:14px">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["Owner signs management agreement"] --> B["Unit inspected and listed"]
+  B --> C["Tenant placed, Ejari"]
+  C -->|"C1"| D["Rent collected"]
+  D -->|"C2"| E["Maintenance and inspections"]
+  E --> F["Monthly owner statement"]
+  F --> G["Renewal or re-let"]
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Tenant → rent</span></h4><p class="bad">Bounced cheques and late payment; absentee landlords unaware.</p><p class="fix">Monthly digital collection; instant owner alerts.</p></div>
+      <div class="ch"><h4><span class="cx">C2</span><span class="step">Rent → upkeep</span></h4><p class="bad">Slow repairs drive tenants away and disputes up.</p><p class="fix">Vetted vendors (S6) with response-time targets.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S4 HOLIDAY HOMES -->
+<section class="stream s" id="s4">
+  <div class="stream-head">
+    <span class="tag">Secondary · S4</span>
+    <h2>Holiday homes (short-term rentals)</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Owner</span></div>
+      <div class="fact"><b>Rate</b><span>≈15–25% of booking revenue</span></div>
+      <div class="fact"><b>Regulator</b><span>Dubai DET holiday home permit</span></div>
+    </div>
+  </div>
+  <figure><div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Holiday homes))
+    Revenue
+      Management commission
+      Furnishing package
+      Cleaning margin
+    Permits
+      Building NOC for short stays
+      DET registration AED 1,520
+      Per-unit permit
+      Up to 8 units on individual licence
+    Setup
+      Furnishing to DET standard
+      Photos and listing
+      Pricing engine
+    Operations
+      Guest registration
+      Check-in and cleaning
+      Tourism Dirham 10 to 15 per bedroom night
+      File by the 15th monthly
+    Tax
+      VAT above AED 375k turnover
+    Owner
+      Monthly payout
+      Occupancy reports
+</pre>
+  </div></figure>
+  <div class="split" style="margin-top:14px">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["Owner opts in"] -->|"C1"| B["Building NOC obtained"]
+  B --> C["DET registration and unit permit"]
+  C --> D["Furnish, photograph, list"]
+  D --> E["Bookings and guest registration"]
+  E -->|"C2"| F["Tourism Dirham filed monthly"]
+  F --> G["Owner payout and report"]
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Opt-in → NOC</span></h4><p class="bad">Some buildings refuse short-stay NOCs.</p><p class="fix">Check building rules before purchase and show STR eligibility on listings.</p></div>
+      <div class="ch"><h4><span class="cx">C2</span><span class="step">Bookings → filing</span></h4><p class="bad">Missed Tourism Dirham filings and seasonal occupancy swings.</p><p class="fix">Automate filing; show realistic yearly yield, not peak-season yield.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S5 GOLDEN VISA -->
+<section class="stream s" id="s5">
+  <div class="stream-head">
+    <span class="tag">Secondary · S5</span>
+    <h2>Golden Visa and residency</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Owner, fixed service fee</span></div>
+      <div class="fact"><b>Trigger</b><span>Property worth AED 2m or more</span></div>
+      <div class="fact"><b>Upsell point</b><span>At checkout for any unit above the threshold</span></div>
+    </div>
+  </div>
+  <figure><div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Golden Visa))
+    Revenue
+      Service fee
+      Family visa add-ons
+    Eligibility
+      Property AED 2m or more
+      DLD valuation certificate
+      Mortgaged with bank NOC
+      Off-plan from approved developers
+      Joint ownership rules
+    Steps
+      Property certificate from DLD
+      Application
+      Medical test
+      Emirates ID biometrics
+      10-year visa issued
+    Family
+      Spouse and children
+      Domestic staff
+</pre>
+  </div></figure>
+  <div class="split" style="margin-top:14px">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["Unit above AED 2m flagged at checkout"] -->|"C1"| B["Eligibility check"]
+  B --> C["DLD certificate and documents"]
+  C --> D["Application submitted"]
+  D --> E["Medical and biometrics"]
+  E --> F["Visa and Emirates ID issued"]
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Checkout → eligibility</span></h4><p class="bad">Rules change often (mortgage equity, off-plan conditions); buyers buy expecting a visa and don't qualify.</p><p class="fix">Eligibility check before payment, using current DLD rules and valuation, not the sale price.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S6 HOME SERVICES -->
+<section class="stream s" id="s6">
+  <div class="stream-head">
+    <span class="tag">Secondary · S6</span>
+    <h2>Home services marketplace</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Vendor commission or customer fee</span></div>
+      <div class="fact"><b>Rate</b><span>10–20% take rate</span></div>
+      <div class="fact"><b>Triggered by</b><span>SPA, handover, move-in, every renewal</span></div>
+    </div>
+  </div>
+  <figure><div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Home services))
+    Before handover
+      Snagging inspection
+      Interior design and fit-out
+      Furnishing packages
+    Move-in
+      Movers
+      DEWA and internet setup
+      Deep cleaning
+      Home insurance
+    Living
+      AC and chiller servicing
+      Annual maintenance contracts
+      Handyman
+      Pest control
+    Move-out
+      Repairs before inspection
+      Cleaning for deposit return
+    Quality
+      Vetted vendors
+      Ratings
+      Pay on completion
+</pre>
+  </div></figure>
+  <div class="split" style="margin-top:14px">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["Life event: SPA, handover, move-in"] --> B["Bundled offer shown"]
+  B -->|"C1"| C["Vendor booked"]
+  C --> D["Job done, photo proof"]
+  D --> E["Customer pays, vendor paid less commission"]
+  E --> F["Rating and re-booking"]
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Offer → booking</span></h4><p class="bad">Unreliable vendors damage the core brand.</p><p class="fix">Few vetted vendors per category, pay on completion, re-do guarantee.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S7 RENT FINANCING -->
+<section class="stream s" id="s7">
+  <div class="stream-head">
+    <span class="tag">Secondary · S7</span>
+    <h2>Rent financing and payments</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Financing partner, revenue share</span></div>
+      <div class="fact"><b>Partner type</b><span>Keyper-style: landlord paid upfront, tenant pays monthly</span></div>
+      <div class="fact"><b>Why</b><span>Removes the biggest rental pain: 1–4 cheques</span></div>
+    </div>
+  </div>
+  <figure><div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((Rent financing))
+    Revenue
+      Partner revenue share
+      Fee on agency and deposit instalments
+    Tenant
+      Credit check
+      Monthly card or bank payments
+    Landlord
+      Full year paid upfront
+      No cheque handling
+    Risk
+      Partner carries credit risk
+      Default handling
+    Regulation
+      Licensed lender or partner only
+</pre>
+  </div></figure>
+  <div class="split" style="margin-top:14px">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["Tenant picks monthly at checkout"] --> B["Partner credit check"]
+  B -->|"C1"| C["Landlord agrees, paid upfront"]
+  C --> D["Tenant pays monthly"]
+  D --> E["Revenue share to platform"]
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Credit check → landlord</span></h4><p class="bad">Landlords used to cheques distrust a third party.</p><p class="fix">Show the upfront payout clearly; partner with landlords who already use it.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S8 B2B -->
+<section class="stream s" id="s8">
+  <div class="stream-head">
+    <span class="tag">Secondary · S8</span>
+    <h2>B2B, advertising and data</h2>
+    <div class="facts">
+      <div class="fact"><b>Who pays</b><span>Developers, agencies, banks</span></div>
+      <div class="fact"><b>Rate</b><span>Subscriptions, campaigns, reports</span></div>
+      <div class="fact"><b>Risk</b><span>Paid placement must not look like advice</span></div>
+    </div>
+  </div>
+  <figure><div class="diagram">
+<pre class="mermaid">
+mindmap
+  root((B2B and data))
+    Developers
+      Featured launches
+      Inventory dashboard
+      Buyer demand insights
+    Agencies
+      Partner listings for resale
+      Lead fees
+      CRM tools
+    Banks and insurers
+      Placement in checkout
+      Qualified leads
+    Data
+      Valuation reports
+      Rental yield reports
+      Area price trends
+    Trust rules
+      Paid labels on ads
+      Ranking by quality not payment
+</pre>
+  </div></figure>
+  <div class="split" style="margin-top:14px">
+    <figure><div class="diagram">
+<pre class="mermaid">
+flowchart TD
+  A["Partner signs up"] --> B["Campaign or subscription chosen"]
+  B -->|"C1"| C["Placement shown with paid label"]
+  C --> D["Leads and results reported"]
+  D --> E["Renewal"]
+</pre>
+    </div></figure>
+    <div class="challenges">
+      <div class="ch"><h4><span class="cx">C1</span><span class="step">Campaign → placement</span></h4><p class="bad">Buyers stop trusting rankings if developers can pay to the top.</p><p class="fix">Clear "Sponsored" labels; organic ranking by verification and delivery record.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<section class="block" id="sources">
+  <h2>Sources</h2>
+  <p class="sub">Reddit threads and news reports were used for the challenges; government and law-firm sources for process and fees. Brokerage blogs are marked as indicative.</p>
+  <ol class="src">
+    <li><a href="https://dubailand.gov.ae/en/news-media/dubai-land-department-provides-madmoun-service-to-verify-validity-of-real-estate-ads-via-qr-codes">DLD: Madmoun QR verification of real estate ads</a></li>
+    <li><a href="https://dubailand.gov.ae/en/eservices/buy-or-sell-property-via-dubai-now/">DLD: Buy or sell property via DubaiNow</a></li>
+    <li><a href="https://dlp.dubai.gov.ae/Legislation%20Reference/2007/Law%20No.%20%288%29%20of%202007%20Concerning%20Escrow%20Accounts%20for%20Real%20Estate%20Development%20in%20the%20Emirate%20of%20Dubai.html">Dubai Law No. 8 of 2007 (escrow accounts)</a></li>
+    <li><a href="https://www.tamimi.com/law-update/september/articles/key-issues-investors-need-know-buying-real-estate-off-plan-part-1-know-rights-real-estate-investors-dubai-guide/">Al Tamimi: Key issues buying off-plan (20% rule, escrow)</a></li>
+    <li><a href="https://www.wam.ae/en/article/bm6n7kr-adrec-launches-digital-buy-sell-journey">WAM: ADREC Digital Buy &amp; Sell Journey</a></li>
+    <li><a href="https://famproperties.com/blog/buying-off-plan-property">fäm Properties: Off-plan buying process</a> (indicative)</li>
+    <li><a href="https://www.binghatti.com/en/blog/form-f-dubai-land-department">Binghatti: Form F explained</a> (indicative)</li>
+    <li><a href="https://atblegal.com/blog/real-estate-law/uae-spa-exit-resale">ATB Legal: Pulling out of a resale SPA</a></li>
+    <li><a href="https://www.propertyfinder.ae/blog/dld-fees-dubai/">Property Finder: DLD fees</a></li>
+    <li><a href="https://sothebysrealty.ae/the-journal/how-to-get-a-mortgage-in-dubai/">Sotheby's Realty: Mortgage guide (LTV, fees)</a> (indicative)</li>
+    <li><a href="https://famproperties.com/dubai-real-estate-guides/renting-guide-property-in-dubai">fäm Properties: Renting guide (Ejari, deposits, DEWA)</a> (indicative)</li>
+    <li><a href="https://www.mondaq.com/landlord-tenant-leases/1535252/rent-price-increases-notice-periods-and-eviction-reasons-in-dubai-what-you-need-to-know">Mondaq: Rent increases, notice periods and eviction in Dubai</a></li>
+    <li><a href="https://alkabban.com/news/dubai-ejari-rental-modifications-2025/">Al Kabban: Ejari property-modification check (2025)</a></li>
+    <li><a href="https://gulfnews.com/living-in-uae/housing/renting-in-dubai-how-to-get-your-security-deposit-back-and-what-to-do-if-your-landlord-refuses-1.500414675">Gulf News: Getting your security deposit back</a></li>
+    <li><a href="https://gulfnews.com/business/property/dubai-property-portals-urged-to-crack-down-on-misleading-verified-listings-1.500593234">Gulf News: Portals urged to crack down on misleading verified listings</a></li>
+    <li><a href="https://www.khaleejtimes.com/business/property/dubai-rental-scam-agents-deposits-disappear?amp=1">Khaleej Times: Rental scams and disappearing deposits</a></li>
+    <li><a href="https://www.khaleejtimes.com/business/realty/dubai-want-to-invest-in-off-plan-property-red-flags-risks-to-watch-out-for-to-secure-dream-home">Khaleej Times: Off-plan red flags</a></li>
+    <li><a href="https://www.businesstoday.in/amp/latest/world/story/landlords-hold-all-the-power-reddit-post-calls-dubai-rental-market-a-frustrating-maze-with-minimal-tenant-protection-hidden-fees-468705-2025-03-20">Business Today: Reddit post on Dubai rental market</a></li>
+    <li><a href="https://www.reddit.com/r/dubai/comments/1ctxzob/worst_experience_buying_property/">r/dubai: Worst experience buying property</a></li>
+    <li><a href="https://www.reddit.com/r/dubai/comments/1dqfjmi/sellers_agent_is_extremely_rude_can_we_buy_the/">r/dubai: Seller's agent is extremely rude</a></li>
+    <li><a href="https://www.reddit.com/r/dubairealestate/comments/1ssryxb/agent_insisting_to_cancel_contract_before_transfer/">r/dubairealestate: Agent insisting to cancel contract before transfer</a></li>
+    <li><a href="https://www.reddit.com/r/dubairealestate/comments/1kwh5zy/what_is_the_worst_about_buying_a_property_in_dubai/">r/dubairealestate: What is the worst about buying a property in Dubai</a></li>
+    <li><a href="https://www.reddit.com/r/dubairealestate/comments/1t54fx2/traffic_is_back_and_so_are_the_lies/">r/dubairealestate: Traffic is back and so are the lies</a></li>
+    <li><a href="https://www.reddit.com/r/dubai/comments/1olhhp9/regret_in_buying_a_damac_property/">r/dubai: Regret in buying a DAMAC property</a></li>
+    <li><a href="https://www.reddit.com/r/dubairealestate/comments/1rzi148/dubai_offplan_owners_are_you_continuing/">r/dubairealestate: Off-plan owners, are you continuing instalments?</a></li>
+    <li><a href="https://www.reddit.com/r/DubaiCentral/comments/1jcf127/the_dubai_rental_struggle_a_tenants_nightmare/">r/DubaiCentral: The Dubai rental struggle</a></li>
+    <li><a href="https://www.reddit.com/r/dubai/comments/124qxik/landlord_will_not_let_me_move_in_appartment/">r/dubai: Landlord will not let me move in</a></li>
+    <li><a href="https://www.reddit.com/r/dubai/comments/1lupyr9/tenant_nightmare_in_dubai_landlord_disconnected/">r/dubai: Landlord disconnected DEWA</a></li>
+    <li><a href="https://www.reddit.com/r/dubai/comments/1idhidu/my_nightmare_renewing_my_dubai_tenancy_contract/">r/dubai: My nightmare renewing my tenancy contract</a></li>
+    <li><a href="https://www.reddit.com/r/dubairealestate/comments/1vrxi0p/landlord_sold_the_apartment_towards_end_of/">r/dubairealestate: Landlord sold the apartment near end of tenancy</a></li>
+    <li><a href="https://www.reddit.com/r/dubairentals/comments/1tukm48/genuinely_curious_whats_been_the_most_frustrating/">r/dubairentals: Most frustrating part of renting in Dubai</a></li>
+    <li><a href="https://www.houst.com/blog/dubai-holiday-home-permit">Houst: Dubai holiday home permit</a> (indicative)</li>
+    <li><a href="https://help.propertyfinder.ae/hc/en-us/articles/37816365548946-How-to-get-a-UAE-Golden-Visa-through-Dubai-property">Property Finder: Golden Visa through Dubai property</a></li>
+    <li><a href="https://joinoliva.com/en/learn/blog/dubai-property-assignment-fees-2026-secondary-off-plan">Oliva: Off-plan assignment fees</a> (indicative)</li>
+    <li><a href="https://pulse2.com/keyper-raises-11-million-series-a-to-expand-monthly-rent-payments-across-the-uae/">Pulse 2.0: Keyper monthly rent payments</a></li>
+  </ol>
+  <p class="note">Fees and rules change often. Confirm each figure with DLD, RERA and partners before building it into the product. This is research, not legal advice.</p>
+</section>
+</div>
