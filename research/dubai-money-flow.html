@@ -1,0 +1,427 @@
+<title>Dubai Property Money Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a money map. Calculator bar → route picker (seller × payment) → one lane per flow: numbered steps with "from → to · amount" chips, then a ledger and safeguards. Channel colour = who you buy from. */
+:root{
+  --bg:#f4f6f8; --surface:#ffffff; --sunk:#e9edf1;
+  --ink:#14202b; --muted:#566370; --line:#d2d9e0;
+  --op:#1f4f8f; --op-soft:#e1eaf6;        /* off-plan: developer channel */
+  --rs:#0b6b5c; --rs-soft:#ddf0eb;        /* ready: existing-owner channel */
+  --rt:#8a5a0b; --rt-soft:#f4ead6;        /* rentals */
+  --money:#0b6b5c;
+  --warn:#a3470f; --warn-soft:#fbe9dc;
+  --good:#1f7a3f;
+  --display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e141a; --surface:#151d25; --sunk:#1c2630;
+    --ink:#e3e9ee; --muted:#9aa8b5; --line:#2b3946;
+    --op:#7fb0ef; --op-soft:#16263b;
+    --rs:#5fcbb5; --rs-soft:#12302b;
+    --rt:#e0b45e; --rt-soft:#33280f;
+    --money:#5fcbb5;
+    --warn:#f2a272; --warn-soft:#3a2314;
+    --good:#6cc98a;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e141a; --surface:#151d25; --sunk:#1c2630;
+  --ink:#e3e9ee; --muted:#9aa8b5; --line:#2b3946;
+  --op:#7fb0ef; --op-soft:#16263b;
+  --rs:#5fcbb5; --rs-soft:#12302b;
+  --rt:#e0b45e; --rt-soft:#33280f;
+  --money:#5fcbb5;
+  --warn:#f2a272; --warn-soft:#3a2314;
+  --good:#6cc98a;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+a{color:var(--op)}
+:focus-visible{outline:2px solid var(--op);outline-offset:2px;border-radius:4px}
+.page{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:28px 72px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+header.cover{display:grid;gap:10px;padding-bottom:20px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0}
+h1{font-family:var(--display);font-weight:650;font-size:clamp(30px,4.4vw,44px);line-height:1.08;margin:0;text-wrap:balance}
+.lede{font-size:17px;color:var(--muted);max-width:74ch;margin:0}
+
+/* calculator */
+.calc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-block:1px solid var(--line);padding-block:10px;margin-inline:-20px;padding-inline:20px;display:flex;flex-wrap:wrap;gap:10px 22px;align-items:end}
+.calc label{display:grid;gap:3px;font-size:11px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.calc input,.calc select{font:600 15px var(--mono);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 9px;width:160px;font-variant-numeric:tabular-nums}
+.calc select{width:auto}
+.calc .hint{font-size:12px;color:var(--muted);max-width:44ch;line-height:1.4}
+
+/* route picker */
+.router{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}
+.channel{border-radius:12px;padding:16px 18px;border:1px solid var(--line);background:var(--surface);min-width:0}
+.channel.op{border-top:4px solid var(--op)}
+.channel.rs{border-top:4px solid var(--rs)}
+.channel h2{font-family:var(--display);font-size:20px;margin:0 0 2px}
+.channel p{margin:0 0 12px;font-size:13.5px;color:var(--muted)}
+.routes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.route{display:grid;gap:2px;text-decoration:none;color:var(--ink);border-radius:8px;padding:10px 12px;background:var(--sunk);border:1px solid transparent}
+.route:hover{border-color:currentColor}
+.route b{font-size:14px}
+.route span{font-size:12.5px;color:var(--muted)}
+.route i{font-style:normal;font-family:var(--mono);font-size:11px;font-weight:600}
+.channel.op .route i{color:var(--op)}
+.channel.rs .route i{color:var(--rs)}
+.extras{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;font-size:13px;align-items:center;color:var(--muted)}
+.extras a{text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:4px 11px;background:var(--surface);color:var(--ink)}
+
+.changes{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+.changes h3{margin:0 0 6px;font-size:15px}
+.changes ul{margin:0;padding-left:18px;display:grid;gap:3px;font-size:13.5px;columns:2;column-gap:28px}
+.changes li{break-inside:avoid}
+
+/* flow lane */
+.flow{margin-top:36px;scroll-margin-top:84px}
+.flow-head{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between;border-radius:12px 12px 0 0;padding:14px 18px;color:var(--ink)}
+.flow.op .flow-head{background:var(--op-soft)}
+.flow.rs .flow-head{background:var(--rs-soft)}
+.flow.rt .flow-head{background:var(--rt-soft)}
+.flow-head h2{margin:0;font-family:var(--display);font-size:22px;font-weight:650}
+.flow-head .tag{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px}
+.flow.op .tag{color:var(--op)} .flow.rs .tag{color:var(--rs)} .flow.rt .tag{color:var(--rt)}
+.flow-head .sits{font-size:13px;color:var(--muted);max-width:52ch}
+.flow-head .sits b{color:var(--ink);font-weight:600}
+.flow-body{background:var(--surface);border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:16px 18px 18px}
+
+ol.steps{list-style:none;margin:0;padding:0;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,1fr);gap:22px;overflow-x:auto;padding-bottom:6px;counter-reset:s}
+ol.steps li{position:relative;counter-increment:s;display:grid;align-content:start;gap:6px;min-width:0}
+ol.steps li::before{content:counter(s);font-family:var(--mono);font-size:11px;font-weight:600;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--sunk);color:var(--ink)}
+ol.steps li:not(:last-child)::after{content:"";position:absolute;top:10px;left:30px;right:-18px;height:2px;background:var(--line)}
+.flow.op ol.steps li::before{background:var(--op-soft);color:var(--op)}
+.flow.rs ol.steps li::before{background:var(--rs-soft);color:var(--rs)}
+.flow.rt ol.steps li::before{background:var(--rt-soft);color:var(--rt)}
+ol.steps h4{margin:0;font-size:14px;line-height:1.3}
+.chip{display:grid;gap:1px;border:1px dashed var(--line);border-radius:7px;padding:6px 8px;font-size:12px;background:var(--bg)}
+.chip .path{color:var(--muted)}
+.chip .path b{color:var(--ink);font-weight:600}
+.chip .amt{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--money);font-variant-numeric:tabular-nums}
+.chip.none .amt{color:var(--muted);font-weight:400}
+ol.steps p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45}
+
+.lower{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;margin-top:16px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:520px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--sunk);font-weight:600}
+td.r,th.r{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.other td{color:var(--muted)}
+tr.total td{font-weight:700;border-bottom:0;background:var(--sunk)}
+.side{display:grid;gap:12px;align-content:start}
+.side h4{margin:0 0 4px;font-size:13px;font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase}
+.side ul{margin:0;padding-left:18px;display:grid;gap:3px;font-size:13.5px}
+.side .ok h4{color:var(--good)}
+.side .risk h4{color:var(--warn)}
+.earn{border-radius:8px;padding:10px 12px;font-size:13.5px;background:var(--sunk)}
+.earn b{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;display:block;color:var(--muted)}
+
+h2.sec{font-family:var(--display);font-size:26px;margin:48px 0 6px}
+.note{font-size:12.5px;color:var(--muted);max-width:90ch}
+ol.src{font-size:12.5px;color:var(--muted);padding-left:24px;display:grid;gap:3px}
+
+@media (max-width:900px){
+  .router,.lower{grid-template-columns:minmax(0,1fr)}
+  .changes ul{columns:1}
+}
+@media (max-width:640px){
+  .page{padding-inline:16px}
+  .calc{margin-inline:-16px;padding-inline:16px;position:static}
+  .routes{grid-template-columns:minmax(0,1fr)}
+  ol.steps{grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;gap:14px}
+  ol.steps li{padding-left:34px}
+  ol.steps li::before{position:absolute;left:0;top:0}
+  ol.steps li:not(:last-child)::after{top:28px;bottom:-14px;left:10px;right:auto;width:2px;height:auto}
+}
+</style>
+
+<div class="page">
+<header class="cover">
+  <p class="eyebrow">Superapp design · Where every dirham goes</p>
+  <h1>Dubai property money flow</h1>
+  <p class="lede">Four core routes plus two the original chart left out: off-plan resale and renting. Each route shows who pays whom, how much, at which step, and where your money sits while you wait. Change the price to recalculate everything.</p>
+</header>
+
+<form class="calc" id="calc" aria-label="Example deal">
+  <label for="price">Property price (AED)<input id="price" inputmode="numeric" value="2,000,000"></label>
+  <label for="rent">Annual rent (AED)<input id="rent" inputmode="numeric" value="120,000"></label>
+  <label for="cheques">Rent cheques<select id="cheques"><option value="1">1</option><option value="2">2</option><option value="4" selected>4</option><option value="12">12</option></select></label>
+  <span class="hint">Example figures. Off-plan uses a 10 / 50 / 40 payment plan. Ready mortgages use the expat first-home cap: 80% LTV up to AED 5m, 70% above.</span>
+</form>
+
+<div class="router" aria-label="Choose your route">
+  <div class="channel op">
+    <h2>Buying from a developer</h2>
+    <p>Off-plan. Your money goes into a project escrow account and is released only as the building goes up.</p>
+    <div class="routes">
+      <a class="route" href="#f1"><i>Flow 1</i><b>Off-plan, cash</b><span>Payment plan to escrow</span></a>
+      <a class="route" href="#f2"><i>Flow 2</i><b>Off-plan, mortgage</b><span>Bank pays up to 50%, usually at handover</span></a>
+    </div>
+  </div>
+  <div class="channel rs">
+    <h2>Buying from an owner</h2>
+    <p>Ready or resale. Money and title swap on one day at a trustee centre, or in-app through DubaiNow if eligible.</p>
+    <div class="routes">
+      <a class="route" href="#f3"><i>Flow 3</i><b>Ready, cash</b><span>One-day transfer</span></a>
+      <a class="route" href="#f4"><i>Flow 4</i><b>Ready, mortgage</b><span>Bank pays the seller at transfer</span></a>
+    </div>
+  </div>
+</div>
+<div class="extras">Also mapped: <a href="#f5">Flow 5 · Off-plan resale (assignment)</a><a href="#f6">Flow 6 · Renting</a><a href="#compare">Side-by-side comparison</a></div>
+
+<div class="changes">
+  <h3>What this version adds to the original chart</h3>
+  <ul>
+    <li>Real amounts at every step, recalculated from your price</li>
+    <li>All fees: 4% DLD, trustee, title deed, agency, mortgage registration, valuation</li>
+    <li>Off-plan mortgages capped at 50% LTV by the Central Bank</li>
+    <li>The 10% security cheque at Form F (held, not cashed)</li>
+    <li>Seller's mortgage payoff and the developer NOC</li>
+    <li>Eligibility limits of DubaiNow Digital Sale</li>
+    <li>Where the superapp earns on each route</li>
+    <li>Off-plan resale and rental flows</li>
+  </ul>
+</div>
+
+<div id="flows"></div>
+
+<h2 class="sec" id="compare">Side by side</h2>
+<div class="tbl" id="compareTbl"></div>
+<p class="note">"Buyer cash out" is everything the buyer or tenant pays from their own pocket on that route, including fees. Bank money and the developer's commission are excluded.</p>
+
+<h2 class="sec">Sources and assumptions</h2>
+<ol class="src">
+  <li>DLD 4% transfer fee, AED 580 title deed fee, trustee fee AED 4,000 + VAT (AED 2,000 under AED 500k): <a href="https://www.propertyfinder.ae/blog/dld-fees-dubai/">Property Finder, DLD fees</a></li>
+  <li>Mortgage registration 0.25% of loan + AED 290: <a href="https://joinoliva.com/en/learn/blog/mortgage-registration-fees-at-dld-explained">Oliva, DLD mortgage registration</a></li>
+  <li>Off-plan LTV capped at 50%; ready expat LTV 80% / 70%: <a href="https://tamimi.com/law-update-articles/the-new-uae-mortgage-regulations">Al Tamimi, UAE mortgage regulations</a>; <a href="https://www.hausandhaus.com/resources/latest-news-and-insights/mortgage-for-off-plan-property-in-dubai-complete-buyer-s-guide/">haus &amp; haus, off-plan mortgages</a></li>
+  <li>Escrow rules and 5% retention: <a href="https://dlp.dubai.gov.ae/Legislation%20Reference/2007/Law%20No.%20%288%29%20of%202007%20Concerning%20Escrow%20Accounts%20for%20Real%20Estate%20Development%20in%20the%20Emirate%20of%20Dubai.html">Dubai Law No. 8 of 2007</a></li>
+  <li>Form F and 10% security cheque: <a href="https://atblegal.com/blog/real-estate-law/uae-spa-exit-resale">ATB Legal, resale SPA exit</a></li>
+  <li>DubaiNow Digital Sale eligibility: <a href="https://dubailand.gov.ae/en/eservices/buy-or-sell-property-via-dubai-now/">DLD, buy or sell via DubaiNow</a></li>
+  <li>Assignment thresholds and NOC fees: <a href="https://joinoliva.com/en/learn/blog/dubai-property-assignment-fees-2026-secondary-off-plan">Oliva, assignment fees</a> (indicative)</li>
+  <li>Rental deposits, agency fee, DEWA deposit: <a href="https://famproperties.com/dubai-real-estate-guides/renting-guide-property-in-dubai">fäm Properties renting guide</a> (indicative)</li>
+  <li>Assumptions: valuation AED 3,000 + VAT; bank processing shown at the 1% maximum; developer commission 4%; bank referral 0.5%; Ejari ≈ AED 220; DEWA activation ≈ AED 130. Confirm before quoting customers.</li>
+</ol>
+</div>
+
+<script>
+(function(){
+  const VAT = 0.05;
+  const $ = id => document.getElementById(id);
+  const parse = s => Math.max(0, Number(String(s).replace(/[^\d.]/g,'')) || 0);
+  const aed = n => 'AED ' + Math.round(n).toLocaleString('en-US');
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+  function build(P, R, n){
+    const trustee = (P >= 500000 ? 4000 : 2000) * (1 + VAT);
+    const deedFee = 580;
+    const valuation = 3000 * (1 + VAT);
+    const agency = 0.02 * P * (1 + VAT);
+    const ltvReady = P <= 5000000 ? 0.80 : 0.70;
+    const Lr = ltvReady * P, Lo = 0.5 * P;
+    const resale = 1.10 * P, paidToDate = 0.40 * P;
+
+    return [
+      { id:'f1', ch:'op', tag:'Flow 1 · Developer · Cash', title:'Off-plan, cash',
+        sits:'<b>Your money sits in:</b> the project escrow account, released to the builder only against certified progress.',
+        steps:[
+          ['Reserve the unit','Buyer','Project escrow',0.10*P,'Booking or EOI. Pay only to the escrow account registered for this project.'],
+          ['Sign SPA, register Oqood','Buyer','DLD',0.04*P,'4% DLD fee plus admin. The developer registers your SPA in Oqood.'],
+          ['Construction instalments','Buyer','Project escrow',0.50*P,'Time-linked or tied to construction milestones.'],
+          ['Escrow pays the build','Escrow bank','Contractors and developer',null,'Released only against engineer-certified progress. 5% held for one year after completion.'],
+          ['Handover payment','Buyer','Project escrow',0.40*P,'Final balance on the completion notice.'],
+          ['Keys and title deed','DLD','Buyer',null,'Oqood converts to a title deed. Service charges and DEWA start.']
+        ],
+        ledger:[
+          ['Buyer','Project escrow','Booking 10%','Day 1',0.10*P,1],
+          ['Buyer','DLD','Oqood registration 4%','At SPA',0.04*P,1],
+          ['Buyer','Project escrow','Instalments 50%','Construction',0.50*P,1],
+          ['Buyer','Project escrow','Handover 40%','Completion',0.40*P,1],
+          ['Developer','Superapp','Commission (example 4%)','After SPA + Oqood',0.04*P,0]
+        ],
+        ok:['Check the RERA project number and escrow account on Dubai REST before paying','Escrow money is protected from the developer\'s creditors','Oqood certificate in your name within weeks of the SPA'],
+        risk:['Handover delays of months or years are common','Cancelling lets the developer keep part of what you paid','Service charges start at handover; ask for the budget early'],
+        earn:'Developer commission, example 4% = '+aed(0.04*P)+'. The buyer pays no agency fee.',
+        keys:'At completion, often 2–4 years'
+      },
+      { id:'f2', ch:'op', tag:'Flow 2 · Developer · Mortgage', title:'Off-plan, mortgage',
+        sits:'<b>Your money sits in:</b> the project escrow account. The bank\'s money joins it, usually near handover. Loan capped at 50% while the unit is off-plan.',
+        steps:[
+          ['Reserve the unit','Buyer','Project escrow',0.10*P,'Pick a project your bank has approved for lending.'],
+          ['Sign SPA, register Oqood','Buyer','DLD',0.04*P,'4% DLD fee plus admin.'],
+          ['Your 50% equity','Buyer','Project escrow',0.40*P,'Off-plan LTV is capped at 50%, so you fund at least half yourself.'],
+          ['Mortgage approval','Buyer','Bank',valuation+0.01*Lo,'Valuation plus processing (up to 1% of loan). Life and property insurance required.'],
+          ['Bank pays its share','Bank','Project escrow',Lo,'Usually at or near handover. Mortgage registered on the Oqood, then the deed.'],
+          ['Keys and title deed','DLD','Buyer',null,'Deed in your name, mortgage registered in favour of the bank.']
+        ],
+        ledger:[
+          ['Buyer','Project escrow','Booking 10%','Day 1',0.10*P,1],
+          ['Buyer','DLD','Oqood registration 4%','At SPA',0.04*P,1],
+          ['Buyer','Project escrow','Equity instalments 40%','Construction',0.40*P,1],
+          ['Buyer','Valuer','Valuation (est.)','Approval',valuation,1],
+          ['Buyer','Bank','Processing, up to 1% of loan','Approval',0.01*Lo,1],
+          ['Buyer','DLD','Mortgage registration 0.25% + 290','Registration',0.0025*Lo+290,1],
+          ['Bank','Project escrow','Loan 50%','Handover',Lo,0],
+          ['Developer','Superapp','Commission (example 4%)','After SPA + Oqood',0.04*P,0],
+          ['Bank','Superapp','Referral (est. 0.5%)','After disbursement',0.005*Lo,0]
+        ],
+        ok:['Escrow protects both your equity and the bank\'s money','Bank valuation is an independent price check','Handover mortgage can be refinanced at ready LTV later'],
+        risk:['Valuation below price leaves a cash gap','Bank may not lend on the project at all','Rate is fixed only at drawdown, not at booking'],
+        earn:'Developer commission '+aed(0.04*P)+' plus bank referral ≈ '+aed(0.005*Lo)+'.',
+        keys:'At completion, after bank disbursement'
+      },
+      { id:'f3', ch:'rs', tag:'Flow 3 · Owner · Cash', title:'Ready, cash',
+        sits:'<b>Your money sits in:</b> your own account until transfer day. Cash means a bank transfer or manager\'s cheque, not banknotes.',
+        steps:[
+          ['Agree price, sign Form F','Buyer','Held by broker',0.10*P,'10% security cheque. Not cashed. Returned at transfer, or forfeited if you default.'],
+          ['Seller clears the NOC','Seller','Developer','AED 500–5,000','Plus any unpaid service charges.'],
+          ['Pre-transfer checks','Trustee','Both parties',null,'Title, identities, POA, no mortgage on the unit.'],
+          ['Transfer day','Buyer','Seller',P,'Manager\'s cheque at the trustee centre, or in-app through DubaiNow Digital Sale if eligible.'],
+          ['Fees on the day','Buyer','DLD, trustee, superapp',0.04*P+deedFee+trustee+agency,'4% DLD, title deed fee, trustee fee, 2% agency + VAT.'],
+          ['Title deed issued','DLD','Buyer',null,'Same day. Keys, access cards and DEWA move over.']
+        ],
+        ledger:[
+          ['Buyer','Seller','Purchase price','Transfer day',P,1],
+          ['Buyer','DLD','Transfer fee 4%','Transfer day',0.04*P,1],
+          ['Buyer','DLD','Title deed fee','Transfer day',deedFee,1],
+          ['Buyer','Trustee centre','Trustee fee + VAT','Transfer day',trustee,1],
+          ['Buyer','Superapp','Agency 2% + VAT','Transfer day',agency,1],
+          ['Buyer','Held by broker','Security cheque (returned)','Form F',0.10*P,0]
+        ],
+        ok:['Form F is registered on the DLD system','Money and title swap at the same appointment','DubaiNow works for cash, single owner, mortgage-free units with UAE Pass and a UAE bank account'],
+        risk:['Seller backs out; disputes over the security cheque','NOC held up by unpaid service charges','Wrong cheque amounts delay transfer day'],
+        earn:'Buyer agency fee 2% + VAT = '+aed(agency)+'.',
+        keys:'Transfer day, 1–3 weeks after Form F'
+      },
+      { id:'f4', ch:'rs', tag:'Flow 4 · Owner · Mortgage', title:'Ready, mortgage',
+        sits:'<b>Your money sits in:</b> your account until transfer day; the bank pays the seller directly at the trustee centre. Fees cannot be financed.',
+        steps:[
+          ['Pre-approval','Buyer','Bank',null,'Free. 3–7 days, valid 60–90 days. Do this before you offer.'],
+          ['Agree price, sign Form F','Buyer','Held by broker',0.10*P,'10% security cheque. Add a valuation opt-out clause.'],
+          ['Valuation and offer letter','Buyer','Bank',valuation+0.01*Lr,'Loan is based on the lower of price and valuation.'],
+          ['Seller\'s loan settled','Your bank','Seller\'s bank','If any','Part of your loan clears the seller\'s mortgage so the title is released.'],
+          ['Transfer day','Buyer + bank','Seller',P,'You pay '+aed(P-Lr)+'; the bank pays '+aed(Lr)+'.'],
+          ['Fees and deed','Buyer','DLD, trustee, superapp',0.04*P+deedFee+0.0025*Lr+290+trustee+agency,'4% DLD, deed fee, mortgage registration, trustee, agency. Deed issued with the bank\'s mortgage on it.']
+        ],
+        ledger:[
+          ['Buyer','Seller','Down payment '+Math.round((1-ltvReady)*100)+'%','Transfer day',P-Lr,1],
+          ['Bank','Seller (or seller\'s bank)','Loan '+Math.round(ltvReady*100)+'%','Transfer day',Lr,0],
+          ['Buyer','DLD','Transfer fee 4%','Transfer day',0.04*P,1],
+          ['Buyer','DLD','Title deed fee','Transfer day',deedFee,1],
+          ['Buyer','DLD','Mortgage registration 0.25% + 290','Transfer day',0.0025*Lr+290,1],
+          ['Buyer','Valuer','Valuation (est.)','Before offer letter',valuation,1],
+          ['Buyer','Bank','Processing, up to 1% of loan','Offer letter',0.01*Lr,1],
+          ['Buyer','Trustee centre','Trustee fee + VAT','Transfer day',trustee,1],
+          ['Buyer','Superapp','Agency 2% + VAT','Transfer day',agency,1],
+          ['Bank','Superapp','Referral (est. 0.5%)','After disbursement',0.005*Lr,0]
+        ],
+        ok:['Bank valuation protects you from overpaying','Mortgage registered on the deed in the bank\'s favour','Opt-out clause protects your 10% if valuation falls short'],
+        risk:['Valuation gap must be paid in cash','Pre-approval can expire before transfer','Seller\'s bank liability letter can take a week or more'],
+        earn:'Agency '+aed(agency)+' plus bank referral ≈ '+aed(0.005*Lr)+'.',
+        keys:'Transfer day, 4–8 weeks after Form F'
+      },
+      { id:'f5', ch:'op', tag:'Flow 5 · Investor · Off-plan resale', title:'Off-plan resale (assignment)',
+        sits:'<b>Example:</b> seller paid 40% and resells at a 10% premium ('+aed(resale)+'). The new buyer takes over the remaining payment plan.',
+        steps:[
+          ['Check the resale threshold','Seller','Developer',null,'Developers allow assignment after a set share is paid, commonly 30–40%.'],
+          ['Agree price, sign','Buyer','Seller',paidToDate+0.10*P,'Seller is repaid what they paid in, plus the premium.'],
+          ['Developer NOC and fee','Seller','Developer','1–2% of price','NOC issued, SPA assigned to the new buyer.'],
+          ['Oqood transfer','Buyer','DLD',0.04*resale,'4% on the resale price.'],
+          ['Continue the plan','Buyer','Project escrow',0.60*P,'Remaining instalments and handover payment.'],
+          ['Keys and title deed','DLD','Buyer',null,'As in Flow 1.']
+        ],
+        ledger:[
+          ['Buyer','Seller','Paid-to-date + premium','Signing',paidToDate+0.10*P,1],
+          ['Buyer','DLD','Oqood transfer 4%','Signing',0.04*resale,1],
+          ['Buyer','Superapp','Agency 2% + VAT','Signing',0.02*resale*(1+VAT),1],
+          ['Buyer','Project escrow','Remaining 60%','To completion',0.60*P,1]
+        ],
+        ok:['Developer confirms the paid amount before you pay the seller','Oqood moves into your name','Remaining money still goes to escrow'],
+        risk:['Developer fees and rules differ by project','Paying the seller before the NOC is issued','Premium can vanish if prices fall before handover'],
+        earn:'Agency 2% + VAT = '+aed(0.02*resale*(1+VAT))+'. Also supplies resale inventory for Flow 1 buyers.',
+        keys:'At completion'
+      },
+      { id:'f6', ch:'rt', tag:'Flow 6 · Tenant', title:'Renting',
+        sits:'<b>Your money goes to:</b> the landlord (rent and deposit) and the agent. With a monthly plan, a financing partner pays the landlord upfront.',
+        steps:[
+          ['Offer accepted','Tenant','Landlord',null,'Rent, number of cheques and start date agreed.'],
+          ['Sign the contract','Tenant','Landlord',0.05*R,'Security deposit: 5% unfurnished, 10% furnished.'],
+          ['Agency fee','Tenant','Superapp',0.05*R*(1+VAT),'5% of annual rent + VAT.'],
+          ['Rent','Tenant','Landlord',R/n,n===12?'12 monthly cheques, or a monthly plan via a financing partner.':n+' cheque'+(n>1?'s':'')+' of '+aed(R/n)+'. A monthly plan lets the landlord be paid upfront.'],
+          ['Ejari and DEWA','Tenant','DLD, DEWA',220+2130,'Ejari ≈ AED 220. DEWA deposit AED 2,000 (apartment) + activation.'],
+          ['Move out','Landlord','Tenant',0.05*R,'Deposit refunded after inspection, less any damage.']
+        ],
+        ledger:[
+          ['Tenant','Landlord','Security deposit 5%','Signing',0.05*R,1],
+          ['Tenant','Superapp','Agency 5% + VAT','Signing',0.05*R*(1+VAT),1],
+          ['Tenant','Landlord','First rent cheque','Signing',R/n,1],
+          ['Tenant','DLD','Ejari (approx.)','Before move-in',220,1],
+          ['Tenant','DEWA','Deposit + activation (approx.)','Before move-in',2130,1],
+          ['Partner','Landlord','Full year upfront (monthly plan)','Signing',R,0]
+        ],
+        ok:['Ejari makes the contract enforceable','Rent rises limited by the Smart Rental Index','Deposit amount recorded on Ejari'],
+        risk:['Landlords asking for 1–4 cheques','Deposit refunds delayed for months','Keys withheld until cheques clear'],
+        earn:'Agency 5% + VAT = '+aed(0.05*R*(1+VAT))+' plus a revenue share on monthly plans.',
+        keys:'After Ejari and DEWA, usually within a week'
+      }
+    ];
+  }
+
+  function render(){
+    const P = parse($('price').value) || 2000000;
+    const R = parse($('rent').value) || 120000;
+    const n = Number($('cheques').value) || 4;
+    const flows = build(P, R, n);
+    const out = flows.map(f => {
+      const steps = f.steps.map(([t,from,to,amt,note]) => {
+        const has = amt !== null;
+        const val = typeof amt === 'number' ? aed(amt) : (has ? esc(amt) : 'No payment');
+        return `<li><h4>${esc(t)}</h4><div class="chip${has?'':' none'}"><span class="path"><b>${esc(from)}</b> → <b>${esc(to)}</b></span><span class="amt">${val}</span></div><p>${esc(note)}</p></li>`;
+      }).join('');
+      const own = f.ledger.filter(r => r[5]);
+      const total = own.reduce((s,r) => s + r[4], 0);
+      const rows = f.ledger.map(r => `<tr class="${r[5]?'':'other'}"><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td><td class="r">${aed(r[4])}</td></tr>`).join('');
+      f.total = total;
+      return `<section class="flow ${f.ch}" id="${f.id}">
+        <div class="flow-head"><div><span class="tag">${esc(f.tag)}</span><h2>${esc(f.title)}</h2></div><div class="sits">${f.sits}</div></div>
+        <div class="flow-body">
+          <ol class="steps">${steps}</ol>
+          <div class="lower">
+            <div class="tbl"><table><thead><tr><th>Payer</th><th>Receiver</th><th>What</th><th>When</th><th class="r">Amount</th></tr></thead>
+              <tbody>${rows}<tr class="total"><td colspan="4">${f.ch==='rt'?'Tenant':'Buyer'} cash out (grey rows excluded)</td><td class="r">${aed(total)}</td></tr></tbody></table></div>
+            <div class="side">
+              <div class="ok"><h4>Protections</h4><ul>${f.ok.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+              <div class="risk"><h4>Watch-outs</h4><ul>${f.risk.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+              <div class="earn"><b>Superapp earns</b>${esc(f.earn)}</div>
+            </div>
+          </div>
+        </div></section>`;
+    }).join('');
+    $('flows').innerHTML = out;
+
+    const cmp = flows.map(f => `<tr><td><a href="#${f.id}">${esc(f.title)}</a></td><td class="r">${aed(f.total)}</td><td>${esc(f.sits.replace(/<[^>]+>/g,'').replace(/^[^:]+:\s*/,''))}</td><td>${esc(f.keys)}</td></tr>`).join('');
+    $('compareTbl').innerHTML = `<table><thead><tr><th>Route</th><th class="r">Buyer cash out</th><th>Where the money sits / how it moves</th><th>Keys</th></tr></thead><tbody>${cmp}</tbody></table>`;
+  }
+
+  function tidy(e){
+    const v = parse(e.target.value);
+    if (v) e.target.value = v.toLocaleString('en-US');
+  }
+  $('calc').addEventListener('submit', e => { e.preventDefault(); render(); });
+  ['price','rent'].forEach(id => { $(id).addEventListener('input', render); $(id).addEventListener('change', tidy); });
+  $('cheques').addEventListener('change', render);
+  render();
+})();
+</script>
