@@ -1,0 +1,157 @@
+<title>Property Superapp Mind Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,650&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one radial mind map. Hub in the middle, eight journey stages read clockwise from top right; colour marks the four phases (find, buy, live, repeat). */
+:root{
+  --bg:#f5f7f8; --surface:#ffffff; --ink:#15212b; --muted:#5b6872; --line:#c9d2d9;
+  --find:#2c5f9e; --find-soft:#e2ebf7;
+  --buy:#0c6e5f;  --buy-soft:#dcf0eb;
+  --live:#93620f; --live-soft:#f5ead4;
+  --again:#7a3f73; --again-soft:#f2e3f0;
+  --display:"Source Serif 4", Georgia, serif;
+  --body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f151a; --surface:#172028; --ink:#e4eaee; --muted:#9aa8b3; --line:#34434f;
+    --find:#86b4ee; --find-soft:#18283b;
+    --buy:#5fcbb5;  --buy-soft:#12302b;
+    --live:#e2b663; --live-soft:#33290f;
+    --again:#d99ad0; --again-soft:#33202f;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f151a; --surface:#172028; --ink:#e4eaee; --muted:#9aa8b3; --line:#34434f;
+  --find:#86b4ee; --find-soft:#18283b;
+  --buy:#5fcbb5;  --buy-soft:#12302b;
+  --live:#e2b663; --live-soft:#33290f;
+  --again:#d99ad0; --again-soft:#33202f;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body)}
+.page{max-width:1280px;margin:0 auto;padding-inline:20px;padding-block:26px 48px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:10px 24px;margin-bottom:12px}
+h1{font-family:var(--display);font-weight:650;font-size:clamp(26px,3.6vw,36px);margin:0;line-height:1.1}
+header p{margin:6px 0 0;color:var(--muted);font-size:15px;max-width:60ch}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.map{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.map svg{display:block;width:100%;min-width:980px;height:auto;font-family:var(--body)}
+.hint{display:none;font-size:12.5px;color:var(--muted);margin-top:8px}
+@media (max-width:1000px){ .hint{display:block} }
+@media (max-width:640px){ .page{padding-inline:16px} }
+
+/* SVG parts, coloured from tokens */
+.edge{fill:none;stroke-width:2}
+.leaf-edge{fill:none;stroke-width:1.25;opacity:.7}
+.hub rect{fill:var(--ink)}
+.hub text{fill:var(--bg)}
+.node rect{stroke-width:1.5}
+.node text{fill:var(--ink)}
+.leaf{fill:var(--ink);font-size:13.5px}
+.dot{stroke:none}
+.loop{fill:none;stroke:var(--again);stroke-width:1.75;stroke-dasharray:6 5}
+.loop-label{fill:var(--again);font-size:12.5px;font-family:var(--mono)}
+.find .edge,.find .leaf-edge{stroke:var(--find)} .find rect{fill:var(--find-soft);stroke:var(--find)} .find .dot,.find .num{fill:var(--find)}
+.buy .edge,.buy .leaf-edge{stroke:var(--buy)}   .buy rect{fill:var(--buy-soft);stroke:var(--buy)}   .buy .dot,.buy .num{fill:var(--buy)}
+.live .edge,.live .leaf-edge{stroke:var(--live)} .live rect{fill:var(--live-soft);stroke:var(--live)} .live .dot,.live .num{fill:var(--live)}
+.again .edge,.again .leaf-edge{stroke:var(--again)} .again rect{fill:var(--again-soft);stroke:var(--again)} .again .dot,.again .num{fill:var(--again)}
+.loopHead{fill:var(--again)}
+</style>
+
+<div class="page">
+<header>
+  <div>
+    <h1>Property superapp journey</h1>
+    <p>Eight stages, read clockwise from the top right. Selling or re-letting feeds new listings back into Discover.</p>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--find)"></i>Find</span>
+    <span><i style="background:var(--buy)"></i>Buy or rent</span>
+    <span><i style="background:var(--live)"></i>Live and earn</span>
+    <span><i style="background:var(--again)"></i>Repeat</span>
+  </div>
+</header>
+
+<figure class="map" style="margin:0">
+  <svg id="mm" viewBox="0 0 1280 800" role="img" aria-label="Mind map of the property superapp journey: Discover, Verify, Transact, Finance, Register, Move in, Own and earn, then Sell or re-let, which loops back to Discover."></svg>
+</figure>
+<p class="hint">Scroll sideways to see the full map.</p>
+</div>
+
+<script>
+(function(){
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('mm');
+  const el = (tag, attrs, parent, text) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    (parent || svg).appendChild(e);
+    return e;
+  };
+
+  const CX = 640, CY = 400, HUB_W = 180, HUB_H = 84;
+  const NODE_W = 172, NODE_H = 44;
+  const RY = [130, 305, 495, 670];
+
+  // side: 'r' or 'l'; ordered clockwise from top right
+  const B = [
+    {n:1, t:'Discover',      g:'find',  side:'r', y:RY[0], leaves:['Verified listings, Madmoun QR','Off-plan · Ready · Rent','All-in cost calculator','Prices vs DLD transactions']},
+    {n:2, t:'Verify',        g:'find',  side:'r', y:RY[1], leaves:['KYC and source of funds','Title deed or Oqood check','RERA project and escrow no.','Developer track record']},
+    {n:3, t:'Transact',      g:'buy',   side:'r', y:RY[2], leaves:['Off-plan: reserve into escrow','Ready: buy now or offer, Form F','Rent: tenancy contract online','Payments routed, never held']},
+    {n:4, t:'Finance',       g:'buy',   side:'r', y:RY[3], leaves:['Mortgage pre-approval','Valuation and offer letter','Monthly rent plans','Fees paid in cash']},
+    {n:5, t:'Register',      g:'buy',   side:'l', y:RY[3], leaves:['Oqood for off-plan','Title deed: trustee or DubaiNow','Mortgage registration','Ejari for rentals']},
+    {n:6, t:'Move in',       g:'live',  side:'l', y:RY[2], leaves:['Snagging inspection','Keys and handover','DEWA, internet, movers','Move-in permit']},
+    {n:7, t:'Own and earn',  g:'live',  side:'l', y:RY[1], leaves:['Property management','Holiday home permit','Golden Visa from AED 2m','Home services']},
+    {n:8, t:'Sell or re-let',g:'again', side:'l', y:RY[0], leaves:['Ready-to-sell pack','Form A and ad permit','Timed offers','Back into Discover']}
+  ];
+
+  const edges = el('g', {});
+  const nodes = el('g', {});
+
+  // loop arc from stage 8 (top left) to stage 1 (top right)
+  const lx1 = 380, lx2 = 900, ly = RY[0] - NODE_H/2 - 4;
+  el('path', {class:'loop', d:`M ${lx1} ${ly} Q ${CX} ${ly-120} ${lx2-6} ${ly-2}`}, edges);
+  el('polygon', {class:'loopHead', points:`${lx2} ${ly} ${lx2-14} ${ly-10} ${lx2-11} ${ly+4}`}, edges);
+  el('text', {class:'loop-label', x:CX, y:ly-74, 'text-anchor':'middle'}, edges, 'resale and re-let feed new listings');
+
+  B.forEach(b => {
+    const g = el('g', {class:b.g}, edges);
+    const ng = el('g', {class:'node '+b.g}, nodes);
+    const right = b.side === 'r';
+    const nx = right ? 900 : 380;               // node centre x
+    const hubEdge = right ? CX + HUB_W/2 : CX - HUB_W/2;
+    const nodeIn = right ? nx - NODE_W/2 : nx + NODE_W/2;
+    const nodeOut = right ? nx + NODE_W/2 : nx - NODE_W/2;
+    const hy = CY + (b.y - CY) * 0.12;          // fan out from the hub's side
+    const k = (nodeIn - hubEdge) * 0.55;
+    el('path', {class:'edge', d:`M ${hubEdge} ${hy} C ${hubEdge+k} ${hy}, ${nodeIn-k} ${b.y}, ${nodeIn} ${b.y}`}, g);
+
+    el('rect', {x:nx-NODE_W/2, y:b.y-NODE_H/2, width:NODE_W, height:NODE_H, rx:22}, ng);
+    el('text', {class:'num', x:nx-NODE_W/2+20, y:b.y+5, 'text-anchor':'middle', 'font-size':13, 'font-family':'JetBrains Mono, monospace', 'font-weight':500}, ng, b.n);
+    el('text', {x:nx+10, y:b.y+5.5, 'text-anchor':'middle', 'font-size':16, 'font-weight':700}, ng, b.t);
+
+    const gap = 27, n = b.leaves.length;
+    const lxStart = right ? nodeOut + 34 : nodeOut - 34;
+    b.leaves.forEach((t, i) => {
+      const y = b.y + (i - (n-1)/2) * gap;
+      const k2 = right ? 18 : -18;
+      el('path', {class:'leaf-edge', d:`M ${nodeOut} ${b.y} C ${nodeOut+k2} ${b.y}, ${lxStart-k2-6} ${y}, ${lxStart-(right?6:-6)} ${y}`}, g);
+      el('circle', {class:'dot', cx:lxStart-(right?6:-6), cy:y, r:3}, g);
+      el('text', {class:'leaf', x:lxStart+(right?2:-2), y:y+4.5, 'text-anchor': right ? 'start' : 'end'}, g, t);
+    });
+  });
+
+  const hub = el('g', {class:'hub'}, nodes);
+  el('rect', {x:CX-HUB_W/2, y:CY-HUB_H/2, width:HUB_W, height:HUB_H, rx:18}, hub);
+  el('text', {x:CX, y:CY-4, 'text-anchor':'middle', 'font-size':20, 'font-weight':700, 'font-family':'Source Serif 4, Georgia, serif'}, hub, 'Property');
+  el('text', {x:CX, y:CY+20, 'text-anchor':'middle', 'font-size':20, 'font-weight':700, 'font-family':'Source Serif 4, Georgia, serif'}, hub, 'superapp');
+})();
+</script>
