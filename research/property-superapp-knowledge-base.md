@@ -1,6 +1,6 @@
 # UAE Property Superapp: Concept Knowledge Base
 
-**Version:** 1.0 · **Knowledge date:** 17 October 2026 (market data through H1 2026) · **Region:** United Arab Emirates (Dubai first, Abu Dhabi second)
+**Version:** 1.1 · **Knowledge date:** 17 October 2026 (market data through H1 2026) · **Region:** United Arab Emirates (Dubai first, Abu Dhabi second)
 **Purpose:** A single, self-contained reference on a startup concept, written so another language model can be trained or prompted on it. It covers the idea and how it evolved, the problem, the market, how UAE property transactions actually work, the regulation that shapes the business, the business model, competitors, the execution plan, the validation survey, the fundraising pitch, risks, a glossary and worked Q&A.
 
 ---
@@ -716,9 +716,36 @@ r/dubai: "Worst experience buying property"; "Seller's agent is extremely rude";
 | Launch roadmap | Excel | 55 tasks, owners, Gantt, gates, roles, budget, deck storyline, sources |
 | Problem survey kit | Excel | 56-question questionnaire, sampling plan, interview guide, responses sheet, analysis with verdicts and generated statements |
 | Pitch deck | 18-slide deck | Problem-first investor presentation with placeholders for survey and pilot results |
+| DLD data integration spec | Markdown | Datasets, field lists, APIs, auth, pipeline, data model, compliance (`dld-data-integration-spec.md`) |
 | This knowledge base | Markdown | Everything above in one place |
 
 ---
 
+## 21. DLD data access (summary of the technical specification)
+
+Full detail is in `dld-data-integration-spec.md`. Key facts:
+
+- **Open data is available for free.** DLD's Real Estate Data page offers CSV downloads for **nine record types**: Transactions, Rents, Projects, Valuations, Land, Units, Buildings, Brokers and Developers; previous years are on Dubai Pulse (data.dubai). [V]
+- **Transactions fields (open):** transaction number, date, type (Sales, Mortgages, Gifts), registration type (Ready or Off Plan), freehold flag, usage, area, property type and sub type, amount, transaction and property size (sq.m), rooms, parking, nearest metro, mall and landmark, number of buyers and sellers, master project, project. **No names and no unit number.** [V]
+- **Projects fields (open):** project number and name, developer, start, end and adoption dates, project type and value, **escrow account number**, **project status**, **completed %**, inspection and completion dates, unit and building counts. This supports verifying an off-plan project and measuring a developer's delivery record. [V]
+- **Programmatic access.** The Dubai Pulse API is OAuth client-credentials: an API key and secret are exchanged at `api.dubaipulse.gov.ae/oauth/client_credential/accesstoken` for a bearer token that expires (about 30 minutes in the example). [B] Exact dataset query parameters, rate limits and the commercial reuse licence were not found. [U]
+- **DLD API Gateway** lists **13 APIs** (Mollak, Ejari, Trakheesi, Oqood, Mollak Budget, Dubai Brokers, Rental Index, Mollak Virtual Account, Mollak Budget Supplier, Mollak Authorized Signatory, Token Sale, Trust Account Bulk Inflow for developers, Oqood-TAS Bank Integration). Registration is through a **MyDLD login with UAE Pass** and is built for registered businesses; several APIs are limited to banks or developers. For a brokerage the relevant ones are **Trakheesi** (listing validation, delisting), **Dubai Brokers** and **Rental Index**. [V]
+- **Do not automate the DLD website download form**: it is protected by reCAPTCHA. Use Dubai Pulse. [V]
+- **Not in open data:** owner identity, unit-level sale link, live inventory, per-unit service charges, an individual buyer's payment status. Alternatives and consented routes are in the spec. [V]/[U]
+
+**Worked Q&A**
+
+**Q25. Can the app pull DLD transaction data for free?**
+Yes for the open datasets (CSV from DLD or Dubai Pulse, and the Dubai Pulse API with a key and secret). Confirm commercial reuse terms with DLD before showing derived data to customers.
+
+**Q26. Can the app verify a seller's identity from DLD open data?**
+No. Open transaction rows contain only counts of buyers and sellers, no names and no unit number. Seller verification uses the title deed and DLD or trustee services with consent.
+
+**Q27. Which DLD APIs would a new brokerage apply for first?**
+Trakheesi (permit validation and delisting), Dubai Brokers (agent verification) and Rental Index (rent-increase checks), after the DET trade licence is issued. Fees and eligibility must be confirmed with DLD.
+
+---
+
 ### Change log
+- **1.1 (17 October 2026):** Added section 21 (DLD data access) and three Q&A pairs; added the DLD data specification to the deliverables table.
 - **1.0 (17 October 2026):** First complete consolidation of the research, plan, survey, pitch and Q&A.
