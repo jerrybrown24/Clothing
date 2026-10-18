@@ -1,0 +1,1722 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ARKO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>:root{--bg:#F7F5F0;--ink:#0A2A2E;--ink2:#4B6165;--line:rgba(10,42,46,.12);--teal:#0E7C79;--teal2:#095C5A;--coral:#FF7A59;--mint:#C6EEE4;--sky:#D3E9F7;--sand:#FFD9B8;--card:#fff;--glass:rgba(255,255,255,.66);--r:22px;--sh:0 1px 2px rgba(10,42,46,.06),0 12px 32px -12px rgba(10,42,46,.16);--ease:cubic-bezier(.2,.8,.2,1);--disp:'Bricolage Grotesque',system-ui,sans-serif;--body:Figtree,system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+*{box-sizing:border-box}html{scroll-padding-top:90px}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{font-family:var(--disp);margin:0;line-height:1.05;letter-spacing:-.02em}h2{font-size:clamp(30px,4.4vw,52px);font-weight:700}h3{font-size:20px}h4{font-size:15px;font-weight:600}
+p{margin:0}button,select,input{font:inherit;color:inherit}button{cursor:pointer;background:none;border:0;padding:0}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}.sec{padding:72px 20px}
+.eyebrow{font:600 12px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:12px}
+.sub{color:var(--ink2);max-width:60ch;margin-top:10px}.lead{font-size:18px;color:var(--ink2);margin-top:14px}.mini{font-size:13px;color:var(--ink2);margin-top:8px}.mt{margin-top:16px}
+.html.has-cursor *,html.has-cursor *{cursor:none!important}
+#trail{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+#cursor{position:fixed;left:0;top:0;pointer-events:none;z-index:100;opacity:0;transition:opacity .3s}#cursor.on{opacity:1}
+#cursor .dot{position:absolute;width:8px;height:8px;margin:-4px;border-radius:50%;background:var(--coral)}
+#cursor .ring{position:absolute;left:0;top:0}#cursor .ring::before{content:"";position:absolute;width:34px;height:34px;margin:-17px;border-radius:50%;border:1.5px solid var(--teal);transition:width .3s var(--ease),height .3s var(--ease),margin .3s var(--ease),background .3s}
+#cursor .ring.link::before{width:50px;height:50px;margin:-25px;background:rgba(14,124,121,.1)}#cursor .ring.big::before{width:78px;height:78px;margin:-39px;background:rgba(255,122,89,.9);border-color:transparent}
+#cursor .ring span{position:absolute;transform:translate(-50%,-50%);font:700 12px var(--body);color:#fff;white-space:nowrap}
+/* header */
+.hd{position:fixed;top:0;left:0;right:0;z-index:50;padding:12px 20px;transition:background .3s,box-shadow .3s}.hd.sc{background:var(--glass);backdrop-filter:blur(16px) saturate(1.4);box-shadow:0 1px 0 var(--line)}
+.hd-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:20px}.brand{display:flex;align-items:center;gap:10px;font:700 22px var(--disp)}
+.hd-nav{display:flex;gap:4px;margin-left:auto}.hd-nav button{padding:8px 14px;border-radius:99px;font-weight:600;color:var(--ink2);transition:background .2s,color .2s}.hd-nav button:hover,.hd-nav button.on{background:rgba(14,124,121,.1);color:var(--teal2)}
+/* seg */
+.seg{position:relative;display:inline-flex;background:rgba(10,42,46,.07);border-radius:99px;padding:4px}.seg button{position:relative;z-index:1;padding:8px 16px;border-radius:99px;font-weight:600;font-size:14px;color:var(--ink2);transition:color .25s}.seg button[aria-selected=true]{color:var(--ink)}
+.seg .thumb{position:absolute;left:0;top:4px;bottom:4px;width:0;background:#fff;border-radius:99px;box-shadow:0 2px 8px rgba(10,42,46,.15);transition:transform .45s var(--ease),width .45s var(--ease)}
+/* buttons */
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:99px;font-weight:700;transition:transform .25s var(--ease),box-shadow .25s,background .2s}
+.btn-primary{background:var(--ink);color:#fff;box-shadow:0 8px 24px -8px rgba(10,42,46,.5)}.btn-primary:hover{background:var(--teal2);box-shadow:0 12px 28px -8px rgba(14,124,121,.6)}.btn:disabled{opacity:.4;pointer-events:none}
+.btn-ghost{background:rgba(10,42,46,.06)}.btn-ghost:hover{background:rgba(10,42,46,.12)}.btn.sm{padding:9px 16px;font-size:14px}
+.rip{position:absolute;width:10px;height:10px;margin:-5px;border-radius:50%;background:rgba(255,255,255,.55);animation:rip .7s ease-out forwards;pointer-events:none}@keyframes rip{to{transform:scale(30);opacity:0}}
+.bp{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:90;animation:bp .7s ease-out forwards}@keyframes bp{to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+/* hero */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:120px 0 60px;overflow:hidden;background:var(--bg)}
+#heroGL,.hero-fallback{position:absolute;inset:0;width:100%;height:100%}.hero-fallback{display:none;background:radial-gradient(60% 50% at 20% 20%,var(--mint),transparent),radial-gradient(50% 50% at 85% 30%,var(--sky),transparent),radial-gradient(40% 40% at 60% 90%,var(--sand),transparent)}.hero.nogl .hero-fallback{display:block}
+.hero-in{position:relative;z-index:2;width:100%}.pill-e{display:inline-flex;align-items:center;gap:8px;background:var(--glass);padding:9px 14px;border-radius:99px;backdrop-filter:blur(8px)}.live{width:8px;height:8px;border-radius:50%;background:var(--coral);animation:pulse 1.8s infinite}@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(255,122,89,0)}0%{box-shadow:0 0 0 0 rgba(255,122,89,.5)}}
+#h1{font-size:clamp(52px,10.5vw,148px);font-weight:600;letter-spacing:-.045em;line-height:.92;margin:6px 0 22px;max-width:11ch}#h1 .l1,#h1 .l2{display:block}
+.l2{position:relative;height:1.0em;color:var(--teal);font-style:normal;font-size:.62em;margin-top:.1em;white-space:nowrap;letter-spacing:-.035em}
+.l2 .word{position:absolute;left:0;top:0;visibility:hidden}.l2 .word.on,.l2 .word.out{visibility:visible}
+.ch{display:inline-block;font-variation-settings:"wght" 420;transform:translateY(105%) rotate(5deg);opacity:0;transition:transform .8s var(--ease) calc(var(--i)*28ms),opacity .5s calc(var(--i)*28ms)}
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em}
+.in .ch,.word.on .ch{transform:none;opacity:1}.word.out .ch{transform:translateY(-105%);opacity:0;transition-delay:calc(var(--i)*14ms)}
+[data-reveal]{opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s var(--ease)}[data-reveal].in{opacity:1;transform:none}
+.hero-p{max-width:52ch;font-size:19px;color:var(--ink2)}
+.search{margin-top:30px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.3);padding:14px;border-radius:28px;box-shadow:var(--sh);max-width:900px}
+.search label{display:flex;flex-direction:column;font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);gap:4px;flex:1;min-width:130px}
+select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%230A2A2E' stroke-width='2'/%3E%3C/svg%3E") right 14px center no-repeat;border:1px solid var(--line);border-radius:14px;padding:11px 34px 11px 14px;font-weight:600;text-transform:none;letter-spacing:0;font-size:15px;color:var(--ink)}
+.trustrow{display:flex;flex-wrap:wrap;gap:20px;margin-top:22px;font-size:14px;font-weight:600;color:var(--ink2)}.trustrow span{display:flex;align-items:center;gap:6px}.trustrow svg{color:var(--teal)}
+#floaters{position:absolute;right:2%;top:14%;width:380px;height:70%;z-index:2;pointer-events:none}.fl{position:absolute;pointer-events:auto;will-change:transform}.fl1{right:4%;top:0}.fl2{right:36%;top:42%}.fl3{right:0;top:62%}
+.fc{display:flex;gap:12px;align-items:center;background:var(--glass);backdrop-filter:blur(14px);padding:8px 16px 8px 8px;border-radius:20px;box-shadow:var(--sh);transform:perspective(700px) rotateX(var(--rx,0)) rotateY(var(--ry,0));transition:transform .3s var(--ease)}.fc img{width:76px;height:56px;border-radius:13px;object-fit:cover}.fc b{display:block;font:700 15px var(--disp)}.fc span{font-size:12px;color:var(--ink2)}
+.mq{overflow:hidden;background:var(--ink);color:#fff;padding:18px 0}.mq-track{display:flex;gap:30px;white-space:nowrap;width:max-content;font:600 clamp(28px,4vw,48px) var(--disp);letter-spacing:-.02em;will-change:transform}.mq i{color:var(--coral);font-style:normal;font-size:.5em;align-self:center}
+/* explore */
+.ex-h{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}.bar{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:26px 0 22px;align-items:center}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{padding:9px 16px;border-radius:99px;background:#fff;border:1px solid var(--line);font-weight:600;font-size:14px;transition:all .25s var(--ease)}.chip:hover{transform:translateY(-2px)}.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.bar-r{display:flex;align-items:center;gap:16px}.count{font:500 14px var(--mono);color:var(--ink2)}.sortl{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:24px}.grid.swap{animation:sw .5s}@keyframes sw{40%{opacity:.4}}
+.empty{grid-column:1/-1;text-align:center;padding:60px;background:#fff;border-radius:var(--r);display:flex;flex-direction:column;gap:6px}
+.card{position:relative;background:var(--card);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .35s var(--ease),box-shadow .35s;outline-offset:3px}
+.card:hover,.card.tilting{box-shadow:0 2px 4px rgba(10,42,46,.05),0 28px 50px -18px rgba(10,42,46,.3)}.card.tilting{transition:transform .08s}
+.ph{position:relative;aspect-ratio:3/2;background:linear-gradient(110deg,#e6eeec 30%,#f4f8f7 50%,#e6eeec 70%);background-size:200% 100%;animation:shim 1.4s infinite;overflow:hidden}@keyframes shim{to{background-position:-200% 0}}
+.cimg{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .6s,transform .9s var(--ease)}.card.ready .cimg{opacity:1}.card:hover .cimg{transform:scale(1.06)}.card.ready .ph{animation:none}.shim{display:none}
+.badges{position:absolute;left:12px;top:12px;display:flex;gap:6px}.b{padding:5px 10px;border-radius:99px;font:700 12px var(--body);background:var(--glass);backdrop-filter:blur(8px)}.b-off{background:var(--coral);color:#fff}.b-res{background:var(--mint)}
+.save{position:absolute;right:12px;top:12px;width:38px;height:38px;border-radius:50%;background:var(--glass);backdrop-filter:blur(8px);display:grid;place-items:center;transition:transform .25s var(--ease)}.save:hover{transform:scale(1.12)}.save[aria-pressed=true]{color:var(--coral)}.save[aria-pressed=true] svg{fill:var(--coral)}
+.ver{position:absolute;left:12px;bottom:12px;display:flex;gap:5px;align-items:center;padding:5px 10px;border-radius:99px;background:rgba(10,42,46,.78);color:#fff;font:600 12px var(--body)}.ver svg{width:14px;color:#7FE0C3}
+.cb{padding:16px 18px 14px}.r1{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.r1 h3{font-size:22px}.yl{font:600 12px var(--mono);color:var(--teal)}.loc{color:var(--ink2);font-size:14px;margin:2px 0 12px}
+.r2{display:grid;grid-template-columns:1.2fr 1fr 1.2fr;gap:8px}.r2 small,.kpis small,.tk-sum small,.units small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);font-weight:600}.r2 b{font:700 16px var(--disp)}
+.pbar{display:flex;gap:3px;margin-top:14px;height:8px}.pbar i{flex:var(--w);border-radius:4px;background:var(--teal);opacity:.9}.pbar i.h{background:var(--coral)}.pbar i.po{background:var(--sky)}
+.cmp{display:flex;gap:8px;align-items:center;margin-top:12px;font-size:13px;font-weight:600;color:var(--ink2);width:max-content}.cmp input{accent-color:var(--teal);width:16px;height:16px}
+.demo-n{margin-top:26px;font-size:13px;color:var(--ink2);text-align:center}
+.how{background:linear-gradient(180deg,var(--bg),#EDF5F2);padding:80px 0}.hw{list-style:none;margin:36px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}.hw li{background:#fff;border-radius:var(--r);padding:26px;box-shadow:var(--sh)}.hw b{font:500 14px var(--mono);color:var(--coral)}.hw h4{font:700 26px var(--disp);margin:14px 0 8px}.hw p{color:var(--ink2);font-size:15px}
+.fit{display:grid;grid-template-columns:1fr 1.3fr;gap:40px;background:#fff;border-radius:34px;padding:44px;box-shadow:var(--sh)}.dots{display:flex;gap:8px;margin-top:22px}.dots i{width:28px;height:6px;border-radius:3px;background:var(--line);transition:all .4s var(--ease)}.dots i.cur{background:var(--coral);width:44px}.dots i.done{background:var(--teal)}
+.q-step h3{font-size:28px;margin-bottom:18px}.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.opt{text-align:left;padding:16px 18px;border-radius:18px;border:1.5px solid var(--line);background:var(--bg);transition:all .25s var(--ease)}.opt:hover{border-color:var(--teal);transform:translateY(-3px)}.opt.hit,.opt.sel{background:var(--ink);color:#fff;border-color:var(--ink)}.opt b{display:block;font:700 17px var(--disp)}.opt span{font-size:13px;opacity:.7}
+.fit-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.fit-list{display:grid;gap:12px}
+.fit-card{display:flex;gap:18px;align-items:center;padding:16px;border-radius:20px;background:var(--bg);opacity:0;transform:translateY(16px);transition:opacity .6s var(--d),transform .6s var(--ease) var(--d),box-shadow .3s}#fitRes.in .fit-card{opacity:1;transform:none}.fit-card:hover{box-shadow:var(--sh)}
+.ring{position:relative;width:64px;height:64px;flex:none}.ring svg{width:100%;transform:rotate(-90deg)}.ring circle{fill:none;stroke:var(--line);stroke-width:4}.ring .v{stroke:var(--teal);stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset 1.2s var(--ease) .3s}#fitRes.in .ring .v{stroke-dashoffset:calc(100 - var(--p))}.ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 15px var(--disp)}
+.fit-card h4{font:700 20px var(--disp)}.fit-card p{font-size:14px;color:var(--ink2)}.fit-card ul{margin:6px 0 0;padding:0;list-style:none;display:flex;gap:6px;flex-wrap:wrap}.fit-card li{font-size:12px;font-weight:600;background:var(--mint);padding:3px 9px;border-radius:99px}
+.ft{padding:50px 20px 120px;color:var(--ink2);font-size:13px}.ft b{font:700 20px var(--disp);color:var(--ink)}.ft p{max-width:70ch;margin-top:8px}
+/* tray / modal / toast */
+.tray{position:fixed;left:50%;bottom:20px;transform:translate(-50%,300%);opacity:0;z-index:40;display:flex;align-items:center;gap:14px;background:var(--ink);color:#fff;padding:10px 12px 10px 14px;border-radius:99px;box-shadow:0 20px 40px -10px rgba(10,42,46,.5);transition:transform .5s var(--ease)}.tray.on{transform:translate(-50%,0);opacity:1}.tray .btn-primary{background:var(--coral)}.thumbs{display:flex}.th{position:relative;width:38px;height:38px;margin-left:-8px;border-radius:50%;overflow:hidden;border:2px solid var(--ink)}.th:first-child{margin:0}.th img{width:100%;height:100%;object-fit:cover}.th i{position:absolute;inset:0;display:grid;place-items:center;background:rgba(10,42,46,.7);opacity:0;transition:opacity .2s}.th:hover i{opacity:1}
+#modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px}.scrim{position:absolute;inset:0;background:rgba(10,42,46,.4);backdrop-filter:blur(6px);opacity:0;transition:opacity .35s}#modal.on .scrim{opacity:1}
+.sheet{position:relative;background:#fff;border-radius:30px;padding:32px;max-width:520px;width:100%;max-height:88vh;overflow:auto;transform:translateY(30px) scale(.97);opacity:0;transition:all .4s var(--ease)}.sheet.wide{max-width:900px}#modal.on .sheet{transform:none;opacity:1}.sheet .x{position:absolute;right:16px;top:16px;width:36px;height:36px;border-radius:50%;background:var(--bg);display:grid;place-items:center}.sheet .btn{margin-top:18px}
+.tbl{overflow:auto;margin-top:18px}table{border-collapse:collapse;width:100%;min-width:560px}th,td{padding:12px;text-align:left;border-bottom:1px solid var(--line);font-size:14px}thead img{width:100%;max-width:200px;border-radius:12px;display:block;margin-bottom:6px}td.best{background:var(--mint);font-weight:700}td em{font-style:normal;font-size:10px;text-transform:uppercase;margin-left:6px;color:var(--teal2)}
+#toasts{position:fixed;right:20px;top:80px;z-index:95;display:grid;gap:10px}.toast{display:flex;gap:10px;align-items:center;background:var(--ink);color:#fff;padding:12px 16px;border-radius:16px;box-shadow:var(--sh);animation:ti .5s var(--ease);font-weight:600;font-size:14px}.toast svg{color:#7FE0C3;flex:none}.toast.out{opacity:0;transform:translateX(30px);transition:all .4s}@keyframes ti{from{opacity:0;transform:translateX(40px)}}
+/* project */
+.pj{padding-top:96px;padding-bottom:140px}.pj-head{display:grid;grid-template-columns:1.15fr 1fr;gap:40px;margin-top:20px}.pj-main{aspect-ratio:3/2;border-radius:28px;overflow:hidden;box-shadow:var(--sh);background:#dfe9e6}.pj-main img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .16s}img.swap{opacity:0}
+.pj-thumbs{display:flex;gap:10px;margin-top:12px}.pj-thumbs button{position:relative;flex:1;aspect-ratio:3/1.6;border-radius:14px;overflow:hidden;border:2px solid transparent;transition:all .25s}.pj-thumbs button[aria-selected=true]{border-color:var(--coral)}.pj-thumbs img{width:100%;height:100%;object-fit:cover}.pj-thumbs span{position:absolute;left:8px;bottom:6px;font:700 12px var(--body);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5)}.note{font-size:12px;color:var(--ink2);margin-top:8px}
+.pj-title h1{font-size:clamp(40px,5.5vw,74px);font-weight:700}.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.tag{display:inline-flex;gap:6px;align-items:center;padding:6px 12px;border-radius:99px;background:var(--sky);font-weight:600;font-size:13px}.tag-ok{background:var(--mint)}.tag svg{width:14px}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:24px 0}.kpis b{font:700 24px var(--disp)}.meter{height:10px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:6px}.meter i,.hb i,.pr i,.esc-b i{display:block;height:100%;width:calc(var(--w)*1%);border-radius:inherit;background:var(--teal);transition:width 1s var(--ease)}.sold-t{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--ink2)}
+.subnav{position:sticky;top:64px;z-index:20;display:flex;gap:6px;margin:44px 0 0;padding:8px;background:var(--glass);backdrop-filter:blur(16px);border-radius:99px;width:max-content;max-width:100%;overflow:auto;box-shadow:var(--sh)}.subnav a{padding:8px 16px;border-radius:99px;font-weight:600;font-size:14px;color:var(--ink2);text-decoration:none;white-space:nowrap}.subnav a.on{background:var(--ink);color:#fff}
+.pj .sec{padding:64px 0 0}.pick{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:28px}.tw-box{position:relative;background:linear-gradient(180deg,var(--sky),var(--mint));border-radius:28px;height:520px}#tw{width:100%;height:100%;display:block;touch-action:pan-y;outline:none}.tw-ctl{position:absolute;right:14px;bottom:14px;display:flex;align-items:center;gap:8px;background:var(--glass);padding:6px 10px;border-radius:99px;font-weight:700;font-size:14px}
+.units{background:#fff;border-radius:28px;padding:24px;box-shadow:var(--sh)}.units-h{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}.legend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2)}.legend i{width:10px;height:10px;border-radius:50%;background:var(--teal);margin-left:8px}.legend .h{background:var(--sand)}.legend .s{background:#c8d2d0}
+#uList{display:grid;gap:8px;margin-top:16px}.u{display:grid;grid-template-columns:50px 1fr auto;gap:10px;align-items:center;text-align:left;padding:12px 14px;border-radius:16px;border:1.5px solid var(--line);transition:all .25s var(--ease)}.u:hover:not(:disabled){border-color:var(--teal);transform:translateX(4px)}.u.sel{border-color:var(--coral);background:#FFF5F1}.u:disabled{opacity:.45}.u b{font:700 16px var(--mono)}.u span{font-size:13px;color:var(--ink2)}.u em{font-style:normal;font-weight:700}
+.u-prev{display:flex;gap:14px;margin-top:16px;align-items:center}.up-img{width:150px;aspect-ratio:3/2;border-radius:14px;overflow:hidden;flex:none}.up-img img{width:100%;height:100%;object-fit:cover}.up-t{display:grid;gap:3px}
+.ins{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:28px}.card-s{background:#fff;border-radius:22px;padding:22px;box-shadow:var(--sh)}.card-s h4{margin-bottom:14px}.big{font:700 40px var(--disp);letter-spacing:-.03em}.big small{font-size:14px;font-weight:500;color:var(--ink2)}
+.hb{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;font-size:13px;margin-bottom:10px}.hb>div{height:10px;border-radius:5px;background:var(--line);overflow:hidden}.hb.hi i{background:var(--coral)}.hb b{font-family:var(--mono);font-size:12px}
+.spark{width:100%}.spark path{fill:none;stroke:var(--teal);stroke-width:3;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.6s var(--ease)}.sec.in .spark path,.card-s .spark path{animation:dr 1.8s var(--ease) forwards}@keyframes dr{to{stroke-dashoffset:0}}
+.pay{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-top:22px}.pay-l,.pay-r{background:#fff;border-radius:24px;padding:24px;box-shadow:var(--sh)}.pt{display:grid;gap:4px;margin-top:12px}.pr{display:grid;grid-template-columns:130px 70px 1fr 40px 90px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}.pr em{font-style:normal;font-size:12px;color:var(--ink2)}.pr i{height:8px;border-radius:4px;max-width:100%}.pr.h i{background:var(--coral)}.pr b{font-weight:700;text-align:right}
+.ln{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}.ln span{color:var(--ink2);display:flex;align-items:center;gap:6px}
+.flow{display:flex;align-items:stretch;gap:12px;margin-top:26px;flex-wrap:wrap}.fn{flex:1;min-width:180px;background:#fff;border-radius:20px;padding:20px;box-shadow:var(--sh)}.fn b{display:block;font:700 18px var(--disp)}.fn span{font-size:13px;color:var(--ink2)}.fn.hl{background:var(--mint)}.flow>i{align-self:center;color:var(--teal)}
+.checks{list-style:none;margin:24px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}.checks li{display:flex;gap:12px;background:#fff;padding:16px;border-radius:18px}.checks li>svg{flex:none;width:28px;height:28px;padding:5px;border-radius:50%;background:var(--mint);color:var(--teal2)}.checks b{display:block}.checks span{font-size:13px;color:var(--ink2)}
+.cta{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px 20px;background:var(--glass);backdrop-filter:blur(18px);box-shadow:0 -1px 0 var(--line);transform:translateY(100%);transition:transform .5s var(--ease)}body[data-view=project] .cta{transform:none}.cta-in{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:16px}.cta small{display:block;font-size:12px;color:var(--ink2)}.cta b{font:700 22px var(--disp)}
+/* reserve */
+.rs{display:grid;grid-template-columns:1fr 340px;gap:30px;padding-top:100px;padding-bottom:80px;align-items:start}.stepper{list-style:none;margin:0 0 24px;padding:0;display:flex;gap:8px;flex-wrap:wrap}.stepper li{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13px;color:var(--ink2);padding:6px 12px 6px 6px;border-radius:99px;background:rgba(10,42,46,.05)}.stepper i{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#fff;font:700 12px var(--mono);font-style:normal}.stepper li.cur{background:var(--ink);color:#fff}.stepper li.done i{background:var(--teal);color:#fff}.stepper svg{width:13px}
+.rs-panel{background:#fff;border-radius:28px;padding:34px;box-shadow:var(--sh);animation:pin .6s var(--ease)}@keyframes pin{from{opacity:0;transform:translateY(20px)}}.rs-panel h2{font-size:34px}.rs-panel .card-s{box-shadow:none;background:var(--bg);margin-top:20px}
+.chk{display:flex;gap:10px;margin-top:20px;font-size:14px}.chk input{accent-color:var(--teal);width:18px;height:18px;flex:none}.rs-foot{display:flex;justify-content:space-between;margin-top:28px}
+.rs-side{position:sticky;top:90px;background:#fff;border-radius:24px;padding:20px;box-shadow:var(--sh)}.rs-img{aspect-ratio:3/2;border-radius:16px;overflow:hidden;margin-bottom:14px}.rs-img img{width:100%;height:100%;object-fit:cover}.rs-side p{color:var(--ink2);margin-bottom:6px}
+.vf{display:grid;gap:12px;margin-top:22px}.vf .btn{justify-content:flex-start;padding:18px 22px}.vf-res{display:grid;justify-items:center;gap:6px;margin-top:24px;text-align:center;padding:24px;background:var(--bg);border-radius:20px}.okc{width:52px;height:52px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;animation:pop .6s var(--ease)}.okc.big{width:84px;height:84px}.okc svg{width:55%;height:55%}@keyframes pop{from{transform:scale(0)}}
+.scan{width:120px;height:80px;border-radius:12px;border:2px solid var(--teal);position:relative;overflow:hidden}.scan i{position:absolute;left:0;right:0;height:3px;background:var(--coral);animation:sc 1s ease-in-out infinite alternate}@keyframes sc{to{top:100%}}
+.two{margin-top:20px}.pay-box{margin-top:20px;background:var(--bg);border-radius:22px;padding:24px}.pay-box .btn{width:100%;margin-top:18px}.spin{width:34px;height:34px;margin:20px auto 0;border-radius:50%;border:4px solid var(--line);border-top-color:var(--teal);animation:spn .8s linear infinite}@keyframes spn{to{transform:rotate(360deg)}}
+.sig{position:relative;margin-top:20px}#sig{width:100%;height:170px;border:2px dashed var(--line);border-radius:20px;background:var(--bg);touch-action:none}.sig .btn{position:absolute;right:10px;top:10px;margin:0}
+.fin{position:relative;text-align:center;padding-top:130px;padding-bottom:80px;display:grid;justify-items:center;gap:12px}#cf{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}.fin h1{font-size:clamp(36px,6vw,64px)}.next{list-style:none;padding:0;margin:20px 0;display:grid;gap:10px;max-width:560px;text-align:left}.next li{background:#fff;border-radius:18px;padding:16px 20px;box-shadow:var(--sh)}.next b{display:block}.next span{color:var(--ink2);font-size:14px}.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+/* tracker */
+.tk{padding-top:100px;padding-bottom:100px}.tk-h{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}.tk-id{display:flex;gap:18px;align-items:center}.tk-id img{width:110px;aspect-ratio:3/2;border-radius:16px;object-fit:cover}.tk-id h1{font-size:42px}.tk-sum{display:flex;gap:30px}.tk-sum b{font:700 24px var(--disp)}
+.tm{display:flex;align-items:center;gap:18px;background:var(--ink);color:#fff;border-radius:99px;padding:10px 24px 10px 12px;margin:24px 0}.tm .btn{background:var(--coral);color:#fff}.tm-r{flex:1;display:grid;gap:2px}.tm-r label{font-size:12px;opacity:.7}.tm input{width:100%;accent-color:var(--coral)}.tm b{font:500 15px var(--mono);min-width:80px;text-align:right}
+.tk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.tc{background:#fff;border-radius:24px;padding:22px;box-shadow:var(--sh)}.tc.wide{grid-column:span 2}.tc h3{margin-bottom:14px}.tc-h{display:flex;justify-content:space-between;align-items:center}.tc-h h3{margin:0}
+.stg ol{list-style:none;margin:0;padding:0}.stg li{position:relative;display:flex;gap:14px;padding-bottom:20px}.stg li::before{content:"";position:absolute;left:11px;top:24px;bottom:0;width:2px;background:var(--line)}.stg li:last-child::before{display:none}.stg li>i{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid var(--line);background:#fff;display:grid;place-items:center;color:#fff;transition:all .5s var(--ease)}.stg li.done>i{background:var(--teal);border-color:var(--teal)}.stg li.now>i{border-color:var(--coral);box-shadow:0 0 0 5px rgba(255,122,89,.2)}.stg li svg{width:12px}.stg b{display:block}.stg span{font-size:13px;color:var(--ink2);display:block}.stg em{font:500 11px var(--mono);font-style:normal;color:var(--teal)}.stg li:not(.done):not(.now){opacity:.5}
+.pill{display:inline-block;padding:6px 14px;border-radius:99px;font-weight:700;font-size:13px}.pill.ok{background:var(--mint);color:var(--teal2)}.pill.wait{background:var(--sand)}.pillrow{margin-bottom:10px}
+.mini-st{list-style:none;margin:12px 0;padding:0;display:grid;gap:8px}.mini-st li{display:flex;gap:10px;align-items:center;font-size:14px;color:var(--ink2)}.mini-st i{width:12px;height:12px;border-radius:50%;background:var(--line);transition:background .4s}.mini-st li.on{color:var(--ink)}.mini-st li.on i{background:var(--teal)}
+.prj{display:flex;align-items:center;gap:8px}.prj canvas{width:220px;height:200px}
+.esc-b{display:flex;height:16px;border-radius:8px;overflow:hidden;background:var(--line);margin-bottom:14px}.esc-b i{border-radius:0;flex:none}#eRel{background:var(--coral)}#eHeld{background:var(--teal)}.d{width:10px;height:10px;border-radius:50%}.d1{background:var(--teal)}.d2{background:var(--coral)}
+.bell{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;background:var(--mint);font-weight:600;font-size:13px}.bell[aria-pressed=false]{background:var(--line)}
+.py{display:grid;grid-template-columns:28px 1fr auto 120px;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;transition:background .4s}.py>i{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;color:#fff}.py.paid>i{background:var(--teal);border-color:var(--teal)}.py svg{width:12px}.py span em{display:block;font-style:normal;font-size:12px;color:var(--ink2)}.py b{font-family:var(--mono);font-size:14px}.py u{text-decoration:none;text-align:right;font-weight:600;color:var(--ink2);font-size:13px}.py.paid u{color:var(--teal)}.py.next{background:#FFF5F1;border-radius:14px;padding-left:8px;padding-right:8px}.py.next u{color:var(--coral)}
+.docs,.act{list-style:none;margin:0;padding:0;display:grid;gap:8px}.docs li{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--bg);font-size:14px;opacity:.55;transition:all .4s}.docs li.on{opacity:1;background:var(--mint)}.docs li span{flex:1}.docs em{font-style:normal;font-size:12px;font-weight:700}.docs svg{width:18px;flex:none}
+.act li{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center;font-size:14px;animation:pin .5s var(--ease)}.act i{width:8px;height:8px;border-radius:50%;background:var(--coral)}.act em{font:500 11px var(--mono);font-style:normal;color:var(--ink2)}
+.tabbar{display:none}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.45s}
+::view-transition-group(hero){animation-duration:.7s;animation-timing-function:cubic-bezier(.2,.8,.2,1)}::view-transition-old(hero),::view-transition-new(hero){height:100%;object-fit:cover}
+@media(max-width:960px){.pj-head,.pick,.pay,.fit,.rs{grid-template-columns:1fr}.tk-grid{grid-template-columns:1fr 1fr}.tc.wide{grid-column:span 2}#floaters{display:none}.rs-side{position:static;order:-1}.fit{padding:26px}}
+@media(max-width:640px){.hd-nav{display:none}.hd-in{justify-content:space-between}.sec{padding:52px 20px}.tk-grid{grid-template-columns:1fr}.tc.wide{grid-column:auto}.opts{grid-template-columns:1fr}.pr{grid-template-columns:1fr 60px 40px 80px}.pr i{display:none}.tabbar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:35;background:var(--glass);backdrop-filter:blur(18px);box-shadow:0 -1px 0 var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}.tabbar button{flex:1;padding:10px;font-weight:600;font-size:13px;color:var(--ink2);border-radius:14px}body[data-view=project] .tabbar,body[data-view=reserve] .tabbar{display:none}.tray{bottom:70px;max-width:94vw}.ft{padding-bottom:100px}.tm{border-radius:24px;flex-wrap:wrap}.tk-sum{gap:16px}.cta b{font-size:18px}.cta .btn{padding:12px 16px;font-size:14px}.tw-box{height:420px}.hb{grid-template-columns:70px 1fr auto}.pj-title h1{font-size:44px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.ch{transform:none;opacity:1}[data-reveal]{opacity:1;transform:none}.l2 .word{visibility:hidden}.l2 .word:first-child{visibility:visible}}
+#cursor .ring.big~.dot{opacity:0}
+.stepper li.cur i{color:var(--ink)}
+@media(max-width:640px){.dp{display:none}.hd{padding:10px 12px}.brand{font-size:19px}.brand svg{width:24px}.hd-in{gap:8px}#curSeg button{padding:7px 9px;font-size:12px}.cta .btn{white-space:nowrap}#cursor,#trail{display:none}}
+/* ---- ARKO revision ---- */
+.brand span{letter-spacing:.14em;font-weight:800}
+.talk{background:var(--ink)!important;color:#fff!important}.talk:hover{background:var(--teal2)!important}
+.intent{margin-top:30px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.3);padding:22px 24px;border-radius:28px;box-shadow:var(--sh);max-width:760px}
+.int-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font:600 12px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--teal)}
+.dots{display:flex;gap:8px}.dots i{width:28px;height:6px;border-radius:3px;background:var(--line);transition:all .4s var(--ease)}.dots i.cur{background:var(--coral);width:44px}.dots i.done{background:var(--teal)}
+.intent h3{font-size:26px;margin-bottom:14px}.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.opts.b3{grid-template-columns:repeat(3,1fr)}
+.opt{text-align:left;padding:16px 18px;border-radius:18px;border:1.5px solid var(--line);background:rgba(255,255,255,.7);transition:all .25s var(--ease)}.opt:hover{border-color:var(--teal);transform:translateY(-3px)}.opt.hit,.opt.sel{background:var(--ink);color:#fff;border-color:var(--ink)}.opt b{display:block;font:700 17px var(--disp)}.opt span{font-size:13px;opacity:.7}
+.int-sum{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.int-sum h3{margin:0;font-size:22px}
+.match{position:absolute;right:12px;bottom:12px;padding:5px 10px;border-radius:99px;background:var(--mint);font:700 12px var(--body);color:var(--teal2)}
+.filters{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0 0}.filters label{display:flex;flex-direction:column;gap:4px;font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);min-width:150px}.filters .bar{margin:0}
+.journey{background:linear-gradient(180deg,var(--bg),#EDF5F2);padding:80px 0}
+.dt{list-style:none;margin:30px 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;counter-reset:d}.dt li{background:#fff;border-radius:18px;padding:16px;box-shadow:var(--sh)}.dt b{display:block;font:700 18px var(--disp);color:var(--teal)}.dt span{font-size:13px;color:var(--ink2)}
+.jm-wrap{overflow-x:auto;padding-bottom:10px}.jm{min-width:1600px}.curve{width:100%;height:120px;display:block}.curve path{fill:none;stroke-width:3;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;animation:dr 2.4s var(--ease) forwards}.c0{stroke:#9AAFB2;stroke-dasharray:6 6!important;stroke-dashoffset:0!important;animation:none!important}.c1{stroke:var(--teal)}
+.legend2{display:flex;gap:18px;align-items:center;font-size:13px;margin:6px 0 14px}.legend2 span{display:flex;align-items:center;gap:6px}.legend2 i{width:22px;height:0;border-top:3px solid var(--teal)}.legend2 i.l0{border-top:3px dashed #9AAFB2}
+.jm-cols{display:grid;grid-template-columns:repeat(8,1fr);gap:12px}.jc{background:#fff;border-radius:18px;padding:16px;box-shadow:var(--sh)}.jc h4{font:700 17px var(--disp);margin-bottom:8px}.jc small{display:block;font:600 10px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin-top:8px}.jc p{font-size:13px}.jc .ans{font-weight:600;color:var(--teal2)}
+.princ{list-style:none;margin:24px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.princ li{background:var(--ink);color:#fff;border-radius:18px;padding:18px}.princ b{display:block;font:700 18px var(--disp)}.princ span{font-size:13px;opacity:.75}
+.two-big{display:flex;gap:24px;margin-bottom:12px}.two-big small{font-size:12px;color:var(--ink2)}.big.pos{color:var(--teal)}.big.neg{color:#C2432B}
+.card-s.wide{grid-column:1/-1}.card-s.hl{background:var(--mint)}
+.mdl{display:grid;grid-template-columns:1fr 1.5fr;gap:28px}.mdl-in{display:grid;gap:14px;align-content:start}.mdl-in label{display:grid;gap:6px;font-weight:600;font-size:14px}.mdl-in label b{float:right;font:500 13px var(--mono);color:var(--teal2)}.mdl input[type=range],.fld input[type=range]{width:100%;accent-color:var(--coral)}
+.mo{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.mo small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);font-weight:600}.mo b{font:700 18px var(--disp)}.mo .pos b{color:var(--teal)}.mo .neg b{color:#C2432B}
+.roi{display:flex;align-items:baseline;gap:12px;margin:16px 0 8px}.bars{display:flex;gap:6px;align-items:flex-end;height:110px}.bars div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;gap:4px;font:500 10px var(--mono);color:var(--ink2);text-align:center}.bars i{display:block;height:calc(var(--h)*.8%);min-height:3px;background:var(--teal);border-radius:4px 4px 0 0;transition:height .6s var(--ease)}.bars .n i{background:#E58A74}
+.adv{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:26px}.adv p{margin-bottom:14px}.row.l{justify-content:flex-start}.adv-st{margin-top:12px;font-weight:700;color:var(--teal2);font-size:14px}
+.path{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.path li{display:flex;gap:12px;background:#fff;border-radius:18px;padding:16px;box-shadow:var(--sh)}.path li>b{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:700 13px var(--mono)}.path h4{font:700 16px var(--disp)}.path span{font-size:13px;color:var(--ink2)}.mt2{margin-top:36px;margin-bottom:12px}
+.look{position:relative;height:520px;border-radius:28px;overflow:hidden;background:var(--sky);touch-action:pan-y;outline:none}.look img{position:absolute;left:50%;top:0;height:100%;width:auto;min-width:170%;margin-left:-85%;max-width:none;object-fit:cover;transition:opacity .2s}.look.sw img{opacity:0}.look-ui{position:absolute;left:14px;right:14px;bottom:14px;display:flex;justify-content:space-between;align-items:center}.look-h{background:var(--glass);padding:7px 12px;border-radius:99px;font-size:13px;font-weight:600}
+.plan svg{width:100%;margin:12px 0}.plan rect{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}.plan text{font:600 11px var(--body);fill:var(--ink)}
+.chipset{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.fld{display:grid;gap:6px;font-weight:600;font-size:14px;margin-top:16px}.fld input:not([type=range]){padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);font-size:16px;background:#fff}
+.conn{display:flex;gap:8px;justify-content:center;margin:20px 0}.conn span{width:14px;height:14px;border-radius:50%;background:var(--teal);animation:cn 1s infinite}.conn span:nth-child(2){animation-delay:.15s}.conn span:nth-child(3){animation-delay:.3s}@keyframes cn{50%{transform:translateY(-10px);opacity:.4}}
+.bid{margin:20px 0 8px}.bid input{width:100%;accent-color:var(--coral)}.bubs{display:grid;gap:8px;margin:14px 0}.bub{max-width:80%;padding:10px 14px;border-radius:16px;font-size:14px;animation:pin .4s var(--ease)}.bub.me{justify-self:end;background:var(--ink);color:#fff}.bub.seller{background:var(--bg)}
+.big-st{margin:18px 0}.mini-st li.cur{color:var(--ink);font-weight:700}.mini-st li.cur i{background:var(--coral)}
+.next-st{display:flex;gap:12px;align-items:baseline;background:#FFF5F1;border-radius:18px;padding:14px 20px;margin-bottom:20px}.next-st b{font:700 12px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--coral)}.next-st span{font-size:15px}
+.fb{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;font-size:14px;color:var(--ink2)}
+.act li.up{opacity:.6}.act li.up i{background:var(--line)}
+@media(max-width:960px){.mdl{grid-template-columns:1fr}.mo{grid-template-columns:repeat(2,1fr)}.look{height:400px}}
+@media(max-width:640px){.opts,.opts.b3{grid-template-columns:1fr}.intent{padding:18px}.intent h3{font-size:22px}.next-st{flex-direction:column;gap:4px}.filters label{min-width:44%;flex:1}}
+.ins{grid-template-columns:repeat(3,1fr)}.two-big .big{font-size:30px}.card-s .big{font-size:34px}
+@media(max-width:960px){.ins{grid-template-columns:1fr}}
+.src{font:600 11px var(--body);letter-spacing:.04em;color:var(--teal2);background:var(--mint);padding:3px 8px;border-radius:99px;margin-left:6px;text-transform:none}.src.demo{background:var(--line);color:var(--ink2)}
+.callcard{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;background:var(--mint);border-radius:20px;padding:16px 18px;margin:14px 0}.callcard small{display:block;font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--teal2)}.callcard b{display:block;font:700 20px var(--disp)}.callcard .tel{font:500 15px var(--mono);color:var(--ink2)}.callcard .btn{margin:0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}.err{color:#C2432B;font-weight:600;font-size:14px;margin-top:10px}.supp{margin-top:6px;color:var(--ink)}.supp a{color:var(--teal2);font-weight:700}
+.sheet a.btn{text-decoration:none}
+</style></head>
+<body data-view="home">
+<canvas id="trail" aria-hidden="true"></canvas>
+<div id="cursor" aria-hidden="true"><div class="ring"><span></span></div><div class="dot"></div></div>
+<div id="app">
+<header class="hd"><div class="hd-in">
+  <button class="brand" data-nav="home" aria-label="ARKO home"><svg viewBox="0 0 32 32" width="28" height="28"><rect width="32" height="32" rx="9" fill="#0A2A2E"/><path d="M8 24V16a8 8 0 0 1 16 0v8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="16" cy="18" r="2.6" fill="#FF7A59"/></svg><span>ARKO</span></button>
+  <nav class="hd-nav"><button data-nav="home" class="on">Explore</button><button data-scroll="#journey">How it works</button><button data-nav="tracker">My purchase</button><button class="talk" id="talkBtn">Talk to us</button></nav>
+  <div class="seg" id="curSeg" aria-label="Currency"><button data-v="AED" aria-selected="true">AED</button><button data-v="USD" aria-selected="false">USD</button><button data-v="GBP" aria-selected="false">GBP</button><button data-v="INR" aria-selected="false">INR</button><span class="thumb"></span></div>
+</div></header>
+
+<main id="stage">
+<div id="v-home">
+ <section id="hero" class="hero"><canvas id="heroGL" aria-hidden="true"></canvas><div class="hero-fallback" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+   <p class="eyebrow pill-e"><span class="live"></span>Off-plan and ready homes, tracked to ownership</p>
+   <h1 id="h1"><span class="l1" id="l1">Own Dubai</span><span class="l2" id="rot"><span class="word">from anywhere.</span><span class="word">in minutes.</span><span class="word">with proof.</span></span></h1>
+   <p class="hero-p">Tell us why and how much. We show the homes, the 3D view, the numbers and every step to owning it, from EOI or viewing to DLD registration.</p>
+   <div class="intent" id="intent"><div class="int-h"><span id="intStep"></span><div class="dots" id="intDots"></div></div><div id="intBody"></div></div>
+   <div class="trustrow"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M8.8 12.2l2.3 2.3 4.2-4.6"/></svg> RERA-registered projects</span><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M8.8 12.2l2.3 2.3 4.2-4.6"/></svg> Escrow-protected payments</span><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M8.8 12.2l2.3 2.3 4.2-4.6"/></svg> DLD-tracked</span></div>
+  </div>
+  <div id="floaters" aria-label="Featured homes"></div>
+ </section>
+ <div class="mq" aria-hidden="true"><div class="mq-track"><span>Discover</span><i>◆</i><span>See in 3D</span><i>◆</i><span>Analyse</span><i>◆</i><span>Decide</span><i>◆</i><span>Pay</span><i>◆</i><span>Register</span><i>◆</i><span>Own</span><i>◆</i><span>Discover</span><i>◆</i><span>See in 3D</span><i>◆</i><span>Analyse</span><i>◆</i><span>Decide</span><i>◆</i><span>Pay</span><i>◆</i><span>Register</span><i>◆</i><span>Own</span><i>◆</i></div></div>
+
+ <section class="wrap sec" id="explore">
+  <div class="ex-h"><div><p class="eyebrow">Browse</p><h2 id="exTitle" data-split>Off-plan launches</h2><p class="sub" id="exSub">Express interest with an EOI and pay in instalments while it is built. Every project shows its RERA number and escrow account.</p></div>
+   <div class="seg" data-seg="market" aria-label="Market"><button data-v="off" aria-selected="true">Off-plan</button><button data-v="res" aria-selected="false">Resale</button><span class="thumb"></span></div></div>
+  <div class="filters"><label>Area<select id="fArea"></select></label><label>Budget<select id="fBud"></select></label><label id="fHandWrap">Handover<select id="fHand"><option value="">Any year</option><option value="28">By 2028</option><option value="29">2029 or later</option></select></label></div>
+  <div class="bar"><div class="chips"><button class="chip" data-f="water" aria-pressed="false">Waterfront</button><button class="chip" data-f="u15" aria-pressed="false">Under AED 1.5M</button><button class="chip" data-f="yield" aria-pressed="false">Best yield</button><button class="chip" data-f="plan50" data-off aria-pressed="false">50/50 plan</button><button class="chip" data-f="h28" data-off aria-pressed="false">Ready by 2028</button></div>
+   <div class="bar-r"><span id="count" class="count"></span><label class="sortl">Sort<select id="sort"><option value="featured">Featured</option><option value="low">Lowest price</option><option value="yield">Highest yield</option><option value="soon">Soonest handover</option></select></label></div></div>
+  <div id="grid" class="grid"></div>
+  <p class="demo-n">All projects, developers and prices in this prototype are fictional demo data. Images are illustrations.</p>
+ </section>
+
+ <section class="journey" id="journey"><div class="wrap">
+  <p class="eyebrow">How ARKO is designed</p><h2 data-split>Built around the buyer's journey</h2>
+  <p class="sub">We mapped every step a buyer takes, where they get stuck, and what ARKO does about it. Friction points are common buyer pain points and still to be validated in our survey.</p>
+  <ol class="dt"><li><b>Empathise</b><span>Talk to buyers and read their threads and reviews.</span></li><li><b>Define</b><span>How might we make each step feel certain?</span></li><li><b>Ideate</b><span>Total cost first, human help on demand, status always visible.</span></li><li><b>Prototype</b><span>The clickable journey you are using now.</span></li><li><b>Test</b><span>Tell us if a step was clear. We change what is not.</span></li></ol>
+  <div class="jm-wrap"><div class="jm" id="jm"></div></div>
+  <ul class="princ"><li><b>Show the total cost early</b><span>No surprise fees at the end.</span></li><li><b>A person when you want one</b><span>Call or meet, never forced.</span></li><li><b>Always know where you are</b><span>One tracker for DLD, payments and documents.</span></li></ul>
+</div></section>
+
+ <footer class="ft wrap"><b>ARKO</b><p class="supp">Call support: <b>Ajinkya</b> <a id="supNum" href="tel:+971586352359">+971 58 635 2359</a></p><p>Prototype for demonstration only. Not an offer to sell property, and not a licensed brokerage. Figures are illustrative. Fee amounts and timelines must be confirmed with DLD, RERA and the developer before any real purchase.</p></footer>
+</div>
+<div id="v-project" hidden></div>
+<div id="v-reserve" hidden></div>
+<div id="v-tracker" hidden></div>
+</main>
+
+<div id="tray" class="tray"><div id="trayThumbs" class="thumbs"></div><span id="trayTxt"></span><button class="btn btn-primary sm" id="trayGo" disabled>Compare</button></div>
+<nav class="tabbar"><button data-nav="home">Explore</button><button id="talkBtn2">Talk to us</button><button data-nav="tracker">My purchase</button></nav>
+<div id="modal" hidden></div><div id="toasts" aria-live="polite"></div>
+</div>
+<script type="application/json" id="dld">null</script>
+<script>/* ---------- utilities and shared state ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = t => 1 - Math.pow(1 - t, 4);
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FINE = matchMedia('(pointer: fine)').matches;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+const RATES = { AED: 1, USD: 1 / 3.6725, GBP: 0.204, INR: 22.8 };
+const SYM = { AED: 'AED ', USD: '$', GBP: '£', INR: '₹' };
+
+const S = {
+  cur: 'AED', market: 'off', filters: new Set(), sort: 'featured',
+  saved: new Set(), compare: [],
+  goal: null, bud: 0, intStep: 0, agent: null, pid: null, floor: 22, unit: null, planKey: null,
+  res: null,            // confirmed reservation {pid, unit, planKey, dep}
+  month: 12, playing: false, step: 0, quiz: {}
+};
+
+function money(aed, full) {
+  const v = aed * RATES[S.cur];
+  if (S.cur === 'INR') {
+    if (full) return '₹' + Math.round(v).toLocaleString('en-IN');
+    return v >= 1e7 ? '₹' + (v / 1e7).toFixed(2) + ' Cr' : '₹' + (v / 1e5).toFixed(1) + ' L';
+  }
+  if (full) return SYM[S.cur] + Math.round(v).toLocaleString('en-US');
+  if (v >= 1e6) return SYM[S.cur] + (v / 1e6).toFixed(2).replace(/\.?0+$/, '') + 'M';
+  return SYM[S.cur] + Math.round(v / 1e3) + 'K';
+}
+
+/* animate a number inside an element (value is always in AED so currency switches count smoothly) */
+function tween(el, to, fmt, dur = 750) {
+  const from = el._v == null ? to : el._v;
+  el._v = to;
+  cancelAnimationFrame(el._raf);
+  if (RM || from === to) { el.textContent = fmt(to); return; }
+  const t0 = performance.now();
+  const step = now => {
+    const k = clamp((now - t0) / dur, 0, 1);
+    el.textContent = fmt(lerp(from, to, ease(k)));
+    if (k < 1) el._raf = requestAnimationFrame(step);
+  };
+  el._raf = requestAnimationFrame(step);
+}
+function refreshPrices(root = document) {
+  $$('.px', root).forEach(el => {
+    const aed = +el.dataset.aed, full = el.dataset.full === '1';
+    tween(el, aed, v => money(v, full));
+  });
+}
+
+const hash = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+function R(seed) {
+  let a = seed >>> 0;
+  return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}
+
+const MONTH0 = new Date(2026, 10, 1);   /* demo "month 0" = November 2026 */
+const monthLabel = m => new Date(MONTH0.getFullYear(), MONTH0.getMonth() + m, 1).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+
+const ICON = {
+  heart: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M8.8 12.2l2.3 2.3 4.2-4.6"/></svg>',
+  check: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  back: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
+  doc: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M9.5 13h6M9.5 17h6"/></svg>',
+  bell: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>',
+  cube: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12L4 7.5M12 12v9"/></svg>',
+  x: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>'
+};
+
+function toast(msg, kind = 'ok') {
+  const t = document.createElement('div');
+  t.className = 'toast ' + kind;
+  t.innerHTML = (kind === 'ok' ? ICON.check : ICON.bell) + '<span>' + msg + '</span>';
+  $('#toasts').appendChild(t);
+  requestAnimationFrame(() => t.classList.add('in'));
+  setTimeout(() => { t.classList.remove('in'); setTimeout(() => t.remove(), 500); }, 3600);
+}
+
+/* call support; the server can override these through /api/config */
+const SUPPORT = { name: 'Ajinkya', phone: '+971586352359' };
+
+/* ---------- DUMMY DATA: fictional projects and developers; real Dubai communities only ---------- */
+const PROJ = [
+  { id: 'azure-reach', name: 'Azure Reach', dev: 'Tidewater Developments', area: 'Dubai Marina', mood: 'dusk', kind: 'tower', set: 'water', seed: 11,
+    types: [['Studio', 430], ['1 BR', 760], ['2 BR', 1180], ['3 BR', 1750]], ppsf: 2650, med: 2480, yld: 6.4, ot: 92, plan: '60/40', ho: 'Q3 2029', hy: 2029, hm: 34, floors: 44, units: 312, sold: 64, metro: '6 min walk to metro', tags: ['Waterfront', 'Marina views'], rera: 'DEMO-2041', pc: 12,
+    blurb: 'A slender glass tower on the Marina promenade, with sky pool, co-working lounge and direct walkway to the beach.' },
+  { id: 'lumen-creek', name: 'Lumen Creek', dev: 'Aurum Built', area: 'Dubai Creek Harbour', mood: 'dawn', kind: 'twin', set: 'water', seed: 23,
+    types: [['1 BR', 780], ['2 BR', 1240], ['3 BR', 1820]], ppsf: 2890, med: 2710, yld: 6.1, ot: 95, plan: '70/30', ho: 'Q2 2029', hy: 2029, hm: 32, floors: 52, units: 410, sold: 58, metro: 'Shuttle to metro', tags: ['Waterfront', 'Skyline views'], rera: 'DEMO-2077', pc: 9,
+    blurb: 'Twin towers facing the creek and the downtown skyline, with a landscaped podium and a waterfront retail strip.' },
+  { id: 'palm-meridian', name: 'Palm Meridian', dev: 'Corniche & Co', area: 'Palm Jumeirah', mood: 'day', kind: 'lowrise', set: 'water', seed: 37,
+    types: [['2 BR', 1550], ['3 BR', 2300], ['4 BR', 3300]], ppsf: 5200, med: 4850, yld: 4.9, ot: 89, plan: '50/50', ho: 'Q4 2029', hy: 2029, hm: 35, floors: 14, units: 96, sold: 71, metro: 'Monorail 9 min', tags: ['Waterfront', 'Post-handover plan'], rera: 'DEMO-2113', pc: 6,
+    blurb: 'Low-rise terraces stepping down to a private beach, with oversized balconies and a residents-only marina club.' },
+  { id: 'hills-verdant', name: 'Hills Verdant', dev: 'Verdant Group', area: 'Dubai Hills Estate', mood: 'dawn', kind: 'lowrise', set: 'park', seed: 52,
+    types: [['1 BR', 720], ['2 BR', 1160], ['3 BR', 1680]], ppsf: 2380, med: 2250, yld: 5.8, ot: 94, plan: '60/40', ho: 'Q4 2028', hy: 2028, hm: 26, floors: 9, units: 188, sold: 77, metro: 'Mall and park on your doorstep', tags: ['Family', 'Park views'], rera: 'DEMO-1988', pc: 31,
+    blurb: 'Garden-terrace apartments around a green spine, close to the golf course, schools and the community mall.' },
+  { id: 'halo-bay', name: 'Halo Bay', dev: 'Halo Properties', area: 'Business Bay', mood: 'dusk', kind: 'tower', set: 'water', seed: 64,
+    types: [['Studio', 400], ['1 BR', 720], ['2 BR', 1120]], ppsf: 2410, med: 2300, yld: 6.7, ot: 90, plan: '60/40', ho: 'Q1 2029', hy: 2029, hm: 28, floors: 41, units: 270, sold: 52, metro: '4 min to metro', tags: ['Canal views', 'Highest rental demand'], rera: 'DEMO-2030', pc: 18,
+    blurb: 'A canal-front tower a few minutes from Downtown, designed for investors with compact, efficient layouts.' },
+  { id: 'jade-circle', name: 'Jade Circle', dev: 'Verdant Group', area: 'Jumeirah Village Circle', mood: 'day', kind: 'lowrise', set: 'park', seed: 71,
+    types: [['Studio', 480], ['1 BR', 780], ['2 BR', 1240]], ppsf: 1480, med: 1390, yld: 7.4, ot: 88, plan: '50/50', ho: 'Q4 2028', hy: 2028, hm: 26, floors: 7, units: 150, sold: 83, metro: 'Community shuttle', tags: ['Post-handover plan', 'Entry price'], rera: 'DEMO-1952', pc: 36,
+    blurb: 'Boutique low-rise with a central courtyard pool and an easy entry price for first-time investors.' },
+  { id: 'meydan-gate', name: 'Meydan Gate', dev: 'Sandline Developments', area: 'MBR City', mood: 'dawn', kind: 'twin', set: 'park', seed: 88,
+    types: [['1 BR', 760], ['2 BR', 1260], ['3 BR', 1900]], ppsf: 2260, med: 2120, yld: 5.9, ot: 93, plan: '70/30', ho: 'Q2 2029', hy: 2029, hm: 31, floors: 36, units: 340, sold: 47, metro: 'Shuttle to metro', tags: ['Lagoon access', 'Family'], rera: 'DEMO-2058', pc: 14,
+    blurb: 'Twin residences beside a crystal lagoon, with a sports club, trails and a dedicated school drop-off.' },
+  { id: 'furjan-courts', name: 'Furjan Courtyards', dev: 'Aurum Built', area: 'Al Furjan', mood: 'day', kind: 'lowrise', set: 'park', seed: 95,
+    types: [['1 BR', 760], ['2 BR', 1180], ['3 BR', 1700]], ppsf: 1320, med: 1260, yld: 7.1, ot: 91, plan: '60/40', ho: 'Q1 2028', hy: 2028, hm: 17, floors: 6, units: 120, sold: 88, metro: '5 min to metro', tags: ['Nearly ready', 'Entry price'], rera: 'DEMO-1904', pc: 58,
+    blurb: 'Courtyard-style blocks that are already more than half built, with the earliest handover of the collection.' }
+];
+PROJ.forEach(p => { p.type = 'off'; p.from = Math.round(p.types[0][1] * p.ppsf / 1e4) * 1e4; p.fromBeds = p.types[0][0] + ' to ' + p.types[p.types.length - 1][0]; });
+
+const RES = [
+  { id: 'r1', name: 'Marina Promenade', unit: '2 BR, floor 31', area: 'Dubai Marina', mood: 'day', kind: 'tower', set: 'water', seed: 141, size: 1280, price: 2650000, rent: 165000, svc: 16.5, beds: 2, view: 'Marina', tenant: true, built: 2016 },
+  { id: 'r2', name: 'Downtown Terraces', unit: '1 BR, floor 18', area: 'Downtown Dubai', mood: 'dusk', kind: 'tower', set: 'water', seed: 152, size: 840, price: 2150000, rent: 125000, svc: 18.2, beds: 1, view: 'Fountain', tenant: false, built: 2014 },
+  { id: 'r3', name: 'Springs Gardens', unit: '3 BR villa', area: 'The Springs', mood: 'dawn', kind: 'lowrise', set: 'park', seed: 163, size: 2450, price: 3350000, rent: 190000, svc: 7.5, beds: 3, view: 'Lake', tenant: true, built: 2008 },
+  { id: 'r4', name: 'JLT Cluster Nine', unit: '1 BR, floor 22', area: 'Jumeirah Lake Towers', mood: 'day', kind: 'tower', set: 'water', seed: 174, size: 780, price: 1050000, rent: 78000, svc: 14.0, beds: 1, view: 'Lake', tenant: true, built: 2010 },
+  { id: 'r5', name: 'Hills Park Residences', unit: '2 BR, floor 6', area: 'Dubai Hills Estate', mood: 'dawn', kind: 'lowrise', set: 'park', seed: 185, size: 1190, price: 2280000, rent: 138000, svc: 11.8, beds: 2, view: 'Park', tenant: false, built: 2021 },
+  { id: 'r6', name: 'Bay Central', unit: 'Studio, floor 14', area: 'Business Bay', mood: 'dusk', kind: 'tower', set: 'water', seed: 196, size: 420, price: 780000, rent: 62000, svc: 15.4, beds: 0, view: 'Canal', tenant: true, built: 2018 }
+];
+RES.forEach(r => { r.type = 'res'; r.ppsf = Math.round(r.price / r.size); r.yld = +(r.rent / r.price * 100).toFixed(1); r.from = r.price; });
+
+/* payment plans: [name, rawMonth (scaled to the project's handover), % of price] */
+const PLANS = {
+  '60/40': { pre: [['Booking', 0, 10], ['SPA signing', 1, 10], ['Instalment 1', 6, 10], ['Instalment 2', 12, 10], ['Instalment 3', 18, 10], ['Instalment 4', 24, 10]], hand: 40, post: [] },
+  '70/30': { pre: [['Booking', 0, 10], ['SPA signing', 1, 10], ['Instalment 1', 6, 10], ['Instalment 2', 12, 10], ['Instalment 3', 18, 10], ['Instalment 4', 24, 10], ['Instalment 5', 27, 10]], hand: 30, post: [] },
+  '50/50': { pre: [['Booking', 0, 10], ['SPA signing', 1, 10], ['Instalment 1', 6, 10], ['Instalment 2', 12, 10], ['Instalment 3', 18, 10]], hand: 10, post: [['Post-handover 1', 6, 10], ['Post-handover 2', 12, 10], ['Post-handover 3', 18, 10], ['Post-handover 4', 24, 10]] }
+};
+function schedule(p, key) {
+  const pl = PLANS[key || p.plan], s = p.hm / 30, out = [];
+  pl.pre.forEach(([n, m, pc]) => out.push({ n, m: Math.round(m * s), pc }));
+  out.push({ n: 'On handover', m: p.hm, pc: pl.hand });
+  pl.post.forEach(([n, m, pc]) => out.push({ n, m: p.hm + m, pc }));
+  return out;
+}
+/* construction progress (percent) by month, scaled to handover */
+function progressAt(p, m) {
+  const s = p.hm / 30, pts = [[0, p.pc], [6 * s, 20 + p.pc * .3], [12 * s, 41], [18 * s, 62], [24 * s, 83], [p.hm, 100]];
+  if (m >= p.hm) return 100;
+  for (let i = 1; i < pts.length; i++) if (m <= pts[i][0]) { const [a, b] = [pts[i - 1], pts[i]]; return lerp(a[1], b[1], (m - a[0]) / Math.max(.001, b[0] - a[0])); }
+  return 100;
+}
+/* units for a floor: deterministic */
+function unitsFor(p, floor) {
+  const r = R(hash(p.id + floor)), views = p.set === 'water' ? ['Sea', 'Marina', 'City', 'Skyline'] : ['Park', 'Garden', 'Lagoon', 'City'], out = [];
+  const n = 4 + Math.floor(r() * 3);
+  for (let i = 0; i < n; i++) {
+    const t = p.types[Math.floor(r() * p.types.length)], size = Math.round(t[1] * (.94 + r() * .14));
+    const price = Math.round(size * p.ppsf * (1 + floor * .0045) / 5e3) * 5e3, q = r();
+    out.push({ no: floor * 100 + i + 1, type: t[0], size, view: views[Math.floor(r() * views.length)], price, st: q < .2 ? 'sold' : q < .32 ? 'held' : 'avail' });
+  }
+  return out;
+}
+const AREAS = [...new Set([...PROJ, ...RES].map(x => x.area))].sort();
+const byId = id => PROJ.find(p => p.id === id) || RES.find(p => p.id === id);
+
+/* ---------- procedural architectural renders (no external images) ---------- */
+const MOOD = {
+  dawn: { sky: ['#a9d4ee', '#f1e3da', '#ffd0ae'], sun: [.74, .6, '255,240,214'], far: '#c7d8e4', mid: '#a7bfcf', water: ['#f0cdb8', '#8fbad0'], glass: '#8db8cf', lit: 0, fog: '255,226,205' },
+  day: { sky: ['#7cc3ea', '#cfe9f6', '#f1f8fb'], sun: [.2, .2, '255,255,255'], far: '#c2d8e6', mid: '#9dbbce', water: ['#c4e6f0', '#5fa9c4'], glass: '#6aa3c1', lit: 0, fog: '235,246,250' },
+  dusk: { sky: ['#5870aa', '#d38d94', '#ffcd98'], sun: [.3, .64, '255,226,176'], far: '#8e8fb6', mid: '#6b7398', water: ['#d99a8f', '#506f9f'], glass: '#46608c', lit: 1, fog: '255,196,160' }
+};
+const hexRGB = c => { const n = parseInt(c.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+const mixc = (a, b, t) => { const A = hexRGB(a), B = typeof b === 'string' ? hexRGB(b) : b; return `rgb(${Math.round(lerp(A[0], B[0], t))},${Math.round(lerp(A[1], B[1], t))},${Math.round(lerp(A[2], B[2], t))})`; };
+const lighten = (c, t) => mixc(c, [255, 255, 255], t), darken = (c, t) => mixc(c, [0, 0, 0], t);
+const rr = (c, x, y, w, h, r) => { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); };
+const mk = (W, H) => { const c = document.createElement('canvas'); c.width = W; c.height = H; return c; };
+
+function skyline(a, W, hz, rand, col, n, minH, maxH, spire) {
+  a.fillStyle = col;
+  let x = -20;
+  while (x < W + 20) {
+    const w = 14 + rand() * 34, h = minH + rand() * (maxH - minH);
+    a.fillRect(x, hz - h, w, h + 2);
+    if (spire && rand() < .06) { a.beginPath(); a.moveTo(x + w / 2 - 3, hz - h); a.lineTo(x + w / 2, hz - h - 110); a.lineTo(x + w / 2 + 3, hz - h); a.fill(); }
+    x += w + rand() * 6;
+  }
+}
+function tower(a, W, H, hz, cx, tw, th, m, rand, hero) {
+  const x0 = cx - tw / 2, top = hz - th, sw = tw * .34, sk = tw * .06;
+  let g = a.createLinearGradient(x0 + tw, top, x0 + tw + sw, hz);
+  g.addColorStop(0, darken(m.glass, .22)); g.addColorStop(1, darken(m.glass, .45)); a.fillStyle = g;
+  a.beginPath(); a.moveTo(x0 + tw, top); a.lineTo(x0 + tw + sw, top + sk); a.lineTo(x0 + tw + sw, hz + sk * .3); a.lineTo(x0 + tw, hz); a.closePath(); a.fill();
+  g = a.createLinearGradient(x0, top, x0 + tw, hz);
+  g.addColorStop(0, lighten(m.glass, .4)); g.addColorStop(.55, m.glass); g.addColorStop(1, darken(m.glass, .18));
+  a.fillStyle = g; a.fillRect(x0, top, tw, th);
+  const fl = Math.max(16, Math.round(th / (H * .016))), fh = th / fl, cols = Math.max(5, Math.round(tw / (W * .016))), cw = tw / cols;
+  for (let r = 0; r < fl; r++) {
+    const y = top + r * fh;
+    for (let c = 0; c < cols; c++) {
+      const x = x0 + c * cw;
+      if (m.lit && rand() < .26) { a.fillStyle = `rgba(255,${190 + Math.round(rand() * 40)},${110 + Math.round(rand() * 40)},.88)`; a.fillRect(x + cw * .12, y + fh * .18, cw * .76, fh * .62); }
+      else if (rand() < .2) { a.fillStyle = 'rgba(255,255,255,.10)'; a.fillRect(x + cw * .1, y + fh * .12, cw * .8, fh * .7); }
+    }
+    a.fillStyle = 'rgba(255,255,255,.5)'; a.fillRect(x0, y + fh * .86, tw, Math.max(1, fh * .1));
+    a.fillStyle = 'rgba(0,0,0,.10)'; a.fillRect(x0, y + fh * .96, tw, Math.max(1, fh * .07));
+  }
+  a.strokeStyle = 'rgba(255,255,255,.16)'; a.lineWidth = 1;
+  for (let c = 1; c < cols; c++) { a.beginPath(); a.moveTo(x0 + c * cw, top); a.lineTo(x0 + c * cw, hz); a.stroke(); }
+  g = a.createLinearGradient(x0, top, x0 + tw * .9, top + th * .5);
+  g.addColorStop(0, 'rgba(255,255,255,.35)'); g.addColorStop(.5, 'rgba(255,255,255,.06)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  a.fillStyle = g; a.fillRect(x0, top, tw, th);
+  a.strokeStyle = 'rgba(255,255,255,.2)';
+  for (let r = 0; r < fl; r++) { const y = top + r * fh; a.beginPath(); a.moveTo(x0 + tw, y); a.lineTo(x0 + tw + sw, y + sk * (1 - (y - top) / th * .7)); a.stroke(); }
+  if (hero) {
+    a.fillStyle = lighten(m.glass, .2); a.fillRect(x0 + tw * .18, top - th * .035, tw * .64, th * .035);
+    a.fillStyle = 'rgba(255,255,255,.55)'; a.fillRect(x0 + tw * .18, top - th * .035, tw * .64, 2);
+    a.fillStyle = darken(m.glass, .1); a.beginPath(); a.moveTo(cx - 2, top - th * .035); a.lineTo(cx, top - th * .035 - th * .12); a.lineTo(cx + 2, top - th * .035); a.fill();
+  }
+  const pw = tw * 1.9, ph = H * .045;
+  g = a.createLinearGradient(0, hz - ph, 0, hz); g.addColorStop(0, lighten(m.mid, .5)); g.addColorStop(1, darken(m.mid, .1));
+  a.fillStyle = g; a.fillRect(cx - pw / 2, hz - ph, pw, ph);
+  a.fillStyle = 'rgba(255,255,255,.55)'; a.fillRect(cx - pw / 2, hz - ph, pw, 2);
+  for (let i = 0; i < 22; i++) {
+    const tx = cx - pw / 2 + rand() * pw, tr = H * (.012 + rand() * .016);
+    a.fillStyle = `rgb(${40 + rand() * 30 | 0},${110 + rand() * 50 | 0},${86 + rand() * 30 | 0})`;
+    a.beginPath(); a.arc(tx, hz - ph, tr, 0, 6.283); a.fill();
+  }
+}
+function lowrise(a, W, H, hz, cx, Wd, m, rand) {
+  const levels = 4 + Math.floor(rand() * 2), lh = H * .085;
+  let w = Wd * .62;
+  for (let i = 0; i < levels; i++) {
+    const x = cx - w / 2 + (rand() - .5) * Wd * .05, y = hz - (i + 1) * lh;
+    let g = a.createLinearGradient(x, y, x, y + lh); g.addColorStop(0, '#f6f4ee'); g.addColorStop(1, '#e2e5df'); a.fillStyle = g; a.fillRect(x, y, w, lh);
+    const gy = y + lh * .22, gh = lh * .56;
+    g = a.createLinearGradient(x, gy, x + w, gy); g.addColorStop(0, lighten(m.glass, .35)); g.addColorStop(1, darken(m.glass, .12)); a.fillStyle = g; a.fillRect(x + w * .03, gy, w * .94, gh);
+    const cols = Math.max(4, Math.round(w / (W * .045))), cwid = w * .94 / cols;
+    for (let c = 1; c < cols; c++) { a.fillStyle = 'rgba(255,255,255,.55)'; a.fillRect(x + w * .03 + c * cwid, gy, 2, gh); }
+    if (m.lit) for (let c = 0; c < cols; c++) if (rand() < .4) { a.fillStyle = 'rgba(255,205,130,.8)'; a.fillRect(x + w * .03 + c * cwid + 3, gy + 3, cwid - 6, gh - 6); }
+    a.fillStyle = '#ffffff'; a.fillRect(x - w * .02, y + lh * .82, w * 1.04, lh * .1);
+    a.fillStyle = 'rgba(0,0,0,.12)'; a.fillRect(x - w * .02, y + lh * .92, w * 1.04, lh * .05);
+    for (let k = 0; k < Math.round(w / 26); k++) { a.fillStyle = `rgb(${50 + rand() * 30 | 0},${120 + rand() * 50 | 0},${88 + rand() * 30 | 0})`; a.beginPath(); a.arc(x + rand() * w, y + lh * .8, lh * (.07 + rand() * .08), 0, 6.283); a.fill(); }
+    w *= .86 + rand() * .08;
+  }
+}
+function waterBlock(b, A, W, H, hz, m, rand) {
+  let g = b.createLinearGradient(0, hz, 0, H); g.addColorStop(0, m.water[0]); g.addColorStop(1, m.water[1]);
+  b.fillStyle = g; b.fillRect(0, hz, W, H - hz);
+  const h = H - hz;
+  b.globalAlpha = .34;
+  for (let d = 0; d < h; d += 2) {
+    const ox = Math.sin(d * .33 + rand() * .6) * (1 + d * .035);
+    b.drawImage(A, 0, Math.max(0, hz - d - 3), W, 2, ox, hz + d, W, 2);
+  }
+  b.globalAlpha = 1;
+  g = b.createLinearGradient(0, hz, 0, H); g.addColorStop(0, 'rgba(255,255,255,.18)'); g.addColorStop(1, `rgba(${hexRGB(m.water[1]).join(',')},.35)`);
+  b.fillStyle = g; b.fillRect(0, hz, W, h);
+  for (let i = 0; i < 70; i++) { b.fillStyle = `rgba(255,255,255,${.05 + rand() * .1})`; const y = hz + rand() * h; b.fillRect(rand() * W, y, 30 + rand() * 130, 1 + y / H * 1.5); }
+}
+function parkBlock(b, W, H, hz, m, rand) {
+  const g = b.createLinearGradient(0, hz, 0, H); g.addColorStop(0, '#a9d1a6'); g.addColorStop(1, '#5d9a78');
+  b.fillStyle = g; b.fillRect(0, hz, W, H - hz);
+  b.fillStyle = 'rgba(255,255,255,.07)';
+  for (let i = -10; i < 22; i++) { b.beginPath(); b.moveTo(i * 70, hz); b.lineTo(i * 70 + 36, hz); b.lineTo(W / 2 + (i - 6) * 170 + 90, H); b.lineTo(W / 2 + (i - 6) * 170, H); b.fill(); }
+  b.fillStyle = 'rgba(244,238,226,.9)'; b.beginPath(); b.moveTo(W * .47, hz); b.lineTo(W * .53, hz); b.lineTo(W * .78, H); b.lineTo(W * .3, H); b.fill();
+}
+function palm(c, x, y, h, lean, col) {
+  c.strokeStyle = col; c.lineCap = 'round'; c.lineWidth = h * .035;
+  c.beginPath(); c.moveTo(x, y); const tx = x + lean * h, ty = y - h; c.quadraticCurveTo(x + lean * h * .2, y - h * .6, tx, ty); c.stroke();
+  for (let i = 0; i < 9; i++) {
+    const ang = -Math.PI / 2 + (i - 4) * .42 + lean * .5, len = h * .34;
+    c.lineWidth = h * .018; c.beginPath(); c.moveTo(tx, ty);
+    c.quadraticCurveTo(tx + Math.cos(ang) * len * .6, ty + Math.sin(ang) * len * .6 - len * .18, tx + Math.cos(ang) * len, ty + Math.sin(ang) * len + len * .35); c.stroke();
+  }
+}
+function foreground(b, W, H, hz, m, rand, set) {
+  const col = m.lit ? '#1a3b47' : '#1f5a4c';
+  if (set === 'water') { palm(b, W * .07, H * 1.02, H * .52, .16, col); palm(b, W * .94, H * 1.03, H * .46, -.2, col); palm(b, W * .15, H * 1.04, H * .34, .22, col); }
+  else {
+    for (let i = 0; i < 9; i++) {
+      const x = (i < 5 ? .02 + i * .045 : .78 + (i - 5) * .06) * W, y = hz + (H - hz) * (.45 + rand() * .5), r = H * (.05 + rand() * .06);
+      b.fillStyle = 'rgba(0,0,0,.08)'; b.beginPath(); b.ellipse(x + r * .2, y + r * .9, r * 1.1, r * .3, 0, 0, 6.283); b.fill();
+      b.fillStyle = `rgb(${40 + rand() * 30 | 0},${112 + rand() * 40 | 0},${80 + rand() * 30 | 0})`; b.beginPath(); b.arc(x, y, r, 0, 6.283); b.fill();
+      b.fillStyle = 'rgba(255,255,255,.14)'; b.beginPath(); b.arc(x - r * .3, y - r * .3, r * .55, 0, 6.283); b.fill();
+    }
+  }
+}
+function finish(b, W, H, rand) {
+  const g = b.createRadialGradient(W / 2, H * .5, H * .3, W / 2, H * .5, W * .75);
+  g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(8,30,40,.22)'); b.fillStyle = g; b.fillRect(0, 0, W, H);
+  for (let i = 0; i < 1400; i++) { b.fillStyle = `rgba(255,255,255,${rand() * .05})`; b.fillRect(rand() * W, rand() * H, 1.4, 1.4); }
+}
+function exterior(item, moodName, W, H, off) {
+  const m = MOOD[moodName], rand = R(item.seed * 97 + off), hz = H * .7;
+  const A = mk(W, H), a = A.getContext('2d');
+  let g = a.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, m.sky[0]); g.addColorStop(.55, m.sky[1]); g.addColorStop(1, m.sky[2]);
+  a.fillStyle = g; a.fillRect(0, 0, W, H);
+  const sx = W * m.sun[0], sy = H * m.sun[1] * .9;
+  g = a.createRadialGradient(sx, sy, 0, sx, sy, W * .5); g.addColorStop(0, `rgba(${m.sun[2]},.95)`); g.addColorStop(.12, `rgba(${m.sun[2]},.55)`); g.addColorStop(1, `rgba(${m.sun[2]},0)`);
+  a.fillStyle = g; a.fillRect(0, 0, W, H);
+  for (let i = 0; i < 7; i++) {
+    const cx = rand() * W, cy = H * (.08 + rand() * .3), rw = 90 + rand() * 160;
+    g = a.createRadialGradient(cx, cy, 0, cx, cy, rw); g.addColorStop(0, 'rgba(255,255,255,.35)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    a.save(); a.translate(cx, cy); a.scale(1, .28); a.translate(-cx, -cy); a.fillStyle = g; a.beginPath(); a.arc(cx, cy, rw, 0, 6.283); a.fill(); a.restore();
+  }
+  skyline(a, W, hz, rand, m.far, 26, H * .09, H * .2, true);
+  skyline(a, W, hz, rand, m.mid, 18, H * .06, H * .15, false);
+  g = a.createLinearGradient(0, hz - H * .18, 0, hz); g.addColorStop(0, `rgba(${m.fog},0)`); g.addColorStop(1, `rgba(${m.fog},.55)`);
+  a.fillStyle = g; a.fillRect(0, hz - H * .18, W, H * .18);
+  const cx = W * (.5 + (rand() - .5) * .08);
+  if (item.kind === 'tower') tower(a, W, H, hz, cx, W * .2, H * .72, m, rand, true);
+  else if (item.kind === 'twin') { tower(a, W, H, hz, cx - W * .15, W * .15, H * .6, m, rand, false); tower(a, W, H, hz, cx + W * .1, W * .17, H * .74, m, rand, true); }
+  else lowrise(a, W, H, hz, cx, W, m, rand);
+  const B = mk(W, H), b = B.getContext('2d');
+  b.drawImage(A, 0, 0);
+  if (item.set === 'water') waterBlock(b, A, W, H, hz, m, rand); else parkBlock(b, W, H, hz, m, rand);
+  foreground(b, W, H, hz, m, rand, item.set);
+  finish(b, W, H, rand);
+  return B;
+}
+function interior(item, W, H) {
+  const rand = R(item.seed * 31 + 5), m = MOOD[item.mood === 'dusk' ? 'dusk' : 'day'], c = mk(W, H), x = c.getContext('2d');
+  let g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#f1eee8'); g.addColorStop(1, '#e4dfd6'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  const wx = W * .3, wy = H * .08, ww = W * .66, wh = H * .56;
+  x.save(); x.beginPath(); x.rect(wx, wy, ww, wh); x.clip();
+  g = x.createLinearGradient(0, wy, 0, wy + wh); g.addColorStop(0, m.sky[0]); g.addColorStop(.6, m.sky[1]); g.addColorStop(1, m.sky[2]); x.fillStyle = g; x.fillRect(wx, wy, ww, wh);
+  skyline(x, W, wy + wh * .8, rand, m.far, 26, wh * .2, wh * .45, true); skyline(x, W, wy + wh * .92, rand, m.mid, 16, wh * .12, wh * .3, false);
+  g = x.createLinearGradient(0, wy + wh * .8, 0, wy + wh); g.addColorStop(0, m.water[0]); g.addColorStop(1, m.water[1]); x.fillStyle = g; x.fillRect(wx, wy + wh * .84, ww, wh * .2);
+  x.restore();
+  x.fillStyle = '#d9d4c9'; for (let i = 0; i <= 4; i++) x.fillRect(wx + i * ww / 4 - 3, wy, 6, wh); x.fillRect(wx, wy - 4, ww, 8); x.fillRect(wx, wy + wh - 4, ww, 8);
+  g = x.createLinearGradient(0, H * .64, 0, H); g.addColorStop(0, '#cdb99c'); g.addColorStop(1, '#a88f6d'); x.fillStyle = g; x.fillRect(0, H * .64, W, H * .36);
+  x.strokeStyle = 'rgba(0,0,0,.06)'; for (let i = 0; i < 14; i++) { x.beginPath(); x.moveTo(W / 2 + (i - 7) * 14, H * .64); x.lineTo(W / 2 + (i - 7) * 110, H); x.stroke(); }
+  x.fillStyle = 'rgba(255,255,255,.18)'; x.beginPath(); x.moveTo(wx, H * .64); x.lineTo(wx + ww, H * .64); x.lineTo(W * 1.05, H); x.lineTo(W * .12, H); x.fill();
+  x.fillStyle = 'rgba(46,120,118,.85)'; x.beginPath(); x.ellipse(W * .52, H * .84, W * .2, H * .07, 0, 0, 6.283); x.fill();
+  x.fillStyle = '#e9e4d9'; rr(x, W * .34, H * .56, W * .34, H * .17, 26); x.fill();
+  x.fillStyle = '#d9d2c3'; rr(x, W * .34, H * .53, W * .34, H * .08, 20); x.fill();
+  [['#0f766e', .38], ['#ff8a6b', .45], ['#f6f1e6', .52], ['#0f766e', .59]].forEach(([col, px]) => { x.fillStyle = col; rr(x, W * px, H * .585, W * .055, H * .06, 12); x.fill(); });
+  x.fillStyle = '#b79b78'; rr(x, W * .42, H * .76, W * .18, H * .05, 12); x.fill();
+  x.fillStyle = '#fff'; x.beginPath(); x.ellipse(W * .51, H * .758, W * .02, H * .008, 0, 0, 6.283); x.fill();
+  x.strokeStyle = '#3d5a5e'; x.lineWidth = 4; x.beginPath(); x.moveTo(W * .14, H * .8); x.lineTo(W * .14, H * .34); x.quadraticCurveTo(W * .14, H * .26, W * .2, H * .28); x.stroke();
+  x.fillStyle = '#ffd89b'; x.beginPath(); x.arc(W * .205, H * .31, 20, 0, 6.283); x.fill();
+  x.fillStyle = '#7a5b3f'; rr(x, W * .075, H * .72, 40, 60, 10); x.fill();
+  for (let i = 0; i < 9; i++) { x.strokeStyle = '#2f7d62'; x.lineWidth = 5; x.beginPath(); x.moveTo(W * .075 + 20, H * .72); x.quadraticCurveTo(W * .075 + 20 + (i - 4) * 18, H * .62 - rand() * 30, W * .075 + 20 + (i - 4) * 30, H * .58 + rand() * 20); x.stroke(); }
+  for (let i = 0; i < 700; i++) { x.fillStyle = `rgba(255,255,255,${rand() * .04})`; x.fillRect(rand() * W, rand() * H, 1.4, 1.4); }
+  return c;
+}
+const IMGS = {};
+function imgFor(item, variant = 'ext') {
+  const key = item.id + variant;
+  if (IMGS[key]) return IMGS[key];
+  const W = 960, H = 640;
+  const c = variant === 'int' ? interior(item, W, H) : exterior(item, variant === 'dusk' ? 'dusk' : item.mood, W, H, variant === 'dusk' ? 7 : 0);
+  return IMGS[key] = c.toDataURL('image/jpeg', .86);
+}
+async function ensureImg(item, variant = 'ext') {
+  if (IMGS[item.id + variant]) return IMGS[item.id + variant];
+  await sleep(0);
+  return imgFor(item, variant);
+}
+
+/* ---------- effects: cursor, trail, shader, kinetic type, micro-interactions ---------- */
+const pointer = { x: -999, y: -999, vx: 0, vy: 0, t: 0 };
+addEventListener('pointermove', e => { pointer.vx = e.clientX - pointer.x; pointer.vy = e.clientY - pointer.y; pointer.x = e.clientX; pointer.y = e.clientY; pointer.t = performance.now(); }, { passive: true });
+
+function initCursor() {
+  if (!FINE || RM) return;
+  const c = $('#cursor'), dot = $('.dot', c), ring = $('.ring', c), lab = $('.ring span', c);
+  let x = 0, y = 0, rx = 0, ry = 0, shown = false;
+  addEventListener('pointermove', e => {
+    x = e.clientX; y = e.clientY;
+    if (!shown) { shown = true; rx = x; ry = y; c.classList.add('on'); }
+    const t = e.target.closest ? e.target.closest('[data-cursor]') : null;
+    ring.classList.toggle('big', !!t);
+    ring.classList.toggle('link', !t && !!(e.target.closest && e.target.closest('a,button,[role=button],input,label,select,.chip')));
+    lab.textContent = t ? t.dataset.cursor : '';
+  }, { passive: true });
+  document.addEventListener('pointerleave', () => c.classList.remove('on'));
+  document.addEventListener('pointerenter', () => shown && c.classList.add('on'));
+  (function loop() {
+    rx = lerp(rx, x, .17); ry = lerp(ry, y, .17);
+    dot.style.transform = `translate(${x}px,${y}px)`;
+    ring.style.transform = `translate(${rx}px,${ry}px)`;
+    requestAnimationFrame(loop);
+  })();
+  document.documentElement.classList.add('has-cursor');
+}
+
+function initTrail() {
+  if (!FINE || RM) return;
+  const cv = $('#trail'), ctx = cv.getContext('2d');
+  let W, H, dpr;
+  const size = () => { dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  size(); addEventListener('resize', size);
+  const pts = [], sparks = []; let last = null;
+  addEventListener('pointermove', e => {
+    const p = { x: e.clientX, y: e.clientY, t: performance.now() };
+    pts.push(p); if (pts.length > 30) pts.shift();
+    if (last) {
+      const d = Math.hypot(p.x - last.x, p.y - last.y), n = Math.min(3, Math.floor(d / 16));
+      for (let i = 0; i < n; i++) sparks.push({ x: p.x + (Math.random() - .5) * 10, y: p.y + (Math.random() - .5) * 10, vx: (Math.random() - .5) * .9, vy: (Math.random() - .5) * .9 - .25, life: 1, r: 2 + Math.random() * 3.5, c: Math.random() < .55 ? '14,124,121' : '255,122,89' });
+    }
+    last = p;
+  }, { passive: true });
+  (function loop() {
+    ctx.clearRect(0, 0, W, H);
+    const now = performance.now();
+    while (pts.length && now - pts[0].t > 420) pts.shift();
+    ctx.lineCap = 'round';
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i], k = i / pts.length;
+      ctx.strokeStyle = `rgba(${k < .55 ? '14,124,121' : '255,122,89'},${k * .38})`;
+      ctx.lineWidth = k * 9;
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const s = sparks[i]; s.x += s.vx; s.y += s.vy; s.life -= .022;
+      if (s.life <= 0) { sparks.splice(i, 1); continue; }
+      ctx.fillStyle = `rgba(${s.c},${s.life * .6})`;
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r * s.life, 0, 6.283); ctx.fill();
+    }
+    requestAnimationFrame(loop);
+  })();
+}
+
+/* ----- cursor-reactive shader hero ----- */
+function initHeroGL() {
+  const cv = $('#heroGL'), hero = $('#hero');
+  if (!cv) return;
+  const gl = cv.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power' });
+  if (!gl) { hero.classList.add('nogl'); return; }
+  const vs = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  const fs = `precision highp float;
+uniform vec2 uRes; uniform float uTime; uniform vec2 uMouse; uniform vec2 uVel; uniform vec3 uTrail[10];
+float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);float a=hash(i),b=hash(i+vec2(1,0)),c=hash(i+vec2(0,1)),d=hash(i+vec2(1,1));return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.02+vec2(3.1,1.7);a*=.5;}return v;}
+void main(){
+  vec2 uv=gl_FragCoord.xy/uRes; float asp=uRes.x/uRes.y;
+  vec2 p=vec2(uv.x*asp,uv.y); vec2 m=vec2(uMouse.x*asp,uMouse.y);
+  float t=uTime*.05;
+  vec2 d=p-m; float r=length(d);
+  float inf=exp(-r*r*12.);
+  vec2 q=p+normalize(d+1e-4)*inf*.07+uVel*inf*.35;
+  float rip=0.;
+  for(int i=0;i<10;i++){vec3 tr=uTrail[i];vec2 tp=vec2(tr.x*asp,tr.y);float dd=length(p-tp);rip+=sin(dd*60.-tr.z*7.)*exp(-dd*8.)*exp(-tr.z*1.7);}
+  q+=rip*.006;
+  vec2 w=vec2(fbm(q*1.5+vec2(t,0.)),fbm(q*1.5+vec2(0.,-t)+5.2));
+  float n=fbm(q*1.25+w*1.9+t);
+  vec3 c1=vec3(.953,.969,.969),c2=vec3(.776,.933,.894),c3=vec3(.827,.914,.969),c4=vec3(1.,.851,.722);
+  vec3 col=mix(c1,c2,smoothstep(.25,.65,n));
+  col=mix(col,c3,smoothstep(.45,.85,fbm(q*2.+w))*.85);
+  col=mix(col,c4,smoothstep(.55,.95,n+uv.y*.1)*.5*(1.-uv.y));
+  col+=pow(abs(sin((n+rip*.12)*20.)),14.)*.10;
+  col+=vec3(1.,.55,.38)*exp(-r*r*45.)*.20+vec3(.2,.8,.75)*exp(-r*r*10.)*.10;
+  col+=(hash(gl_FragCoord.xy+uTime)-.5)*.014;
+  gl_FragColor=vec4(col,1.);
+}`;
+  const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) { console.warn(gl.getShaderInfoLog(o)); return null; } return o; };
+  const v = sh(gl.VERTEX_SHADER, vs), f = sh(gl.FRAGMENT_SHADER, fs);
+  if (!v || !f) { hero.classList.add('nogl'); return; }
+  const pr = gl.createProgram(); gl.attachShader(pr, v); gl.attachShader(pr, f); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { hero.classList.add('nogl'); return; }
+  gl.useProgram(pr);
+  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const U = n => gl.getUniformLocation(pr, n);
+  const uRes = U('uRes'), uTime = U('uTime'), uMouse = U('uMouse'), uVel = U('uVel'), uTrail = U('uTrail[0]');
+  const size = () => { const k = Math.min(devicePixelRatio || 1, 1.5) * .6; cv.width = Math.max(2, hero.clientWidth * k | 0); cv.height = Math.max(2, hero.clientHeight * k | 0); gl.viewport(0, 0, cv.width, cv.height); };
+  size(); addEventListener('resize', size);
+  const trail = []; for (let i = 0; i < 10; i++) trail.push({ x: .5, y: .5, t: -99 }); let ti = 0, lastDrop = 0;
+  let mx = .6, my = .5, tx = .6, ty = .5, vx = 0, vy = 0, visible = true;
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0 }).observe(hero);
+  const arr = new Float32Array(30), t0 = performance.now();
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (!visible || document.hidden || $('#v-home').hidden) return;
+    const rect = hero.getBoundingClientRect(), sec = (now - t0) / 1000;
+    const idle = now - pointer.t > 2200;
+    if (!idle && pointer.x > -900) { tx = clamp((pointer.x - rect.left) / rect.width, 0, 1); ty = clamp(1 - (pointer.y - rect.top) / rect.height, 0, 1); }
+    else { tx = .62 + .22 * Math.sin(sec * .35); ty = .5 + .18 * Math.cos(sec * .27); }
+    vx = lerp(vx, (tx - mx) * 2, .2); vy = lerp(vy, (ty - my) * 2, .2);
+    mx = lerp(mx, tx, .09); my = lerp(my, ty, .09);
+    if (now - lastDrop > 70 && (Math.abs(vx) + Math.abs(vy) > .02)) { lastDrop = now; trail[ti] = { x: mx, y: my, t: now }; ti = (ti + 1) % 10; }
+    for (let i = 0; i < 10; i++) { arr[i * 3] = trail[i].x; arr[i * 3 + 1] = trail[i].y; arr[i * 3 + 2] = Math.min(99, (now - trail[i].t) / 1000); }
+    gl.uniform2f(uRes, cv.width, cv.height); gl.uniform1f(uTime, RM ? 3 : sec + 20);
+    gl.uniform2f(uMouse, mx, my); gl.uniform2f(uVel, clamp(vx, -.3, .3), clamp(vy, -.3, .3)); gl.uniform3fv(uTrail, arr);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ----- kinetic typography ----- */
+function split(el) {
+  const txt = el.textContent.trim();
+  el.setAttribute('aria-label', txt);
+  el.textContent = '';
+  let i = 0;
+  txt.split(' ').forEach((w, wi, arr) => {
+    const wd = document.createElement('span'); wd.className = 'w'; wd.setAttribute('aria-hidden', 'true');
+    [...w].forEach(ch => { const s = document.createElement('span'); s.className = 'ch'; s.textContent = ch; s.style.setProperty('--i', i++); wd.appendChild(s); });
+    el.appendChild(wd);
+    if (wi < arr.length - 1) el.appendChild(document.createTextNode(' '));
+  });
+  el.dataset.split = 'done';
+  return $$('.ch', el);
+}
+function weightField(el) {
+  if (!FINE || RM) return;
+  const chs = $$('.ch', el), cur = chs.map(() => 420); let on = true;
+  new IntersectionObserver(es => { on = es[0].isIntersecting; }).observe(el);
+  (function loop() {
+    requestAnimationFrame(loop);
+    if (!on || $('#v-home').hidden || pointer.x < -900) return;
+    const rects = chs.map(c => c.getBoundingClientRect());
+    chs.forEach((c, i) => {
+      const r = rects[i], d = Math.hypot(pointer.x - (r.left + r.width / 2), (pointer.y - (r.top + r.height / 2)) * .7);
+      cur[i] = lerp(cur[i], lerp(780, 380, clamp(d / 280, 0, 1)), .12);
+      c.style.fontVariationSettings = `"wght" ${cur[i].toFixed(0)}`;
+    });
+  })();
+}
+function initRotator() {
+  const rot = $('#rot'); if (!rot) return;
+  const words = $$('.word', rot); words.forEach(w => split(w));
+  let i = 0; words[0].classList.add('on');
+  if (RM) return;
+  setInterval(() => {
+    const a = words[i], b = words[(i + 1) % words.length];
+    a.classList.remove('on'); a.classList.add('out');
+    setTimeout(() => { a.classList.remove('out'); }, 900);
+    b.classList.add('on'); i = (i + 1) % words.length;
+  }, 3000);
+}
+function initMarquee() {
+  const tracks = $$('.mq-track'); if (!tracks.length) return;
+  let pos = 0, lastY = scrollY, skew = 0;
+  (function loop() {
+    requestAnimationFrame(loop);
+    const dy = scrollY - lastY; lastY = scrollY;
+    skew = lerp(skew, clamp(dy * .12, -6, 6), .12);
+    pos += RM ? 0 : .6 + Math.abs(dy) * .35;
+    tracks.forEach((t, k) => {
+      const w = t.scrollWidth / 2 || 1, off = (pos * (k ? -1 : 1)) % w;
+      t.style.transform = `translate3d(${k ? off - w : -off}px,0,0) skewX(${(-skew * (k ? -1 : 1)).toFixed(2)}deg)`;
+    });
+  })();
+}
+function reveal(root = document) {
+  $$('[data-split]', root).forEach(el => { if (el.dataset.split !== 'done') split(el); });
+  $$('[data-reveal],[data-split]', root).forEach(el => {
+    if (el._o) return; el._o = 1;
+    io.observe(el);
+  });
+}
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .18, rootMargin: '0px 0px -6% 0px' });
+
+/* ----- micro-interactions ----- */
+function initMicro() {
+  document.addEventListener('pointerdown', e => {
+    const b = e.target.closest && e.target.closest('.btn'); if (!b) return;
+    const r = b.getBoundingClientRect(), s = document.createElement('span');
+    s.className = 'rip'; s.style.left = (e.clientX - r.left) + 'px'; s.style.top = (e.clientY - r.top) + 'px';
+    b.appendChild(s); setTimeout(() => s.remove(), 700);
+  });
+  if (FINE && !RM) {
+    const mags = () => $$('[data-magnetic]').filter(el => el.offsetParent !== null);
+    addEventListener('pointermove', e => {
+      mags().forEach(el => {
+        const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, d = Math.hypot(e.clientX - cx, e.clientY - cy), R0 = Math.max(r.width, r.height) * .9;
+        if (d < R0) { el.style.transform = `translate(${(e.clientX - cx) * .22}px,${(e.clientY - cy) * .28}px)`; el._mg = 1; }
+        else if (el._mg) { el.style.transform = ''; el._mg = 0; }
+      });
+    }, { passive: true });
+    let tEl = null;
+    document.addEventListener('pointermove', e => {
+      const el = e.target.closest ? e.target.closest('[data-tilt]') : null;
+      if (tEl && tEl !== el) { tEl.style.setProperty('--rx', '0deg'); tEl.style.setProperty('--ry', '0deg'); tEl.classList.remove('tilting'); }
+      tEl = el;
+      if (!el) return;
+      const r = el.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+      el.classList.add('tilting');
+      el.style.setProperty('--rx', ((.5 - py) * 7).toFixed(2) + 'deg'); el.style.setProperty('--ry', ((px - .5) * 9).toFixed(2) + 'deg');
+      el.style.setProperty('--mx', (px * 100).toFixed(1) + '%'); el.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+    }, { passive: true });
+  }
+}
+function initSeg(seg, onChange) {
+  const th = $('.thumb', seg), bs = $$('button', seg);
+  const place = () => { const a = bs.find(b => b.getAttribute('aria-selected') === 'true'); if (!a || !a.offsetWidth) return; th.style.width = a.offsetWidth + 'px'; th.style.transform = `translateX(${a.offsetLeft}px)`; };
+  bs.forEach(b => b.addEventListener('click', () => { bs.forEach(x => x.setAttribute('aria-selected', String(x === b))); place(); onChange && onChange(b.dataset.v); }));
+  place(); addEventListener('resize', place); seg._place = place;
+  return place;
+}
+function burst(el, n = 8) {
+  const r = el.getBoundingClientRect();
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('i'); s.className = 'bp';
+    const a = i / n * 6.283 + Math.random() * .4, d = 22 + Math.random() * 18;
+    s.style.left = (r.left + r.width / 2) + 'px'; s.style.top = (r.top + r.height / 2) + 'px';
+    s.style.setProperty('--dx', Math.cos(a) * d + 'px'); s.style.setProperty('--dy', Math.sin(a) * d + 'px');
+    s.style.background = i % 2 ? 'var(--coral)' : 'var(--teal)';
+    document.body.appendChild(s); setTimeout(() => s.remove(), 700);
+  }
+}
+function confetti(cv, ms = 2600) {
+  const ctx = cv.getContext('2d'), W = cv.width = cv.clientWidth, H = cv.height = cv.clientHeight, cols = ['#0E7C79', '#FF7A59', '#C6EEE4', '#FFD9B8', '#0A2A2E', '#D3E9F7'];
+  const ps = Array.from({ length: 120 }, () => ({ x: W / 2 + (Math.random() - .5) * 120, y: H * .42, vx: (Math.random() - .5) * 15, vy: -Math.random() * 15 - 4, r: 4 + Math.random() * 6, a: Math.random() * 6.28, va: (Math.random() - .5) * .4, c: cols[Math.random() * cols.length | 0] }));
+  const t0 = performance.now();
+  (function loop(now) {
+    const k = (now - t0) / ms; ctx.clearRect(0, 0, W, H);
+    ps.forEach(p => { p.vy += .42; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.a += p.va; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.globalAlpha = clamp(1.2 - k, 0, 1); ctx.fillStyle = p.c; ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r); ctx.restore(); });
+    if (k < 1.2) requestAnimationFrame(loop); else ctx.clearRect(0, 0, W, H);
+  })(t0);
+}
+
+/* ---------- draggable 3D tower (canvas, hand-rolled projection) ---------- */
+function Tower3D(canvas, o) {
+  const ctx = canvas.getContext('2d'), N = o.floors, twist = o.twist || .03;
+  const glass = MOOD[o.mood === 'dusk' ? 'dusk' : 'day'].glass;
+  let W, H, dpr, rot = .7, vel = 0, drag = false, lastX = 0, moved = 0, sel = o.sel, hover = -1, vis = true, mid = [];
+  const size = () => { const r = canvas.getBoundingClientRect(); dpr = Math.min(devicePixelRatio || 1, 2); W = r.width; H = r.height; canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  size(); addEventListener('resize', size);
+  const HW = .58, HD = .42, HT = 3.3, FH = HT / N, PITCH = .16, CAM = 6.2;
+  function P(x, y, z) {
+    const cy = Math.cos(PITCH), sy = Math.sin(PITCH), Y = y - HT * .5, y2 = Y * cy - z * sy, z2 = Y * sy + z * cy, f = CAM / (CAM + z2), K = Math.min(W * .55, H * .34);
+    return [W * .5 + x * f * K, H * .52 - y2 * f * K, z2];
+  }
+  function ring(i) {
+    const a = rot + twist * i, c = Math.cos(a), s = Math.sin(a), y = i * FH;
+    return [[-HW, -HD], [HW, -HD], [HW, HD], [-HW, HD]].map(([x, z]) => P(x * c + z * s, y, -x * s + z * c));
+  }
+  const N0 = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    let g = ctx.createRadialGradient(W * .5, H * .85, 10, W * .5, H * .85, W * .5); g.addColorStop(0, 'rgba(10,42,46,.18)'); g.addColorStop(1, 'rgba(10,42,46,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(W * .5, H * .86, W * .34, H * .06, 0, 0, 6.283); ctx.fill();
+    const rings = []; for (let i = 0; i <= N; i++) rings.push(ring(i));
+    mid = new Array(N).fill(null);
+    for (let i = 0; i < N; i++) {
+      const a = rot + twist * (i + .5), c = Math.cos(a), s = Math.sin(a);
+      for (let k = 0; k < 4; k++) {
+        const [nx0, nz0] = N0[k], nz = -nx0 * s + nz0 * c, nx = nx0 * c + nz0 * s;
+        if (nz > .02) continue;
+        const A = rings[i][k], B = rings[i][(k + 1) % 4], C = rings[i + 1][(k + 1) % 4], D = rings[i + 1][k];
+        const lit = clamp(.45 + (-nx * .5 - nz * .6) * .7, .15, 1), hgt = i / N;
+        ctx.fillStyle = mixc(glass, lit > .6 ? [255, 255, 255] : [8, 30, 40], Math.abs(lit - .6) * .75 + (1 - hgt) * .04);
+        ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.lineTo(C[0], C[1]); ctx.lineTo(D[0], D[1]); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,.2)'; ctx.lineWidth = 1;
+        for (let j = 1; j < 6; j++) { const t = j / 6; ctx.beginPath(); ctx.moveTo(lerp(A[0], B[0], t), lerp(A[1], B[1], t)); ctx.lineTo(lerp(D[0], C[0], t), lerp(D[1], C[1], t)); ctx.stroke(); }
+        ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
+        const cx = (A[0] + B[0] + C[0] + D[0]) / 4, cy = (A[1] + B[1] + C[1] + D[1]) / 4, wd = Math.abs(B[0] - A[0]);
+        if (!mid[i] || wd > mid[i].w) mid[i] = { x: cx, y: cy, w: wd, h: Math.abs(D[1] - A[1]), A, B, C, D };
+        if (i === sel || i === hover) {
+          ctx.fillStyle = i === sel ? 'rgba(255,122,89,.62)' : 'rgba(14,124,121,.42)';
+          ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.lineTo(C[0], C[1]); ctx.lineTo(D[0], D[1]); ctx.closePath(); ctx.fill();
+        }
+      }
+    }
+    /* crown */
+    const top = rings[N]; ctx.fillStyle = lighten(glass, .5); ctx.beginPath(); top.forEach((p, k) => k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath(); ctx.fill();
+    /* label */
+    const m = mid[sel]; if (m) {
+      const label = 'Floor ' + (sel + 1), x = Math.min(W - 92, m.x + m.w * .52 + 14), y = m.y;
+      ctx.strokeStyle = '#FF7A59'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(m.x + m.w * .3, y); ctx.lineTo(x, y); ctx.stroke();
+      ctx.font = '700 13px Figtree, system-ui, sans-serif'; const tw = ctx.measureText(label).width + 20;
+      ctx.fillStyle = '#0A2A2E'; rr(ctx, x, y - 14, tw, 28, 14); ctx.fill(); ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle'; ctx.fillText(label, x + 10, y + 1);
+    }
+  }
+  let raf;
+  function loop() {
+    raf = requestAnimationFrame(loop);
+    if (!vis || document.hidden) return;
+    if (!drag) { rot += vel + (RM ? 0 : .0035); vel *= .94; }
+    draw();
+  }
+  new IntersectionObserver(es => { vis = es[0].isIntersecting; }).observe(canvas);
+  canvas.addEventListener('pointerdown', e => { drag = true; moved = 0; lastX = e.clientX; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', e => {
+    const r = canvas.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+    if (drag) { const dx = e.clientX - lastX; moved += Math.abs(dx); rot += dx * .008; vel = dx * .0016; lastX = e.clientX; }
+    let best = -1, bd = 1e9;
+    mid.forEach((m, i) => { if (!m) return; const d = Math.abs(py - m.y) + Math.abs(px - m.x) * .15; if (Math.abs(py - m.y) < Math.max(5, m.h * .8) && Math.abs(px - m.x) < m.w * .7 && d < bd) { bd = d; best = i; } });
+    hover = best;
+  });
+  canvas.addEventListener('pointerleave', () => { hover = -1; });
+  canvas.addEventListener('pointerup', e => { drag = false; if (moved < 5 && hover >= 0) { sel = hover; o.onPick && o.onPick(sel); } });
+  canvas.addEventListener('keydown', e => { if (e.key === 'ArrowUp') { sel = Math.min(N - 1, sel + 1); o.onPick(sel); } if (e.key === 'ArrowDown') { sel = Math.max(0, sel - 1); o.onPick(sel); } if (e.key === 'ArrowLeft') rot -= .2; if (e.key === 'ArrowRight') rot += .2; });
+  loop();
+  return { setSel(i) { sel = i; }, destroy() { cancelAnimationFrame(raf); } };
+}
+
+/* ---------- router + home ---------- */
+const V = { home: $('#v-home'), project: $('#v-project'), reserve: $('#v-reserve'), tracker: $('#v-tracker') };
+let curView = 'home';
+
+function showView(name) {
+  for (const k in V) V[k].hidden = (k !== name);
+  curView = name; document.body.dataset.view = name; scrollTo(0, 0);
+  $$('[data-nav]').forEach(b => b.classList.toggle('on', b.dataset.nav === (name === 'tracker' ? 'tracker' : 'home')));
+  reveal(V[name]);
+  if (name === 'home') $$('.seg', V.home).forEach(s => s._place && s._place());
+}
+function go(name, after, cleanup) {
+  const swap = () => { showView(name); after && after(); };
+  if (document.startViewTransition && !RM) {
+    try { const vt = document.startViewTransition(swap); if (cleanup) vt.finished.finally(cleanup); return vt; } catch (e) { /* fall through */ }
+  }
+  swap(); cleanup && cleanup();
+}
+function goHome(sel) {
+  const done = () => { if (sel) { const el = $(sel); el && el.scrollIntoView(); } };
+  if (curView === 'home') { if (sel) { const el = $(sel); el && el.scrollIntoView({ behavior: RM ? 'auto' : 'smooth' }); } return; }
+  go('home', done);
+}
+
+/* ----- cards ----- */
+function planBarHTML(p) {
+  const s = schedule(p), hand = s.find(x => x.n === 'On handover'), pre = s.filter(x => x.m < p.hm).reduce((a, x) => a + x.pc, 0), post = s.filter(x => x.n.startsWith('Post')).reduce((a, x) => a + x.pc, 0);
+  const segs = s.map(x => `<i class="${x.n === 'On handover' ? 'h' : x.n.startsWith('Post') ? 'po' : 'pre'}" style="--w:${x.pc}"></i>`).join('');
+  return `<div class="pbar" aria-hidden="true">${segs}</div><p class="mini">${pre}% while it is built · ${hand.pc}% on handover${post ? ' · ' + post + '% after' : ''}</p>`;
+}
+function cardHTML(it) {
+  const off = it.type === 'off';
+  const c2 = off ? `<div><small>Plan</small><b>${it.plan}</b></div>` : `<div><small>Rent / yr</small><b class="px" data-aed="${it.rent}">${money(it.rent)}</b></div>`;
+  const c3 = off ? `<div><small>Homes</small><b>${it.fromBeds}</b></div>` : `<div><small>Size</small><b>${it.size} sqft</b></div>`;
+  return `<article class="card" data-id="${it.id}" data-tilt data-cursor="View" tabindex="0" role="button" aria-label="${it.name}, ${it.area}">
+  <div class="ph"><img alt="Illustrated render of ${it.name}" class="cimg"><span class="shim"></span>
+    <div class="badges"><span class="b ${off ? 'b-off' : 'b-res'}">${off ? 'Off-plan' : 'Ready'}</span><span class="b">${off ? 'Handover ' + it.ho : (it.tenant ? 'Tenanted' : 'Vacant')}</span></div>
+    <button class="save" aria-label="Save ${it.name}" aria-pressed="${S.saved.has(it.id)}">${ICON.heart}</button>
+    ${S.goal?`<span class="match">${fitOf(it)}% match</span>`:''}<span class="ver">${ICON.shield}<span>${off ? 'RERA project checked' : 'Title checked'}</span></span>
+  </div>
+  <div class="cb">
+    <div class="r1"><h3>${it.name}</h3><span class="yl">${it.yld}% est. yield</span></div>
+    <p class="loc">${it.area} · ${off ? it.dev : it.unit}</p>
+    <div class="r2"><div><small>${off ? 'From' : 'Price'}</small><b class="px" data-aed="${it.from}">${money(it.from)}</b></div>${c2}${c3}</div>
+    ${off ? planBarHTML(it) : `<p class="mini">Service charge AED ${it.svc}/sqft · built ${it.built}</p>`}
+    <label class="cmp"><input type="checkbox" ${S.compare.includes(it.id) ? 'checked' : ''}><span>Compare</span></label>
+  </div></article>`;
+}
+function listItems() {
+  let a = S.market === 'off' ? PROJ.slice() : RES.slice();
+  const A = $('#fArea').value, B = +$('#fBud').value, H = $('#fHand').value, f = S.filters;
+  if (A) a = a.filter(x => x.area === A);
+  if (B) a = a.filter(x => x.from <= B);
+  if (H && S.market === 'off') a = a.filter(x => H === '28' ? x.hy <= 2028 : x.hy >= 2029);
+  if (f.has('water')) a = a.filter(x => x.set === 'water');
+  if (f.has('u15')) a = a.filter(x => x.from < 1.5e6);
+  if (S.market === 'off') { if (f.has('plan50')) a = a.filter(x => x.plan === '50/50'); if (f.has('h28')) a = a.filter(x => x.hy <= 2028); }
+  const so = S.sort;
+  if (S.goal && so === 'featured' && !f.has('yield')) return a.sort((x, y) => fitOf(y) - fitOf(x));
+  if (f.has('yield') || so === 'yield') a.sort((x, y) => y.yld - x.yld);
+  else if (so === 'low') a.sort((x, y) => x.from - y.from);
+  else if (so === 'soon' && S.market === 'off') a.sort((x, y) => x.hm - y.hm);
+  return a;
+}
+async function renderCards(anim = true) {
+  const grid = $('#grid'), items = listItems();
+  const first = new Map($$('.card', grid).map(c => [c.dataset.id, c.getBoundingClientRect()]));
+  grid.innerHTML = items.map(cardHTML).join('') || '<div class="empty"><b>No homes match.</b><span>Try widening the budget or clearing a filter.</span></div>';
+  $('#count').textContent = items.length + (items.length === 1 ? ' home' : ' homes');
+  grid.dataset.market = S.market;
+  $$('.card', grid).forEach((c, i) => {
+    const it = byId(c.dataset.id), img = $('img', c), ok = () => c.classList.add('ready');
+    const key = it.id + 'ext';
+    img.onload = ok;
+    if (IMGS[key]) { img.src = IMGS[key]; if (img.complete) ok(); } else ensureImg(it, 'ext').then(src => { img.src = src; });
+    if (anim && !RM) {
+      const old = first.get(it.id), r = c.getBoundingClientRect();
+      if (old) c.animate([{ transform: `translate(${old.left - r.left}px,${old.top - r.top}px)` }, { transform: 'none' }], { duration: 650, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      else c.animate([{ opacity: 0, transform: 'translateY(28px) scale(.97)' }, { opacity: 1, transform: 'none' }], { duration: 640, delay: i * 60, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
+    }
+  });
+  updateTray();
+}
+function setMarket(v, scroll) {
+  if (S.market === v) return;
+  S.market = v;
+  $$('.seg[data-seg="market"]').forEach(s => { $$('button', s).forEach(b => b.setAttribute('aria-selected', String(b.dataset.v === v))); s._place && s._place(); });
+  const off = v === 'off';
+  $('#exTitle').classList.remove('in'); const t = $('#exTitle'); t.textContent = off ? 'Off-plan launches' : 'Ready homes for resale'; t.dataset.split = ''; split(t); requestAnimationFrame(() => t.classList.add('in'));
+  $('#exSub').textContent = off ? 'Pay in instalments while it is built. Every project shows its RERA number and escrow account before you commit.' : 'Move in or rent out now. Each listing shows tenancy, service charge and a title check. Resale offers open in phase 3 of the prototype.';
+  $('#fHandWrap').hidden = !off;
+  $$('.chip[data-off]').forEach(c => c.hidden = !off);
+  $('#grid').classList.add('swap'); setTimeout(() => $('#grid').classList.remove('swap'), 500);
+  renderCards(true);
+  if (scroll) $('#explore').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+}
+function toggleSave(card, btn) {
+  const id = card.dataset.id, on = !S.saved.has(id);
+  on ? S.saved.add(id) : S.saved.delete(id);
+  btn.setAttribute('aria-pressed', String(on));
+  if (on) { burst(btn); toast('Saved ' + byId(id).name); }
+}
+function toggleCompare(id, on, input) {
+  if (on) { if (S.compare.length >= 3) { input.checked = false; toast('You can compare up to 3 homes', 'info'); return; } S.compare.push(id); }
+  else S.compare = S.compare.filter(x => x !== id);
+  updateTray();
+}
+function updateTray() {
+  const t = $('#tray'); t.classList.toggle('on', S.compare.length > 0);
+  $('#trayThumbs').innerHTML = S.compare.map(id => { const it = byId(id); return `<button class="th" data-rm="${id}" aria-label="Remove ${it.name} from comparison"><img src="${imgFor(it)}" alt=""><i>${ICON.x}</i></button>`; }).join('');
+  $('#trayGo').disabled = S.compare.length < 2;
+  $('#trayTxt').textContent = S.compare.length < 2 ? 'Pick 2 or 3 homes to compare' : S.compare.length + ' homes selected';
+}
+function openModal(html, cls = '') {
+  const m = $('#modal'); m.innerHTML = `<div class="scrim" data-close></div><div class="sheet ${cls}" role="dialog" aria-modal="true"><button class="x" data-close aria-label="Close">${ICON.x}</button>${html}</div>`;
+  m.hidden = false; requestAnimationFrame(() => m.classList.add('on'));
+  const f = $('.sheet button:not(.x),.sheet input', m); f && f.focus();
+}
+function closeModal() { const m = $('#modal'); m.classList.remove('on'); setTimeout(() => { m.hidden = true; m.innerHTML = ''; }, 350); }
+function compareModal() {
+  const items = S.compare.map(byId), off = it => it.type === 'off';
+  const best = (fn, hi) => { const vals = items.map(fn); const ok = vals.filter(v => v != null); if (ok.length < 2) return -1; const b = hi ? Math.max(...ok) : Math.min(...ok); return vals.indexOf(b); };
+  const rows = [
+    ['Area', it => it.area], ['Developer', it => off(it) ? it.dev : 'Resale'],
+    ['Price', it => `<span class="px" data-aed="${it.from}">${money(it.from)}</span>`, () => best(i => i.from, false)],
+    ['Price per sqft', it => `AED ${it.ppsf.toLocaleString()}`, () => best(i => i.ppsf / (i.med || i.ppsf), false)],
+    ['Vs area median', it => off(it) ? `${it.ppsf > it.med ? '+' : ''}${((it.ppsf / it.med - 1) * 100).toFixed(1)}%` : '–', () => best(i => off(i) ? i.ppsf / i.med : null, false)],
+    ['Est. gross yield', it => it.yld + '%', () => best(i => i.yld, true)],
+    ['Handover', it => off(it) ? it.ho : 'Ready now', () => best(i => off(i) ? i.hm : 0, false)],
+    ['Payment plan', it => off(it) ? it.plan : '–'],
+    ['Developer on-time record', it => off(it) ? it.ot + '%' : '–', () => best(i => off(i) ? i.ot : null, true)],
+    ['Sold so far', it => off(it) ? it.sold + '%' : '–'],
+    ['Escrow account shown', it => off(it) ? 'Yes' : 'Not applicable']
+  ];
+  const head = items.map(it => `<th><img src="${imgFor(it)}" alt=""><b>${it.name}</b></th>`).join('');
+  const body = rows.map(([l, f, b]) => { const bi = b ? b() : -1; return `<tr><th scope="row">${l}</th>${items.map((it, i) => `<td class="${i === bi ? 'best' : ''}">${f(it)}${i === bi ? '<em>best</em>' : ''}</td>`).join('')}</tr>`; }).join('');
+  openModal(`<h2>Side by side</h2><p class="sub">Highlighted cells lead on that measure. Figures are illustrative demo data.</p><div class="tbl"><table><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table></div>`, 'wide');
+}
+
+/* ----- fit score (used for match badges) ----- */
+function fitScore(p, a) {
+  let s = 50;
+  if (a.goal === 'live') s += (p.set === 'park' ? 14 : 4) + (p.ot - 90) * 1.2;
+  if (a.goal === 'rent') s += (p.yld - 5.5) * 9 + (p.metro.includes('metro') ? 4 : 0);
+  if (p.from > a.bud) s -= Math.min(40, (p.from - a.bud) / a.bud * 70); else s += 6;
+  s += p.hy <= 2028 ? 4 : 2;
+  return clamp(Math.round(s), 35, 98);
+}
+function fitOf(it) {
+  const a = { goal: S.goal === 'invest' ? 'rent' : 'live', bud: S.bud || 9e6 };
+  if (it.type === 'off') return fitScore(it, a);
+  let s = 55 + (a.goal === 'rent' ? (it.yld - 5.5) * 9 + (it.tenant ? 5 : 0) : (it.tenant ? -4 : 8) + (it.built >= 2018 ? 4 : 0));
+  if (it.from > a.bud) s -= Math.min(40, (it.from - a.bud) / a.bud * 70); else s += 6;
+  return clamp(Math.round(s), 35, 98);
+}
+
+/* ----- Discover: why, budget, off-plan or ready ----- */
+const BUDS = [1e6, 1.5e6, 2.5e6, 4e6, 0];
+function renderIntent() {
+  const body = $('#intBody'), st = S.intStep || 0;
+  $('#intDots').innerHTML = [0, 1, 2].map(i => `<i class="${i < st ? 'done' : i === st ? 'cur' : ''}"></i>`).join('');
+  $('#intStep').textContent = st < 3 ? 'Step ' + (st + 1) + ' of 3' : 'Your starting point';
+  if (st === 0) body.innerHTML = `<h3>Why are you buying?</h3><div class="opts"><button class="opt" data-goal="own" data-cursor="Pick"><b>To live in it</b><span>A home for me or my family</span></button><button class="opt" data-goal="invest" data-cursor="Pick"><b>To invest</b><span>Rental income or resale gain</span></button></div>`;
+  else if (st === 1) body.innerHTML = `<h3>What budget feels right?</h3><div class="opts b3">${BUDS.map(b => `<button class="opt" data-bud="${b}"><b>${b ? 'Up to ' + money(b) : 'Show everything'}</b></button>`).join('')}</div>`;
+  else if (st === 2) body.innerHTML = `<h3>What are you looking for?</h3><div class="opts"><button class="opt" data-kind="off" data-cursor="Pick"><b>Off-plan</b><span>Express interest, pay while it is built</span></button><button class="opt" data-kind="res" data-cursor="Pick"><b>Ready</b><span>View, bid and move in or rent out</span></button></div>`;
+  else body.innerHTML = `<div class="int-sum"><div><h3>${S.goal === 'invest' ? 'Investing' : 'Buying to live in'} · ${S.bud ? 'up to ' + money(S.bud) : 'any budget'} · ${S.market === 'off' ? 'Off-plan' : 'Ready homes'}</h3><p class="mini">Homes below are ranked by how well they match.</p></div><button class="btn btn-ghost sm" data-reset>Change</button></div>`;
+}
+S.renderIntent = renderIntent;
+function applyIntent() {
+  const sel = $('#fBud'); sel.value = S.bud ? String(S.bud) : '';
+  S.sort = 'featured'; $('#sort').value = 'featured';
+  renderCards(true); $('#explore').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+  toast('Showing homes that match');
+}
+
+function initHome() {
+  $('#fArea').innerHTML = '<option value="">All areas</option>' + AREAS.map(a => `<option>${a}</option>`).join('');
+  const budgets = [['', 'Any budget'], [1e6], [1.5e6], [2.5e6], [4e6]];
+  const drawBud = () => { const v = $('#fBud').value; $('#fBud').innerHTML = budgets.map(([x, l]) => `<option value="${x}">${x ? 'Up to ' + money(x) : l}</option>`).join(''); $('#fBud').value = v; };
+  drawBud(); S.drawBud = drawBud;
+  $$('.seg[data-seg="market"]').forEach(s => initSeg(s, v => setMarket(v)));
+  ['fArea', 'fBud', 'fHand'].forEach(id => $('#' + id).addEventListener('change', () => renderCards(true)));
+  $('#sort').addEventListener('change', e => { S.sort = e.target.value; renderCards(true); });
+  $$('.chip[data-f]').forEach(c => c.addEventListener('click', () => {
+    const k = c.dataset.f, on = c.getAttribute('aria-pressed') !== 'true';
+    c.setAttribute('aria-pressed', String(on)); on ? S.filters.add(k) : S.filters.delete(k); renderCards(true);
+  }));
+  const grid = $('#grid');
+  grid.addEventListener('click', e => {
+    const card = e.target.closest('.card'); if (!card) return;
+    const sv = e.target.closest('.save'); if (sv) { toggleSave(card, sv); return; }
+    if (e.target.closest('.cmp')) return;
+    openItem(card.dataset.id, $('img', card));
+  });
+  grid.addEventListener('change', e => { if (e.target.matches('.cmp input')) toggleCompare(e.target.closest('.card').dataset.id, e.target.checked, e.target); });
+  grid.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('card')) { e.preventDefault(); openItem(e.target.dataset.id, $('img', e.target)); } });
+  $('#trayThumbs').addEventListener('click', e => { const b = e.target.closest('[data-rm]'); if (!b) return; S.compare = S.compare.filter(x => x !== b.dataset.rm); $$('.card', grid).forEach(c => { const i = $('.cmp input', c); if (i) i.checked = S.compare.includes(c.dataset.id); }); updateTray(); });
+  $('#trayGo').addEventListener('click', compareModal);
+  /* intent flow */
+  $('#intent').addEventListener('click', e => {
+    const g = e.target.closest('[data-goal]'), b = e.target.closest('[data-bud]'), k = e.target.closest('[data-kind]'), r = e.target.closest('[data-reset]');
+    if (g) { S.goal = g.dataset.goal; S.intStep = 1; }
+    else if (b) { S.bud = +b.dataset.bud; S.intStep = 2; }
+    else if (k) { S.intStep = 3; if (S.market !== k.dataset.kind) setMarket(k.dataset.kind); applyIntent(); }
+    else if (r) { S.intStep = 0; S.goal = null; S.bud = 0; renderCards(false); }
+    else return;
+    renderIntent();
+  });
+  S.intStep = 0; renderIntent();
+  /* hero floaters */
+  const fl = $('#floaters');
+  fl.innerHTML = [PROJ[0], PROJ[3], PROJ[2]].map((p, i) => `<div class="fl fl${i + 1}" data-depth="${[.9, 1.5, 1.1][i]}"><div class="fc" data-tilt data-cursor="View" data-open="${p.id}"><img alt="" src="${imgFor(p)}"><div><b>${p.name}</b><span>${p.area} · <span class="px" data-aed="${p.from}">${money(p.from)}</span></span></div></div></div>`).join('');
+  fl.addEventListener('click', e => { const c = e.target.closest('[data-open]'); if (c) openItem(c.dataset.open, $('img', c)); });
+  if (FINE && !RM) {
+    const fls = $$('.fl', fl); let tx = 0, ty = 0, cx = 0, cy = 0;
+    addEventListener('pointermove', e => { tx = (e.clientX / innerWidth - .5); ty = (e.clientY / innerHeight - .5); }, { passive: true });
+    (function loop() { requestAnimationFrame(loop); if (curView !== 'home') return; cx = lerp(cx, tx, .06); cy = lerp(cy, ty, .06); fls.forEach(f => { const d = +f.dataset.depth; f.style.transform = `translate3d(${-cx * 38 * d}px,${-cy * 30 * d}px,0)`; }); })();
+  }
+  renderCards(false);
+}
+
+/* ---------- home detail: 3D view, analysis, advice, deal ---------- */
+const px = (aed, full) => `<span class="px" data-aed="${Math.round(aed)}"${full ? ' data-full="1"' : ''}>${money(aed, full)}</span>`;
+const DEP = 40000;
+let tw3d = null, spy = null, lookRaf = 0;
+
+const DLD = (() => { try { const d = JSON.parse($('#dld').textContent); return d && d.areas ? d : null; } catch (e) { return null; } })();
+const dldOf = it => DLD && DLD.areas[it.area];
+const medOf = it => (dldOf(it) && dldOf(it).medPpsf) || it.med || Math.round(it.ppsf * (.95 + R(hash(it.id))() * .1));
+const areaStats = it => { const r = R(hash(it.area)), d = dldOf(it), o = { g1: +(4 + r() * 7).toFixed(1), g3: Math.round(14 + r() * 20), yld: +(5.2 + r() * 2).toFixed(1), supply: ['Low', 'Balanced', 'Rising'][Math.floor(r() * 3)], demand: Math.round(70 + r() * 25) }; if (d) { o.real = true; o.n = d.n; o.offMed = d.offMed; o.readyMed = d.readyMed; o.offShare = d.offShare; } return o; };
+const priceOf = it => it.type === 'off' ? (S.unit ? S.unit.price : it.from) : it.price;
+const sizeOf = it => it.type === 'off' ? (S.unit ? S.unit.size : it.types[0][1]) : it.size;
+const feesOf = (it, price) => { const off = it.type === 'off'; return { dld: price * .04, trustee: 4000 * 1.05, admin: 580, agency: off ? 0 : price * .02 * 1.05 }; };
+const FEES = price => ({ dld: price * .04, trustee: 4000 * 1.05, admin: 580 });
+
+function openItem(id, srcImg) {
+  const it = byId(id); if (!it) return;
+  S.pid = id; S.unit = null; S.planKey = it.plan || null;
+  if (srcImg && !RM) srcImg.style.viewTransitionName = 'hero';
+  go('project', () => buildProject(it), () => { if (srcImg) srcImg.style.viewTransitionName = ''; });
+}
+function sparkPath(p) {
+  const r = R(p.seed + 5), pts = []; let v = .74;
+  for (let i = 0; i < 12; i++) { v += (r() - .36) * .05 + .022; pts.push(v); }
+  const mx = Math.max(...pts), mn = Math.min(...pts);
+  return pts.map((y, i) => `${i ? 'L' : 'M'}${(i / 11 * 300).toFixed(1)},${(70 - (y - mn) / (mx - mn) * 58).toFixed(1)}`).join('');
+}
+const bar = (label, val, max, txt, cls = '') => `<div class="hb ${cls}"><span>${label}</span><div><i style="--w:${(clamp(val / max, 0, 1) * 100).toFixed(1)}"></i></div><b>${txt}</b></div>`;
+
+/* ----- return model ----- */
+function model(it, price, o) {
+  const off = it.type === 'off', size = sizeOf(it), f = feesOf(it, price), fees = f.dld + f.trustee + f.admin + f.agency;
+  const rent0 = price * it.yld / 100, svc0 = (it.svc || 14) * size, start = off ? it.hm / 12 : 0, rate = .048;
+  const loan = price * o.ltv, equity = price - loan + fees; let net = 0; const prof = [];
+  for (let y = 1; y <= o.yrs; y++) {
+    const act = clamp(y - start, 0, 1), rent = rent0 * Math.pow(1 + o.rg, Math.max(0, y - 1 - start)), svc = svc0 * Math.pow(1.03, y - 1);
+    net += act * (rent - svc - loan * rate);
+    prof.push(net + price * Math.pow(1 + o.g, y) * .98 - price - fees);
+  }
+  const profit = prof[prof.length - 1], roi = profit / equity;
+  return { fees, equity, net, exit: price * Math.pow(1 + o.g, o.yrs), profit, roi, ann: roi > -1 ? Math.pow(1 + roi, 1 / o.yrs) - 1 : -1, prof, netYield: (rent0 - svc0) / price * 100, rent0, start };
+}
+
+/* ----- section builders ----- */
+function headerHTML(it) {
+  const off = it.type === 'off';
+  const kp = off ? [['From', px(it.from)], ['Handover', it.ho], ['Est. yield', it.yld + '%'], ['Developer on time', it.ot + '%']] : [['Price', px(it.price)], ['Size', it.size + ' sqft'], ['Rent / yr', px(it.rent)], ['Yield', it.yld + '%']];
+  const tags = off ? it.tags.map(t => `<span class="tag">${t}</span>`).join('') + `<span class="tag tag-ok">${ICON.shield} RERA ${it.rera}</span>` : `<span class="tag">${it.view} view</span><span class="tag">${it.tenant ? 'Tenanted' : 'Vacant'}</span><span class="tag tag-ok">${ICON.shield} Title checked</span>`;
+  return `<header class="pj-head"><div class="pj-gal"><div class="pj-main"><img id="pjHero" alt="Illustrated render of ${it.name}"></div>
+    ${off ? `<div class="pj-thumbs" role="tablist">${[['ext', 'Day'], ['dusk', 'Dusk'], ['int', 'Interior']].map(([v, l], i) => `<button role="tab" aria-selected="${i === 0}" data-v="${v}" data-cursor="Show"><img alt="" data-v="${v}"><span>${l}</span></button>`).join('')}</div>` : ''}
+    <p class="note">Illustrated renders for this demo. A live version would show official images.</p></div>
+  <div class="pj-title"><p class="eyebrow">${it.area} · ${off ? it.dev : it.unit}</p><h1 data-split>${it.name}</h1><p class="lead">${off ? it.blurb : `${it.beds ? it.beds + ' bedroom' : 'Studio'} ${it.view.toLowerCase()}-view home, built ${it.built}. Service charge AED ${it.svc} per sqft.`}</p>
+  <div class="tags">${tags}</div><div class="kpis">${kp.map(([l, v]) => `<div><small>${l}</small><b>${v}</b></div>`).join('')}</div>
+  ${off ? `<div class="sold"><div class="sold-t"><span>${it.sold}% sold</span><span>${it.units} homes</span></div><div class="meter"><i style="--w:${it.sold}"></i></div></div>` : ''}</div></header>`;
+}
+function planSVG(beds) {
+  const n = Math.max(beds, 0), rooms = [['Living and dining', 10, 10, 210, 150], ['Kitchen', 10, 160, 210, 70]];
+  if (!n) rooms.push(['Sleeping area', 220, 10, 170, 130], ['Bath', 220, 140, 170, 90]);
+  else { const h = 130 / n; for (let i = 0; i < n; i++) rooms.push([i ? 'Bedroom ' + (i + 1) : 'Main bedroom', 220, 10 + i * h, 170, h]); rooms.push(['Bath', 220, 140, 170, 90]); }
+  return `<svg viewBox="0 0 400 240" role="img" aria-label="Schematic floor plan">${rooms.map(([l, x, y, w, h]) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6"/><text x="${x + w / 2}" y="${y + h / 2 + 4}" text-anchor="middle">${l}</text>`).join('')}</svg>`;
+}
+function viewHTML(it) {
+  if (it.type === 'off') return `<section id="pjHome" class="sec"><h2 data-split>See your exact home in 3D</h2><p class="sub">Drag the tower to turn it. Tap a floor, then choose a unit.</p>
+    <div class="pick"><div class="tw-box"><canvas id="tw" tabindex="0" aria-label="3D tower. Use arrow keys to change floor." data-cursor="Drag"></canvas><div class="tw-ctl"><button class="btn btn-ghost sm" id="fUp" aria-label="Floor up">▲</button><span id="fNo">Floor ${S.floor}</span><button class="btn btn-ghost sm" id="fDn" aria-label="Floor down">▼</button></div></div>
+    <div class="units"><div class="units-h"><h3 id="uTitle"></h3><span class="legend"><i class="a"></i>Available <i class="h"></i>Held <i class="s"></i>Sold</span></div><div id="uList"></div><div class="u-prev" id="uPrev"></div></div></div></section>`;
+  return `<section id="pjHome" class="sec"><h2 data-split>Look around before you visit</h2><p class="sub">Drag to look around, then compare with the floor plan.</p>
+    <div class="pick"><div class="look" id="look" tabindex="0" data-cursor="Look around"><img id="lookImg" alt="Illustrated view"><div class="look-ui"><div class="seg" id="lookSeg"><button data-v="int" aria-selected="true">Inside</button><button data-v="ext" aria-selected="false">Outside</button><span class="thumb"></span></div><span class="look-h">Drag to look around</span></div></div>
+    <div class="units"><h3>Floor plan</h3><div class="plan">${planSVG(it.beds)}</div><div class="ln"><span>Size</span><b>${it.size} sqft</b></div><div class="ln"><span>Bedrooms</span><b>${it.beds || 'Studio'}</b></div><div class="ln"><span>View</span><b>${it.view}</b></div><p class="mini">Schematic only. A live version would load the real plan.</p></div></div></section>`;
+}
+function analysisHTML(it) {
+  const off = it.type === 'off', a = areaStats(it), med = medOf(it), vs = (it.ppsf / med - 1) * 100, max = Math.max(it.ppsf, med) * 1.1;
+  return `<section id="pjAn" class="sec"><h2 data-split>The numbers behind the price</h2><p class="sub">Area returns, rental yield, total cost and a return model you can adjust. ${DLD ? 'Median price per sqft comes from DLD open data (flat sales to ' + DLD.asOf + ') where the area has enough sales; project prices, yields and the return model are demo values.' : 'All figures are illustrative demo values.'} Not advice.</p>
+  <div class="ins">
+   <div class="card-s"><h4>Area returns · ${it.area}${a.real ? ' <span class="src">DLD data, ' + a.n + ' sales</span>' : ' <span class="src demo">demo</span>'}</h4>${a.real ? `<div class="two-big"><div><div class="big">AED ${med.toLocaleString()}</div><small>median per sqft, flats sold ${DLD.from.slice(0, 7)} to ${DLD.asOf.slice(0, 7)}</small></div><div><div class="big">${a.offMed && a.readyMed ? (a.offMed / a.readyMed - 1 >= 0 ? '+' : '') + Math.round((a.offMed / a.readyMed - 1) * 100) + '%' : '–'}</div><small>off-plan vs ready price</small></div></div>` : `<div class="two-big"><div><div class="big">+${a.g1}%</div><small>price growth, last 12 months (demo)</small></div><div><div class="big">+${a.g3}%</div><small>last 3 years (demo)</small></div></div>`}
+    ${bar('This home', it.ppsf, max, 'AED ' + it.ppsf.toLocaleString(), 'hi')}${bar('Area median', med, max, 'AED ' + med.toLocaleString())}<p class="mini">${Math.abs(vs).toFixed(1)}% ${vs > 0 ? 'above' : 'below'} the area median per sqft${a.real ? ` (${a.offShare}% of these sales were off-plan)` : ''}. ${a.real ? '' : `Supply is ${a.supply.toLowerCase()}; rental demand ${a.demand}/100.`}</p>
+    ${a.real && DLD.city ? `<p class="mini">Dubai-wide, flat prices rose ${DLD.city.flat12m}% in the 12 months to ${DLD.city.asOf}, the latest month in DLD's index file.</p>` : `<svg viewBox="0 0 300 80" class="spark" role="img" aria-label="Illustrative price trend"><path d="${sparkPath(it)}" pathLength="1"/></svg>`}</div>
+   <div class="card-s"><h4>Rental yield</h4><div class="big" id="yNet"></div><small class="mini">net, after service charges</small>${bar('Gross yield', it.yld, 9, it.yld + '%', 'hi')}${bar('Area average', a.yld, 9, a.yld + '%')}<p class="mini">Estimated rent about ${px(it.type === 'off' ? it.from * it.yld / 100 : it.rent)} a year.${off ? ' Rent starts after handover, ' + it.ho + '.' : ''}</p></div>
+   <div class="card-s"><h4>Total project cost</h4><div id="costBox"></div></div>
+   <div class="card-s wide"><h4>Return model</h4><div class="mdl"><div class="mdl-in">
+     <label>Hold for <b id="vYrs"></b><input type="range" id="mYrs" min="3" max="10" value="5"></label>
+     <label>Price growth a year <b id="vG"></b><input type="range" id="mG" min="0" max="12" step="0.5" value="5"></label>
+     <label>Rent growth a year <b id="vR"></b><input type="range" id="mR" min="0" max="8" step="0.5" value="3"></label>
+     <label>Mortgage <b id="vL"></b><input type="range" id="mL" min="0" max="70" step="5" value="${off ? 0 : 50}"></label>
+     <p class="mini">Mortgage at 4.8% interest-only for simplicity. Selling costs 2%.</p></div>
+    <div class="mdl-out" id="mOut"></div></div></div>
+  </div></section>`;
+}
+function adviceHTML() {
+  return `<section id="pjAdv" class="sec"><h2 data-split>Want someone to talk it through?</h2><p class="sub">Optional. You can carry on by yourself at any point.</p>
+  <div class="adv"><div class="card-s"><h4>I am comfortable on my own</h4><p class="mini">Everything you need is on this page. Go straight to the deal steps.</p><button class="btn btn-ghost" data-jump="pjDeal">See how the deal works ${ICON.arrow}</button></div>
+  <div class="card-s hl"><h4>Talk to a specialist</h4><p class="mini">A licensed adviser walks you through price, payment and paperwork.</p><div class="row l"><button class="btn btn-primary" data-agent="call" data-magnetic>Call me</button><button class="btn btn-ghost" data-agent="meet">Meet in person</button></div><p class="adv-st" id="advSt"></p></div></div></section>`;
+}
+function dealHTML(it) {
+  const off = it.type === 'off';
+  const steps = off ? [['EOI', 'Reserve with AED 40,000 into escrow'], ['Deal closed', 'Sign the sale agreement'], ['Initial payment', '10% booking to escrow'], ['Charges', 'DLD 4% and trustee fee'], ['DLD registration', 'Oqood issued for your unit'], ['Instalments', 'Reminders and follow-ups'], ['Handover', 'Keys and title deed']]
+    : [['Viewing', 'In person or on live video'], ['Bidding', 'Make an offer, hear back'], ['Deal closed', 'Agree the price'], ['Cash or loan', 'Loan: bank, documents, valuation, approvals'], ['Initial payment', '10% deposit'], ['Charges', 'DLD 4%, trustee, agency'], ['DLD registration', 'Title transferred'], ['Ownership', 'Title deed in your name']];
+  return `<section id="pjDeal" class="sec"><h2 data-split>Your deal, step by step</h2><p class="sub">This is the full path from here to ${off ? 'handover' : 'owning the home'}. We show where you are at every step.</p>
+  <ol class="path">${steps.map(([t, d], i) => `<li><b>${i + 1}</b><div><h4>${t}</h4><span>${d}</span></div></li>`).join('')}</ol>
+  ${off ? `<h3 class="mt2">Choose a payment plan</h3><div class="seg" id="planSeg" role="tablist">${Object.keys(PLANS).map(k => `<button role="tab" aria-selected="${k === S.planKey}" data-v="${k}">${k}</button>`).join('')}<span class="thumb"></span></div><div class="pay"><div class="pay-l" id="payTbl"></div><div class="pay-r" id="payCost"></div></div>` : ''}
+  <h3 class="mt2">How your money is protected</h3>
+  <div class="flow">${off ? `<div class="fn"><b>You</b><span>Pay the EOI and instalments</span></div><i>${ICON.arrow}</i><div class="fn hl"><b>Project escrow account</b><span>Regulated bank, one account per project</span></div><i>${ICON.arrow}</i><div class="fn"><b>Developer</b><span>Paid as RERA-certified milestones are met</span></div>`
+    : `<div class="fn"><b>You</b><span>Pay the deposit and balance</span></div><i>${ICON.arrow}</i><div class="fn hl"><b>DLD trustee office</b><span>Transfer is signed and paid here</span></div><i>${ICON.arrow}</i><div class="fn"><b>Seller</b><span>Paid when the title moves to you</span></div>`}</div>
+  <ul class="checks"><li>${ICON.check}<div><b>${off ? 'RERA project registration' : 'Title checked'}</b><span>${off ? it.rera + ' (demo number)' : 'Ownership and any mortgage on the unit are verified first'}</span></div></li><li>${ICON.check}<div><b>Registered at DLD</b><span>${off ? 'Your purchase is recorded on the Oqood register through a trustee office' : 'The sale is recorded in your name at the DLD'}</span></div></li><li>${ICON.check}<div><b>Independent role</b><span>ARKO does not hold your money. Payments go to the account shown.</span></div></li></ul></section>`;
+}
+
+/* ----- build ----- */
+function buildProject(it) {
+  if (tw3d) { tw3d.destroy(); tw3d = null; } if (spy) spy.disconnect(); cancelAnimationFrame(lookRaf);
+  const el = V.project, off = it.type === 'off';
+  S.floor = off ? clamp(S.floor, 1, it.floors) : S.floor;
+  el.innerHTML = `<div class="wrap pj"><button class="btn btn-ghost sm" id="pjBack">${ICON.back}<span>All homes</span></button>${headerHTML(it)}
+   <nav class="subnav" id="subnav">${[['pjHome', '3D view'], ['pjAn', 'Analysis'], ['pjAdv', 'Advice'], ['pjDeal', 'Deal']].map(([id, l]) => `<a href="#${id}" data-to="${id}">${l}</a>`).join('')}</nav>
+   ${viewHTML(it)}${analysisHTML(it)}${adviceHTML()}${dealHTML(it)}</div>
+   <div class="cta" id="cta"><div class="cta-in"><div><small id="ctaK"></small><b id="ctaT"></b></div><button class="btn btn-primary" id="ctaGo" data-magnetic>${off ? 'Start EOI<span class="dp"> · AED 40,000</span>' : 'Book a viewing'} ${ICON.arrow}</button></div></div>`;
+  const hero = $('#pjHero'); hero.src = imgFor(it, 'ext'); if (!RM) hero.style.viewTransitionName = 'hero';
+  if (off) {
+    $$('.pj-thumbs img').forEach(i => ensureImg(it, i.dataset.v).then(s => i.src = s));
+    $('.pj-thumbs').addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      $$('.pj-thumbs button').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+      ensureImg(it, b.dataset.v).then(s => { hero.classList.add('swap'); setTimeout(() => { hero.src = s; hero.classList.remove('swap'); }, 160); });
+    });
+  }
+  $('#pjBack').onclick = () => go('home');
+  reveal(el);
+  $$('#subnav a').forEach(a => a.onclick = e => { e.preventDefault(); $('#' + a.dataset.to).scrollIntoView({ behavior: RM ? 'auto' : 'smooth' }); });
+  el.onclick = e => {
+    const j = e.target.closest('[data-jump]'); if (j) $('#' + j.dataset.jump).scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+    const a = e.target.closest('[data-agent]'); if (a) openAgent(a.dataset.agent);
+  };
+  spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) $$('#subnav a').forEach(a => a.classList.toggle('on', a.dataset.to === e.target.id)); }), { rootMargin: '-35% 0px -55% 0px' });
+  $$('.sec', el).forEach(s => spy.observe(s));
+  if (off) {
+    tw3d = Tower3D($('#tw'), { floors: it.floors, twist: it.kind === 'tower' ? .035 : .015, mood: it.mood, sel: S.floor - 1, onPick: i => pickFloor(it, i + 1) });
+    $('#fUp').onclick = () => { pickFloor(it, Math.min(it.floors, S.floor + 1)); tw3d.setSel(S.floor - 1); };
+    $('#fDn').onclick = () => { pickFloor(it, Math.max(1, S.floor - 1)); tw3d.setSel(S.floor - 1); };
+    $('#uList').onclick = e => { const b = e.target.closest('.u'); if (!b || b.disabled) return; pickUnit(it, +b.dataset.no); };
+    initSeg($('#planSeg'), k => { S.planKey = k; renderPay(it); });
+    pickFloor(it, S.floor);
+    $('#ctaGo').onclick = () => openReserve();
+  } else {
+    initLook(it); renderCost(it); renderModel(it); setCTA(null);
+    $('#ctaGo').onclick = () => openViewing();
+  }
+  ['mYrs', 'mG', 'mR', 'mL'].forEach(id => $('#' + id).oninput = () => renderModel(it));
+  renderCost(it); renderModel(it); setAdvSt();
+  refreshPrices(el);
+}
+function initLook(it) {
+  const box = $('#look'), img = $('#lookImg'); let x = 0, vx = 0, drag = false, lx = 0, t = 0;
+  const set = v => ensureImg(it, v).then(s => { img.src = s; });
+  set('int');
+  initSeg($('#lookSeg'), v => { box.classList.add('sw'); setTimeout(() => { set(v); box.classList.remove('sw'); }, 200); });
+  const lim = () => Math.max(0, img.offsetWidth - box.clientWidth) / 2;
+  box.addEventListener('pointerdown', e => { drag = true; lx = e.clientX; box.setPointerCapture(e.pointerId); });
+  box.addEventListener('pointermove', e => { if (!drag) return; const d = e.clientX - lx; lx = e.clientX; x += d; vx = d; });
+  box.addEventListener('pointerup', () => drag = false);
+  box.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') x += 40; if (e.key === 'ArrowRight') x -= 40; });
+  (function loop() { lookRaf = requestAnimationFrame(loop); if (!drag) { x += vx; vx *= .93; if (!RM && Math.abs(vx) < .05) { t += .01; x += Math.sin(t) * .25; } } x = clamp(x, -lim(), lim()); img.style.transform = `translateX(${x}px)`; })();
+}
+function renderCost(it) {
+  const price = priceOf(it), f = feesOf(it, price), tot = price + f.dld + f.trustee + f.admin + f.agency;
+  $('#costBox').innerHTML = `<div class="big">${px(tot)}</div><small class="mini">price plus government and admin fees</small><div class="ln"><span>${S.unit || it.type === 'res' ? 'Price' : 'Price, smallest home'}</span>${px(price)}</div><div class="ln"><span>DLD fee (4%)</span>${px(f.dld)}</div><div class="ln"><span>Trustee fee + VAT</span>${px(f.trustee)}</div><div class="ln"><span>Admin fees</span>${px(f.admin)}</div>${f.agency ? `<div class="ln"><span>Agency fee (2% + VAT)</span>${px(f.agency)}</div>` : '<div class="ln"><span>Agency fee</span><b>Paid by developer</b></div>'}<p class="mini">Indicative. Confirm every fee before a real purchase.</p>`;
+  const n = model(it, price, { yrs: 5, g: 0, rg: 0, ltv: 0 });
+  $('#yNet').textContent = n.netYield.toFixed(1) + '%';
+  refreshPrices($('#costBox'));
+}
+function renderModel(it) {
+  const o = { yrs: +$('#mYrs').value, g: +$('#mG').value / 100, rg: +$('#mR').value / 100, ltv: +$('#mL').value / 100 };
+  $('#vYrs').textContent = o.yrs + ' years'; $('#vG').textContent = (o.g * 100).toFixed(1) + '%'; $('#vR').textContent = (o.rg * 100).toFixed(1) + '%'; $('#vL').textContent = (o.ltv * 100).toFixed(0) + '% of price';
+  const m = model(it, priceOf(it), o), mx = Math.max(...m.prof.map(Math.abs), 1);
+  $('#mOut').innerHTML = `<div class="mo"><div><small>Cash you put in</small><b>${px(m.equity)}</b></div><div><small>Rent after costs</small><b>${px(m.net)}</b></div><div><small>Sale value</small><b>${px(m.exit)}</b></div><div class="${m.profit >= 0 ? 'pos' : 'neg'}"><small>Profit after selling</small><b>${px(m.profit)}</b></div></div>
+   <div class="roi"><span class="big ${m.roi >= 0 ? 'pos' : 'neg'}">${(m.roi * 100).toFixed(0)}%</span><small>total return on your cash · about ${(m.ann * 100).toFixed(1)}% a year</small></div>
+   <div class="bars" aria-label="Profit by year">${m.prof.map((v, i) => `<div class="${v >= 0 ? '' : 'n'}" style="--h:${(Math.abs(v) / mx * 100).toFixed(0)}"><i></i><span>Y${i + 1}</span></div>`).join('')}</div>${it.type === 'off' ? `<p class="mini">Rent and interest start after handover, ${it.ho}.</p>` : ''}`;
+  refreshPrices($('#mOut'));
+}
+function pickFloor(p, f) {
+  S.floor = f; S.unit = null; $('#fNo').textContent = 'Floor ' + f;
+  const us = unitsFor(p, f); $('#uTitle').textContent = 'Floor ' + f + ' · ' + us.length + ' homes';
+  $('#uList').innerHTML = us.map(u => `<button class="u ${u.st}" data-no="${u.no}" ${u.st !== 'avail' ? 'disabled' : ''}><b>${u.no}</b><span>${u.type} · ${u.size} sqft · ${u.view} view</span><em>${u.st === 'avail' ? px(u.price) : u.st === 'held' ? 'Held' : 'Sold'}</em></button>`).join('');
+  refreshPrices($('#uList'));
+  const a = us.find(u => u.st === 'avail');
+  if (a) pickUnit(p, a.no); else { $('#uPrev').innerHTML = '<p class="mini">All homes on this floor are taken. Try another floor.</p>'; setCTA(null); }
+}
+function pickUnit(p, no) {
+  const u = unitsFor(p, S.floor).find(x => x.no === no); S.unit = u;
+  $$('#uList .u').forEach(b => b.classList.toggle('sel', +b.dataset.no === no));
+  $('#uPrev').innerHTML = `<div class="up-img"><img alt="Illustrated interior" src="${imgFor(p, 'int')}"></div><div class="up-t"><b>${u.type} · ${u.size} sqft</b><span>Unit ${u.no}, ${u.view} view</span><span class="mini">Interior render is illustrative.</span></div>`;
+  setCTA(u); if ($('#costBox')) { renderCost(p); renderModel(p); } if ($('#payTbl')) renderPay(p);
+}
+function setCTA(u) {
+  const p = byId(S.pid); if (!$('#cta')) return;
+  if (p.type === 'res') { $('#ctaGo').disabled = false; $('#ctaK').textContent = p.name; $('#ctaT').innerHTML = px(p.price); }
+  else { $('#ctaGo').disabled = !u; $('#ctaK').textContent = u ? `${p.name} · unit ${u.no}` : 'Choose a home'; $('#ctaT').innerHTML = u ? px(u.price) : '–'; }
+  refreshPrices($('#cta'));
+}
+function renderPay(p) {
+  const price = S.unit ? S.unit.price : p.from, sch = schedule(p, S.planKey), f = FEES(price);
+  $('#payTbl').innerHTML = `<h4>Instalments for ${px(price)}</h4><div class="pt">${sch.map(x => `<div class="pr ${x.n === 'On handover' ? 'h' : ''}"><span>${x.n}</span><em>${x.m ? monthLabel(x.m) : 'Today'}</em><i style="--w:${x.pc * 2.2}"></i><b>${x.pc}%</b><b>${px(price * x.pc / 100)}</b></div>`).join('')}</div>`;
+  const now = price * .10 + f.dld + f.trustee + f.admin;
+  $('#payCost').innerHTML = `<h4>Cash needed to start</h4><div class="big">${px(now)}</div><div class="ln"><span>Booking (10%)</span>${px(price * .1)}</div><div class="ln"><span>DLD fee (4%)</span>${px(f.dld)}</div><div class="ln"><span>Trustee fee + VAT</span>${px(f.trustee)}</div><div class="ln"><span>Admin fees</span>${px(f.admin)}</div><p class="mini">Your AED 40,000 EOI counts towards the booking. Indicative amounts.</p>`;
+  refreshPrices($('#v-project'));
+}
+
+/* ----- specialist: call centre or meeting ----- */
+function setAdvSt() {
+  const s = $('#advSt'); if (!s) return;
+  s.textContent = S.agent ? (S.agent.mode === 'call' ? 'Call requested: ' : 'Meeting booked: ') + S.agent.when : '';
+}
+const fmtPhone = p => p.replace(/^\+971(\d{2})(\d{3})(\d{4})$/, '+971 $1 $2 $3');
+async function sendLead(payload) {
+  const r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  if (!r.ok) throw new Error('lead ' + r.status);
+  return r.json();
+}
+function openAgent(mode) {
+  const sup = SUPPORT, tel = fmtPhone(sup.phone);
+  const days = [...Array(5)].map((_, i) => new Date(Date.now() + (i + 1) * 864e5).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }));
+  const chips = (id, arr, sel) => `<div class="chipset" id="${id}">${arr.map((x, i) => `<button type="button" class="chip" aria-pressed="${i === sel}" data-v="${x}">${x}</button>`).join('')}</div>`;
+  const form = (btn, extra = '') => `<label class="fld">Your name<input id="agName" autocomplete="name" maxlength="80"></label><label class="fld">Mobile number<input id="agPhone" type="tel" placeholder="+971 50 000 0000" autocomplete="tel" maxlength="20"></label><input id="agWeb" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">${extra}<label class="chk"><input type="checkbox" id="agOk"><span>I agree that ARKO may contact me about this enquiry and store my details for that purpose.</span></label><p class="err" id="agErr" role="alert" hidden></p><button class="btn btn-primary" id="agGo" disabled>${btn}</button>`;
+  const callCard = `<div class="callcard"><div><small>Call support</small><b>${sup.name}</b><span class="tel">${tel}</span></div><div class="row l"><a class="btn btn-primary" href="tel:${sup.phone}" data-magnetic>Call ${sup.name}</a><button class="btn btn-ghost" type="button" id="agCopy">Copy number</button></div></div>`;
+  const m = $('#modal');
+  if (!mode) { openModal(`<h2>Talk to a specialist</h2><p class="sub">Choose how you would like to speak.</p>${callCard}<div class="opts"><button class="opt" data-agent="call"><b>Request a call back</b><span>Leave your number</span></button><button class="opt" data-agent="meet"><b>Meet in person</b><span>At the ARKO lounge</span></button></div>`); }
+  else if (mode === 'call') openModal(`<h2>Talk to ${sup.name}</h2><p class="sub">Call now, or leave your number and we ring you back.</p>${callCard}<h4 class="mt">Or request a call back</h4>${form('Request call back', `<p class="mini mt">When should we call?</p>${chips('agWhen', ['As soon as possible', 'This evening', 'Tomorrow morning'], 0)}`)}`);
+  else openModal(`<h2>Meet a specialist</h2><p class="sub">ARKO lounge, Business Bay (demo address). About 45 minutes.</p><p class="mini">Day</p>${chips('agDay', days, 0)}<p class="mini mt">Time</p>${chips('agTime', ['10:00', '12:30', '16:00', '18:30'], 0)}${form('Book meeting')}`);
+  m.onclick = e => {
+    const c = e.target.closest('.chipset .chip'); if (c) $$('.chip', c.parentNode).forEach(x => x.setAttribute('aria-pressed', String(x === c)));
+    const a = e.target.closest('[data-agent]'); if (a) openAgent(a.dataset.agent);
+    if (e.target.closest('#agCopy')) { const done = () => toast('Number copied'); (navigator.clipboard ? navigator.clipboard.writeText(sup.phone).then(done, () => toast(tel, 'info')) : toast(tel, 'info')); }
+  };
+  const go = $('#agGo'); if (!go) return;
+  const ok = () => { go.disabled = !($('#agName').value.trim().length >= 2 && $('#agPhone').value.replace(/\D/g, '').length >= 7 && $('#agOk').checked); };
+  ['agName', 'agPhone', 'agOk'].forEach(id => $('#' + id).addEventListener('input', ok));
+  go.onclick = async () => {
+    const sel = id => ($('#' + id + ' .chip[aria-pressed=true]') || {}).dataset.v;
+    const when = mode === 'call' ? sel('agWhen') : sel('agDay') + ' at ' + sel('agTime'), item = byId(S.pid);
+    go.disabled = true; go.textContent = 'Sending…'; $('#agErr').hidden = true;
+    try {
+      await sendLead({ kind: mode, name: $('#agName').value.trim(), phone: $('#agPhone').value.trim(), when, home: item ? item.name : '', budget: S.bud || 0, goal: S.goal || '', consent: $('#agOk').checked, website: $('#agWeb').value });
+      S.agent = { mode, when }; setAdvSt();
+      $('#modal .sheet').innerHTML = `<button class="x" data-close aria-label="Close">${ICON.close || ICON.x}</button><div class="okc">${ICON.check}</div><h2>${mode === 'call' ? 'Call back requested' : 'Meeting booked'}</h2><p class="sub">${mode === 'call' ? 'We will call you: ' + when + '.' : when + ', ARKO lounge, Business Bay.'} If it is urgent, call ${sup.name} on <b>${tel}</b>.</p><button class="btn btn-primary" data-close>Done</button>`;
+      toast(mode === 'call' ? 'Call back requested' : 'Meeting booked');
+    } catch (e) {
+      go.disabled = false; go.textContent = mode === 'call' ? 'Request call back' : 'Book meeting';
+      const er = $('#agErr'); er.textContent = `We could not send that. Please call ${sup.name} on ${tel}.`; er.hidden = false;
+    }
+  };
+}
+
+/* ---------- reserve flow ---------- */
+const STEPS = ['EOI details', 'Verify you', 'Source of funds', 'Pay to escrow', 'Sign'];
+const RS = { id: false, fund: '', method: 'bank', paid: false, sig: false };
+let sigCleanup = null;
+
+function openReserve() {
+  const p = byId(S.pid); if (!p || !S.unit) return;
+  Object.assign(RS, { id: false, fund: '', method: 'bank', paid: false, sig: false });
+  S.step = 0;
+  go('reserve', renderReserve, () => { });
+}
+function renderReserve() {
+  const p = byId(S.pid), u = S.unit, el = V.reserve, k = S.step;
+  const price = u.price, f = FEES(price);
+  const side = `<aside class="rs-side"><div class="rs-img"><img alt="" src="${imgFor(p)}"></div><h3>${p.name}</h3><p>${u.type} · ${u.size} sqft · unit ${u.no}</p><div class="ln"><span>Price</span>${px(price)}</div><div class="ln"><span>Plan</span><b>${S.planKey}</b></div><div class="ln"><span>EOI amount</span>${px(DEP)}</div><p class="mini">${ICON.lock} Paid straight into the project escrow account.</p></aside>`;
+  const bar = `<ol class="stepper">${STEPS.map((s, i) => `<li class="${i < k ? 'done' : i === k ? 'cur' : ''}"><i>${i < k ? ICON.check : i + 1}</i><span>${s}</span></li>`).join('')}</ol>`;
+  const panels = [
+    `<h2>Express your interest</h2><p class="sub">An EOI (expression of interest) holds this home while you do the paperwork. Nothing is final until the deal closes with the sale agreement.</p>
+     <div class="card-s"><div class="ln"><span>Home</span><b>${p.name}, ${u.type}, unit ${u.no}</b></div><div class="ln"><span>Price</span>${px(price)}</div><div class="ln"><span>Cash to start (booking + fees)</span>${px(price * .1 + f.dld + f.trustee + f.admin)}</div><div class="ln"><span>Handover</span><b>${p.ho}</b></div></div>
+     <label class="chk"><input type="checkbox" id="c1"><span>I understand that this is an EOI and the sale agreement (SPA) follows.</span></label>`,
+    `<h2>Verify who you are</h2><p class="sub">Required by law for every property buyer. Takes about a minute in the real product.</p>
+     <div class="vf" id="vf"><button class="btn btn-ghost" id="vUae">Continue with UAE Pass (demo)</button><button class="btn btn-ghost" id="vPass">Scan passport and take a selfie (demo)</button></div>
+     <div class="vf-res" id="vfRes" hidden></div>`,
+    `<h2>Where do the funds come from?</h2><p class="sub">Anti-money-laundering rules ask for this. It stays private.</p>
+     <div class="opts two" id="fund">${['Salary and savings', 'Business income', 'Sale of another property', 'Gift or inheritance'].map(o => `<button class="opt" data-v="${o}"><b>${o}</b></button>`).join('')}</div>
+     <h4 class="mt">How will you pay?</h4><div class="seg" id="mseg"><button aria-selected="true" data-v="bank">Bank transfer</button><button aria-selected="false" data-v="card">Card</button><span class="thumb"></span></div>
+     <p class="mini">Funds must come from an account in your own name.</p>`,
+    `<h2>Pay the EOI amount</h2><p class="sub">Your money goes to the regulated escrow account for ${p.name}, not to us.</p>
+     <div class="pay-box"><div class="big">${px(DEP, true)}</div><div class="ln"><span>Pay to</span><b>${p.name} Escrow A/C ••••4821</b></div><div class="ln"><span>Bank</span><b>Regulated UAE escrow bank (demo)</b></div><div class="ln"><span>Refund</span><b>Full refund until the agreement is signed</b></div>
+     <button class="btn btn-primary" id="payGo" data-magnetic>${RS.method === 'card' ? 'Pay by card' : 'Confirm transfer'} ${ICON.arrow}</button><div class="spin" id="spin" hidden></div></div>`,
+    `<h2>Sign the EOI form</h2><p class="sub">Draw your signature. In the real product this is a legally binding e-signature.</p>
+     <div class="sig"><canvas id="sig" height="170"></canvas><button class="btn btn-ghost sm" id="sigClr">Clear</button></div><p class="mini">By signing you agree to the EOI terms (demo text).</p>`
+  ];
+  const nextLbl = k === 4 ? 'Submit EOI' : 'Continue';
+  const foot = k === 3 ? '' : `<div class="rs-foot"><button class="btn btn-ghost" id="rsBack">${ICON.back} Back</button><button class="btn btn-primary" id="rsNext" disabled>${nextLbl} ${ICON.arrow}</button></div>`;
+  el.innerHTML = `<div class="wrap rs"><div class="rs-main">${bar}<div class="rs-panel" id="rsP">${panels[k]}${foot}</div></div>${side}</div>`;
+  refreshPrices(el);
+  const next = $('#rsNext'), ok = v => { if (next) next.disabled = !v; };
+  $('#rsBack') && ($('#rsBack').onclick = () => { if (k === 0) { go('project'); } else { S.step--; renderReserve(); } });
+  if (next) next.onclick = () => { if (k === 4) return finishReserve(); S.step++; renderReserve(); };
+  if (k === 0) { $('#c1').onchange = e => ok(e.target.checked); }
+  if (k === 1) {
+    const run = label => {
+      $('#vf').hidden = true; const r = $('#vfRes'); r.hidden = false;
+      r.innerHTML = `<div class="scan"><i></i></div><p>Checking ${label}…</p>`;
+      setTimeout(() => { r.innerHTML = `<div class="okc">${ICON.check}</div><b>Identity verified</b><span>Name matched, document in date, selfie matched. (Demo)</span>`; RS.id = true; ok(true); toast('Identity verified'); }, RM ? 100 : 1700);
+    };
+    $('#vUae').onclick = () => run('your UAE Pass'); $('#vPass').onclick = () => run('your passport and selfie');
+    if (RS.id) { $('#vf').hidden = true; $('#vfRes').hidden = false; $('#vfRes').innerHTML = `<div class="okc">${ICON.check}</div><b>Identity verified</b>`; ok(true); }
+  }
+  if (k === 2) {
+    initSeg($('#mseg'), v => RS.method = v);
+    $('#fund').onclick = e => { const b = e.target.closest('.opt'); if (!b) return; $$('#fund .opt').forEach(x => x.classList.toggle('sel', x === b)); RS.fund = b.dataset.v; ok(true); };
+    if (RS.fund) { $$('#fund .opt').forEach(x => x.classList.toggle('sel', x.dataset.v === RS.fund)); ok(true); }
+  }
+  if (k === 3) {
+    $('#payGo').onclick = () => { $('#payGo').hidden = true; $('#spin').hidden = false; setTimeout(() => { RS.paid = true; toast('Payment received in escrow'); S.step++; renderReserve(); }, RM ? 100 : 1600); };
+  }
+  if (k === 4) {
+    const cv = $('#sig'); cv.width = cv.clientWidth; const c = cv.getContext('2d'); c.lineWidth = 2.6; c.lineCap = 'round'; c.strokeStyle = '#0A2A2E'; let d = false;
+    const pt = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    cv.onpointerdown = e => { d = true; cv.setPointerCapture(e.pointerId); const [x, y] = pt(e); c.beginPath(); c.moveTo(x, y); };
+    cv.onpointermove = e => { if (!d) return; const [x, y] = pt(e); c.lineTo(x, y); c.stroke(); if (!RS.sig) { RS.sig = true; ok(true); } };
+    cv.onpointerup = () => d = false;
+    $('#sigClr').onclick = () => { c.clearRect(0, 0, cv.width, cv.height); RS.sig = false; ok(false); };
+  }
+  reveal(el);
+  scrollTo(0, 0);
+}
+function finishReserve() {
+  const p = byId(S.pid), u = S.unit, ref = 'ARK-' + (hash(p.id + u.no) % 900000 + 100000);
+  S.res = { kind: 'off', pid: p.id, unit: u, planKey: S.planKey, ref };
+  const el = V.reserve;
+  el.innerHTML = `<div class="wrap fin"><canvas id="cf"></canvas><div class="okc big">${ICON.check}</div><h1>Your EOI for ${p.name} is in</h1><p class="lead">${u.type}, unit ${u.no} is held for you. Reference <b>${ref}</b>.</p>
+    <ol class="next"><li><b>Today</b><span>Reservation money sits in the project escrow account.</span></li><li><b>Deal closed</b><span>Sign the sale agreement (SPA) and pay the rest of the 10% initial payment.</span></li><li><b>DLD registration</b><span>Your purchase is registered at DLD through Oqood, then instalment reminders begin.</span></li></ol>
+    ${feedbackHTML()}<div class="row"><button class="btn btn-primary" id="toTrack" data-magnetic>Track my purchase ${ICON.arrow}</button><button class="btn btn-ghost" id="toHome">Keep browsing</button></div></div>`;
+  $('#toTrack').onclick = () => goTracker(); $('#toHome').onclick = () => go('home');
+  confetti($('#cf')); bindFeedback(el); toast('EOI submitted');
+}
+
+/* ----- test: quick feedback on a flow ----- */
+function feedbackHTML() { return `<div class="fb"><span>Was this flow clear?</span><button class="btn btn-ghost sm" data-fb="clear">Clear</button><button class="btn btn-ghost sm" data-fb="confusing">Confusing</button></div>`; }
+function bindFeedback(root) { const f = $('.fb', root); if (f) f.onclick = e => { const b = e.target.closest('[data-fb]'); if (!b) return; f.innerHTML = '<span>Thanks. That helps us improve the next version.</span>'; toast('Feedback noted', 'info'); }; }
+
+/* ---------- status tracker (off-plan and ready) ---------- */
+let trkTimer = null;
+const pmt = (L, r, n) => L * r / 12 / (1 - Math.pow(1 + r / 12, -n * 12));
+function goTracker() {
+  if (!S.res) {  /* sample purchase so the tracker can always be explored */
+    const p = PROJ[0], us = unitsFor(p, 22), u = us.find(x => x.st === 'avail') || us[0];
+    S.res = { kind: 'off', pid: p.id, unit: u, planKey: p.plan, ref: 'ARK-' + (hash(p.id + u.no) % 900000 + 100000), demo: true };
+  }
+  go('tracker', buildTracker);
+}
+function trackerCfg(r) {
+  const p = byId(r.pid);
+  if (r.kind === 'res') {
+    const price = r.price, loan = r.loan ? r.loan.amount : 0, f = feesOf(p, price), fees = f.dld + f.trustee + f.admin + f.agency + (loan ? loan * .0025 + 290 : 0);
+    const stages = [['Viewing', 'You saw the home', 0], ['Deal closed', 'Offer accepted, contract signed', 0]];
+    if (loan) stages.push(['Mortgage approved', 'The bank issued the final offer', 1]);
+    stages.push(['Initial payment and charges', '10% deposit plus government fees', 2], ['Registered at DLD', 'Title transferred to you', 3], ['You are the owner', 'Title deed in your name', 4], ['Payments and follow-ups', loan ? 'Mortgage instalment reminders' : 'Service charge reminders', 5]);
+    const pays = [{ n: 'Initial payment (10% deposit)', m: 2, amt: price * .1 }, { n: 'Charges: DLD, trustee, agency', m: 2, amt: fees }];
+    if (loan) pays.push({ n: 'Bank pays loan amount', m: 3, amt: loan });
+    pays.push({ n: 'Your balance at transfer', m: 3, amt: price * .9 - loan });
+    if (loan) for (let k = 1; k <= 6; k++) pays.push({ n: 'Mortgage instalment ' + k, m: 5 + k, amt: r.loan.pmt });
+    else [6, 9].forEach((m, k) => pays.push({ n: 'Service charge, quarter ' + (k + 1), m, amt: p.svc * p.size / 4 }));
+    const docs = [['Viewing confirmation', 0], ['Accepted offer and contract (Form F)', 0]];
+    if (loan) docs.push(['Mortgage pre-approval letter', 1], ['Final bank offer letter', 1]);
+    docs.push(['Payment receipts', 2], ['Transfer forms signed at trustee', 3], ['Title deed', 4]); if (loan) docs.push(['Mortgage contract', 4]);
+    const ev = [[0, 'Viewing done'], [0, 'Offer accepted, deal closed'], ...(loan ? [[1, 'Mortgage approved by ' + r.loan.bank]] : []), [2, 'Initial payment received'], [3, 'Transfer registered at DLD'], [4, 'Title deed issued'], [5, 'Utilities and keys handed over'], ...pays.filter(x => x.m >= 5).map(x => [x.m, x.n + ' due'])];
+    return { p, res: true, price, ref: r.ref, maxM: 10, dm: 3, stages, pays, docs, ev, loan: r.loan, ownAt: 4, dldSteps: ['Initial payment', 'Forms signed at trustee', 'DLD review', 'Title transferred'], dldNo: 'Transfer reference', sub: p.unit + ' · ' + p.area, handover: 'Ready now', feeLabel: 'DLD transfer fee (4%)' };
+  }
+  const u = r.unit, price = u.price, sch = schedule(p, r.planKey);
+  const stages = [['EOI submitted', 'Home held, EOI money in escrow', 0], ['Deal closed', 'Sale agreement signed, initial payment made', 1], ['Registered at DLD', 'Oqood certificate issued for your unit', 2], ['Under construction', 'Progress checked by RERA inspectors', 3], ['Handover and snagging', 'Inspect the unit, list any defects', p.hm], ['Title deed', 'Ownership recorded in your name', p.hm + 2]];
+  const docs = [['EOI form', 0], ['EOI payment receipt', 0], ['Sale agreement (SPA)', 1], ['Oqood certificate', 2], ['Floor plan and unit specification', 1], ['Construction progress report', 6], ['Handover notice', p.hm], ['Title deed', p.hm + 2]];
+  const pays = sch.map(x => ({ n: x.n, m: x.m, amt: price * x.pc / 100 }));
+  const ev = [[0, 'EOI received in escrow'], [1, 'Sale agreement signed, deal closed'], [1, 'Initial payment made'], [2, 'Oqood registered at DLD'], [3, 'Construction started'], ...sch.filter(x => x.m > 1 && x.m <= p.hm).map(x => [x.m, x.n + ' due']), [Math.round(p.hm * .5), 'Mid-build inspection'], [p.hm, 'Handover invitation'], [p.hm + 2, 'Title deed issued']];
+  return { p, res: false, price, ref: r.ref, maxM: p.hm + 3, dm: 2, stages, pays, docs, ev, ownAt: p.hm + 2, dldSteps: ['Booking paid', 'Sent to trustee', 'DLD review', 'Registered'], dldNo: 'Oqood number', sub: u.type + ' · unit ' + u.no + ' · ' + p.area, handover: p.ho, feeLabel: 'DLD fee (4%)' };
+}
+function buildTracker() {
+  clearInterval(trkTimer); S.playing = false;
+  const r = S.res, c = trackerCfg(r), p = c.p, price = c.price, maxM = c.maxM, dm = c.dm;
+  const oq = (c.res ? 'TR-' : 'OQ-') + (hash(r.ref) % 9000000 + 1000000);
+  const ag = S.agent ? `<span class="pill ok">${S.agent.mode === 'call' ? 'Call requested' : 'Meeting booked'}: ${S.agent.when}</span>` : '';
+  const side = c.res ? `<section class="tc"><h3>Your home</h3><ul class="docs" id="home">${[['Funds confirmed', 3], ['Title transferred', 4], ['Utilities connected (DEWA)', 5], ['Keys received', 5]].map(d => `<li data-at="${d[1]}">${ICON.check}<span>${d[0]}</span><em></em></li>`).join('')}</ul></section>` :
+    `<section class="tc"><h3>Project progress</h3><div class="prj"><canvas id="bld" width="220" height="200" aria-label="Building under construction"></canvas><div><div class="big" id="prog">0%</div><span class="mini">complete</span></div></div><div class="ln"><span>RERA project</span><b>${p.rera}</b></div><div class="ln"><span>Next inspection</span><b id="insp"></b></div></section>`;
+  const money2 = c.res ? (c.loan ? `<section class="tc"><h3>Mortgage</h3><div class="ln"><span>Bank</span><b>${c.loan.bank}</b></div><div class="ln"><span>Loan</span><b>${px(c.loan.amount)}</b></div><div class="ln"><span>Rate and term</span><b>${(c.loan.rate * 100).toFixed(1)}% · ${c.loan.term} years</b></div><div class="ln"><span>Monthly instalment</span><b>${px(c.loan.pmt)}</b></div><div class="ln"><span>Balance left</span><b id="lnBal"></b></div><p class="mini">Demo rate and terms.</p></section>` : `<section class="tc"><h3>Payment summary</h3><div class="ln"><span>Price plus fees</span><b>${px(price + c.pays[1].amt)}</b></div><div class="ln"><span>Paid so far</span><b id="sPaid"></b></div><div class="ln"><span>Still to pay</span><b id="sLeft"></b></div></section>`)
+    : `<section class="tc"><h3>Escrow</h3><div class="esc"><div class="esc-b"><i id="eRel"></i><i id="eHeld"></i></div></div><div class="ln"><span class="d d1"></span>Held for you<b id="eH"></b></div><div class="ln"><span class="d d2"></span>Released to developer<b id="eR"></b></div><p class="mini">Released only as certified construction milestones are reached. Illustrative split.</p></section>`;
+  V.tracker.innerHTML = `<div class="wrap tk">
+   <header class="tk-h"><div class="tk-id"><img alt="" src="${imgFor(p)}"><div><p class="eyebrow">Reference ${r.ref}${r.demo ? ' · sample purchase' : ''}</p><h1>${p.name}</h1><p>${c.sub}</p>${ag}</div></div>
+    <div class="tk-sum"><div><small>Price</small><b>${px(price)}</b></div><div><small>Paid so far</small><b id="kPaid"></b></div><div><small>${c.res ? 'Status' : 'Handover'}</small><b>${c.handover}</b></div></div></header>
+   <div class="tm"><button class="btn btn-ghost sm" id="tmPlay" aria-label="Play time machine">▶ Play</button><div class="tm-r"><label for="tm">Demo time machine: ${monthLabel(0)} to ${monthLabel(maxM)}</label><input id="tm" type="range" min="0" max="${maxM}" step="1" value="1"></div><b id="tmNow"></b></div>
+   <div class="next-st" id="nextSt" aria-live="polite"></div>
+   <div class="tk-grid">
+    <section class="tc stg"><h3>Your journey</h3><ol id="stg">${c.stages.map(s => `<li data-at="${s[2]}"><i></i><div><b>${s[0]}</b><span>${s[1]}</span><em>${monthLabel(s[2])}</em></div></li>`).join('')}</ol></section>
+    <section class="tc"><h3>DLD registration</h3><div class="pillrow"><span class="pill" id="dldPill"></span></div><div class="ln"><span>${c.dldNo}</span><b id="oqN">–</b></div><ol class="mini-st" id="dldSt">${c.dldSteps.map(s => `<li><i></i>${s}</li>`).join('')}</ol><div class="ln"><span>${c.feeLabel}</span><b id="dldFee"></b></div><p class="mini">${c.res ? 'The transfer is signed and paid at a DLD trustee office.' : 'Off-plan sales must be registered within 60 days of the agreement.'}</p></section>
+    ${side}${money2}
+    <section class="tc wide"><div class="tc-h"><h3>Payments and reminders</h3><button class="bell" id="bell" aria-pressed="true">${ICON.bell}<span>Reminders on</span></button></div><div id="pays">${c.pays.map(x => `<div class="py" data-m="${x.m}"><i></i><span>${x.n}<em>${monthLabel(x.m)}</em></span><b>${px(x.amt)}</b><u></u></div>`).join('')}</div></section>
+    <section class="tc"><h3>Documents</h3><ul class="docs" id="docs">${c.docs.map(d => `<li data-at="${d[1]}">${ICON.doc}<span>${d[0]}</span><em></em></li>`).join('')}</ul></section>
+    <section class="tc"><h3>Updates and follow-ups</h3><ul class="act" id="act"></ul></section>
+   </div></div>`;
+  const q = s => $(s, V.tracker), tm = q('#tm');
+  let drawBld = () => { };
+  if (!c.res) {
+    const bld = q('#bld'), bc = bld.getContext('2d'), dpr = Math.min(devicePixelRatio || 1, 2); bld.width = 220 * dpr; bld.height = 200 * dpr; bc.scale(dpr, dpr);
+    drawBld = pc => {
+      bc.clearRect(0, 0, 220, 200); const fl = Math.min(p.floors, 22), x0 = 60, w = 100, H0 = 175, fh = 150 / fl, done = Math.floor(fl * pc / 100);
+      bc.fillStyle = '#E4EFEC'; bc.fillRect(10, H0, 200, 6);
+      for (let i = 0; i < fl; i++) {
+        const y = H0 - (i + 1) * fh;
+        if (i < done) { bc.fillStyle = i % 2 ? '#6FB9B4' : '#0E7C79'; bc.fillRect(x0, y, w, fh - 1); bc.fillStyle = 'rgba(255,255,255,.35)'; for (let k = 0; k < 4; k++) bc.fillRect(x0 + 8 + k * 23, y + 3, 14, fh - 7); }
+        else { bc.strokeStyle = 'rgba(10,42,46,.25)'; bc.setLineDash([3, 3]); bc.strokeRect(x0 + .5, y + .5, w - 1, fh - 2); bc.setLineDash([]); }
+      }
+      if (pc < 100) { const ty = H0 - 160; bc.strokeStyle = '#FF7A59'; bc.lineWidth = 2; bc.beginPath(); bc.moveTo(175, H0); bc.lineTo(175, ty); bc.moveTo(120, ty); bc.lineTo(205, ty); bc.moveTo(130, ty); bc.lineTo(130, ty + 22); bc.stroke(); bc.lineWidth = 1; }
+    };
+  }
+  const upd = m => {
+    S.month = m; q('#tmNow').textContent = monthLabel(m); tm.value = m;
+    $$('#stg li', V.tracker).forEach((li, i, all) => { const at = +li.dataset.at, nx = all[i + 1] ? +all[i + 1].dataset.at : 1e9; li.className = m >= nx ? 'done' : m >= at ? 'now' : ''; $('i', li).innerHTML = m >= nx ? ICON.check : ''; });
+    const left = dm - m, labels = ['Waiting for payment', 'Sent to trustee office', 'Under DLD review', 'Registered'];
+    q('#dldPill').textContent = m >= dm ? 'Registered' : labels[left >= 2 ? 0 : 1]; q('#dldPill').className = 'pill ' + (m >= dm ? 'ok' : 'wait');
+    $$('#dldSt li', V.tracker).forEach((li, i) => li.className = (m >= dm ? 4 : left >= 2 ? 1 : 2) > i ? 'on' : '');
+    q('#oqN').textContent = m >= dm ? oq : 'Issued on registration'; q('#dldFee').innerHTML = m >= (c.res ? 2 : 1) ? 'Paid' : px(price * .04); refreshPrices(q('#dldFee'));
+    let paid = 0, nextI = -1, cnt = 0; c.pays.forEach((x, i) => { if (x.m <= m) { paid += x.amt; if (/instalment/i.test(x.n)) cnt++; } else if (nextI < 0) nextI = i; });
+    $$('.py', V.tracker).forEach((row, i) => { const x = c.pays[i], done = x.m <= m, d = x.m - m; row.className = 'py ' + (done ? 'paid' : i === nextI ? 'next' : ''); $('u', row).textContent = done ? 'Paid' : i === nextI ? (d <= 1 ? 'Due this month' : 'Due in ' + d + ' months') : 'Upcoming'; $('i', row).innerHTML = done ? ICON.check : ''; });
+    q('#kPaid').innerHTML = px(paid);
+    if (!c.res) {
+      const pc = m < 3 ? 0 : Math.round(progressAt(p, m)); q('#prog').textContent = pc + '%'; drawBld(pc);
+      q('#insp').textContent = m < 3 ? 'After launch' : m >= p.hm ? 'Completed' : monthLabel(Math.min(p.hm, Math.ceil((m + 1) / 3) * 3));
+      const rel = paid * (pc / 100) * .95, held = paid - rel;
+      q('#eRel').style.setProperty('--w', paid ? rel / paid * 100 : 0); q('#eHeld').style.setProperty('--w', paid ? held / paid * 100 : 0); q('#eH').innerHTML = px(held); q('#eR').innerHTML = px(rel);
+    } else {
+      $$('#home li', V.tracker).forEach(li => { const on = m >= +li.dataset.at; li.className = on ? 'on' : ''; $('em', li).textContent = on ? 'Done' : 'Pending'; });
+      if (c.loan) { const rr = c.loan.rate / 12, n = c.loan.term * 12, bal = cnt ? c.loan.amount * (Math.pow(1 + rr, n) - Math.pow(1 + rr, cnt)) / (Math.pow(1 + rr, n) - 1) : c.loan.amount; q('#lnBal').innerHTML = px(m >= 3 ? bal : 0); }
+      else { const core = c.pays.filter(x => !/Service/.test(x.n)), due = core.reduce((t, x) => t + x.amt, 0), pd = core.reduce((t, x) => t + (x.m <= m ? x.amt : 0), 0); q('#sPaid').innerHTML = px(pd); q('#sLeft').innerHTML = px(due - pd); }
+    }
+    $$('#docs li', V.tracker).forEach(li => { const on = m >= +li.dataset.at; li.className = on ? 'on' : ''; $('em', li).innerHTML = on ? 'Ready' : ICON.lock; });
+    const past = c.ev.filter(e => e[0] <= m).sort((a, b) => b[0] - a[0]).slice(0, 4), up = c.ev.filter(e => e[0] > m).sort((a, b) => a[0] - b[0]).slice(0, 2);
+    q('#act').innerHTML = up.reverse().map(e => `<li class="up"><i></i><span>${e[1]}</span><em>${monthLabel(e[0])}</em></li>`).join('') + past.map(e => `<li><i></i><span>${e[1]}</span><em>${monthLabel(e[0])}</em></li>`).join('');
+    const nx = c.pays[nextI], ns = q('#nextSt');
+    ns.innerHTML = nx ? `<b>Next</b><span>${nx.n}: ${px(nx.amt)} in ${Math.max(0, nx.m - m) <= 1 ? 'about a month' : (nx.m - m) + ' months'} (${monthLabel(nx.m)}). ${q('#bell').getAttribute('aria-pressed') === 'true' ? 'A reminder is set.' : 'Reminders are off.'}</span>` : `<b>All set</b><span>Everything due has been paid. We will keep following up on documents and handover.</span>`;
+    refreshPrices(ns);
+  };
+  tm.oninput = () => upd(+tm.value);
+  q('#bell').onclick = e => { const b = e.currentTarget, on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', String(on)); $('span', b).textContent = on ? 'Reminders on' : 'Reminders off'; toast(on ? 'You will get a reminder a week before each payment' : 'Reminders turned off', 'info'); upd(S.month); };
+  q('#tmPlay').onclick = () => {
+    const btn = q('#tmPlay'); if (S.playing) { clearInterval(trkTimer); S.playing = false; btn.textContent = '▶ Play'; return; }
+    if (S.month >= maxM) upd(0);
+    S.playing = true; btn.textContent = '❚❚ Pause';
+    trkTimer = setInterval(() => { if (S.month >= maxM) { clearInterval(trkTimer); S.playing = false; btn.textContent = '▶ Play'; return; } upd(S.month + 1); }, 650);
+  };
+  upd(1); reveal(V.tracker);
+}
+
+/* ---------- ready-home flow: viewing, bidding, cash or loan, payment, DLD ---------- */
+const RF0 = { step: 0, mode: 'In person', day: 0, time: 0, booked: false, bid: .97, round: 0, log: [], accepted: false, final: 0, counter: 0, pay: null, bank: null, docs: {}, ms: 0, valued: false, loanAmt: 0, loan: null, paid: false, sig: false };
+let RF = {};
+const BANKS = ['Gulfstream Bank', 'Falcon Commercial', 'Oasis Islamic Bank', 'Meridian National'];
+const LDOCS = ['Emirates ID and passport', 'Salary certificate', 'Last 6 months bank statements', 'Liability letter', 'Signed offer on the property'];
+const rkeys = () => ['view', 'bid', 'mode', ...(RF.pay === 'loan' ? ['loan'] : []), 'pay', 'sign'];
+const RNAME = { view: 'Viewing', bid: 'Bidding', mode: 'Cash or loan', loan: 'Mortgage', pay: 'Initial payment', sign: 'Sign and register' };
+const dayLabels = () => [...Array(5)].map((_, i) => new Date(Date.now() + (i + 1) * 864e5).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }));
+const TIMES = ['10:00', '12:30', '16:00', '18:30'];
+
+function openViewing() {
+  RF = JSON.parse(JSON.stringify(RF0)); RF.docs = {}; RF.log = [];
+  go('reserve', renderReady);
+}
+function renderReady() {
+  const p = byId(S.pid), keys = rkeys(), k = keys[RF.step], el = V.reserve, ask = p.price;
+  const fp = RF.final || ask, f = feesOf(p, fp);
+  const side = `<aside class="rs-side"><div class="rs-img"><img alt="" src="${imgFor(p)}"></div><h3>${p.name}</h3><p>${p.unit} · ${p.area}</p><div class="ln"><span>Asking price</span>${px(ask)}</div>${RF.accepted ? `<div class="ln"><span>Agreed price</span><b>${px(RF.final)}</b></div>` : ''}${RF.pay ? `<div class="ln"><span>Payment</span><b>${RF.pay === 'loan' ? 'Bank loan' : 'Cash'}</b></div>` : ''}<p class="mini">${ICON.lock} Deposit and transfer go through a DLD trustee office.</p></aside>`;
+  const bar = `<ol class="stepper">${keys.map((s, i) => `<li class="${i < RF.step ? 'done' : i === RF.step ? 'cur' : ''}"><i>${i < RF.step ? ICON.check : i + 1}</i><span>${RNAME[s]}</span></li>`).join('')}</ol>`;
+  const chips = (id, arr, sel) => `<div class="chipset" id="${id}">${arr.map((x, i) => `<button class="chip" aria-pressed="${i === sel}" data-i="${i}">${x}</button>`).join('')}</div>`;
+  let panel = '', nextLbl = 'Continue', ok = false, noNext = false;
+  if (k === 'view') {
+    ok = RF.booked; nextLbl = 'Continue to bidding';
+    panel = `<h2>Book a viewing</h2><p class="sub">See it in person or on a live video call. Free to cancel.</p>
+     <div class="seg" id="vmode"><button data-v="In person" aria-selected="${RF.mode === 'In person'}">In person</button><button data-v="Live video" aria-selected="${RF.mode === 'Live video'}">Live video</button><span class="thumb"></span></div>
+     <p class="mini mt">Day</p>${chips('vday', dayLabels(), RF.day)}<p class="mini mt">Time</p>${chips('vtime', TIMES, RF.time)}
+     ${RF.booked ? `<div class="vf-res"><div class="okc">${ICON.check}</div><b>Viewing booked</b><span>${RF.mode}, ${dayLabels()[RF.day]} at ${TIMES[RF.time]}. (Demo) Continue once you have viewed the home.</span></div>` : `<button class="btn btn-primary mt" id="vBook">Book viewing</button>`}`;
+  } else if (k === 'bid') {
+    ok = RF.accepted; nextLbl = 'Continue';
+    const bubbles = RF.log.map(l => `<div class="bub ${l[0]}">${l[1]}</div>`).join('');
+    panel = `<h2>Make your offer</h2><p class="sub">Asking price ${px(ask)}. Sellers often accept within 3% of asking (demo).</p>
+     <div class="bid"><div class="big" id="bidV"></div><input type="range" id="bid" min="90" max="100" step="0.5" value="${(RF.bid * 100).toFixed(1)}" ${RF.accepted ? 'disabled' : ''}></div>
+     <div class="bubs">${bubbles}</div>
+     ${RF.accepted ? `<div class="vf-res"><div class="okc">${ICON.check}</div><b>Deal closed at ${px(RF.final)}</b><span>Offer accepted by the seller.</span></div>` : RF.counter ? `<div class="row l"><button class="btn btn-primary" id="acc">Accept ${px(RF.counter)}</button><button class="btn btn-ghost" id="bidGo">Send a new offer</button></div>` : `<button class="btn btn-primary mt" id="bidGo">Send offer</button>`}`;
+  } else if (k === 'mode') {
+    ok = !!RF.pay;
+    panel = `<h2>How will you pay?</h2><p class="sub">Deal closed at ${px(RF.final)}. Choose cash or a bank loan.</p><div class="opts two" id="pm"><button class="opt ${RF.pay === 'cash' ? 'sel' : ''}" data-v="cash"><b>Cash</b><span>Go straight to the initial payment</span></button><button class="opt ${RF.pay === 'loan' ? 'sel' : ''}" data-v="loan"><b>Bank loan</b><span>Connect a bank, share documents, get approval</span></button></div>`;
+  } else if (k === 'loan') {
+    const rows = ['Connect your bank', 'Share your documents', 'Bank valuation', 'Pre-approval', 'Loan approval'], ms = RF.ms, ltv = fp <= 5e6 ? .8 : .7, maxL = Math.round(fp * ltv / 1e4) * 1e4;
+    ok = ms >= 5; nextLbl = 'Continue to initial payment';
+    let act = '';
+    if (ms === 0) act = `<p class="mini">Choose your bank (demo banks)</p><div class="opts two" id="bk">${BANKS.map(b => `<button class="opt" data-v="${b}"><b>${b}</b></button>`).join('')}</div>`;
+    else if (ms === 1) { const n = Object.keys(RF.docs).length; act = `<p class="mini">Upload each document (demo: one tap each)</p><ul class="docs" id="ld">${LDOCS.map((d, i) => `<li class="${RF.docs[i] ? 'on' : ''}" data-i="${i}">${ICON.doc}<span>${d}</span><em>${RF.docs[i] ? 'Uploaded' : 'Upload'}</em></li>`).join('')}</ul><button class="btn btn-primary mt" id="ldGo" ${n < LDOCS.length ? 'disabled' : ''}>Send to ${RF.bank}</button>`; }
+    else if (ms === 2) act = `<div class="vf-res"><div class="spin"></div><b>${RF.bank} is valuing the home…</b></div>`;
+    else if (ms === 3) { if (!RF.loanAmt) RF.loanAmt = maxL; act = `<div class="vf-res"><b>Valued at ${px(fp)}</b><span>Pre-approved up to ${px(maxL)} (${(ltv * 100).toFixed(0)}% of value, demo)</span></div><label class="fld">Loan amount <b id="laV">${px(RF.loanAmt)}</b><input type="range" id="la" min="${Math.round(fp * .4 / 1e4) * 1e4}" max="${maxL}" step="10000" value="${RF.loanAmt}"></label><button class="btn btn-primary mt" id="paGo">Accept pre-approval</button>`; }
+    else if (ms === 4) { const r = .048, t = 25, pm = pmt(RF.loanAmt, r, t); act = `<div class="card-s"><div class="ln"><span>Loan</span><b>${px(RF.loanAmt)}</b></div><div class="ln"><span>Rate (fixed 3 years, demo)</span><b>4.8%</b></div><div class="ln"><span>Term</span><b>${t} years</b></div><div class="ln"><span>Monthly instalment</span><b>${px(pm)}</b></div></div><button class="btn btn-primary mt" id="lnGo">Accept final offer</button>`; }
+    else act = `<div class="vf-res"><div class="okc">${ICON.check}</div><b>Loan approved</b><span>${RF.bank}: ${px(RF.loan.amount)} over ${RF.loan.term} years.</span></div>`;
+    panel = `<h2>Get your mortgage</h2><p class="sub">Five steps with your bank. Your progress is saved.</p><ol class="mini-st big-st">${rows.map((r, i) => `<li class="${i < ms ? 'on' : i === ms ? 'cur' : ''}"><i></i>${r}</li>`).join('')}</ol>${act}`;
+  } else if (k === 'pay') {
+    const loan = RF.loan ? RF.loan.amount : 0, fee2 = loan ? loan * .0025 + 290 : 0, dep = fp * .1, ch = f.dld + f.trustee + f.admin + f.agency + fee2;
+    ok = RF.paid; nextLbl = 'Continue';
+    panel = `<h2>Initial payment and charges</h2><p class="sub">Pay the 10% deposit now. The balance moves at the DLD trustee office on transfer day.</p>
+     <div class="card-s"><div class="ln"><span>Initial payment (10% deposit)</span><b>${px(dep)}</b></div><div class="ln"><span>DLD transfer fee (4%)</span>${px(f.dld)}</div><div class="ln"><span>Trustee fee + VAT</span>${px(f.trustee)}</div><div class="ln"><span>Agency fee (2% + VAT)</span>${px(f.agency)}</div>${loan ? `<div class="ln"><span>Mortgage registration (0.25% + AED 290)</span>${px(fee2)}</div>` : ''}<div class="ln"><span><b>Total payable on transfer day, besides the deposit</b></span><b>${px(ch)}</b></div></div>
+     <p class="mini">${loan ? `Bank pays ${money(loan)} at transfer. Your balance then is ${money(fp * .9 - loan)}.` : `Balance at transfer: ${money(fp * .9)}.`} Fee amounts are indicative.</p>
+     ${RF.paid ? `<div class="vf-res"><div class="okc">${ICON.check}</div><b>Deposit received</b><span>Held by the trustee office for the seller. (Demo)</span></div>` : `<button class="btn btn-primary mt" id="depGo">Pay ${money(dep, true)} deposit</button><div class="spin" id="spin" hidden></div>`}`;
+  } else {
+    ok = RF.sig; nextLbl = 'Complete and register at DLD';
+    panel = `<h2>Sign the sale contract</h2><p class="sub">Sign the contract (Form F). We then book the DLD transfer for you.</p><div class="sig"><canvas id="sig" height="170"></canvas><button class="btn btn-ghost sm" id="sigClr">Clear</button></div>`;
+  }
+  const foot = `<div class="rs-foot"><button class="btn btn-ghost" id="rsBack">${ICON.back} Back</button><button class="btn btn-primary" id="rsNext" ${ok ? '' : 'disabled'}>${nextLbl} ${ICON.arrow}</button></div>`;
+  el.innerHTML = `<div class="wrap rs"><div class="rs-main">${bar}<div class="rs-panel">${panel}${foot}</div></div>${side}</div>`;
+  refreshPrices(el); reveal(el);
+  const re = () => renderReady();
+  $('#rsBack').onclick = () => { if (RF.step === 0) go('project'); else { RF.step--; re(); } };
+  $('#rsNext').onclick = () => { if (k === 'sign') return finishReady(); RF.step++; re(); };
+  if (k === 'view') {
+    initSeg($('#vmode'), v => RF.mode = v);
+    ['vday', 'vtime'].forEach(id => { const b = $('#' + id); b.onclick = e => { const c = e.target.closest('.chip'); if (!c) return; $$('.chip', b).forEach(x => x.setAttribute('aria-pressed', String(x === c))); RF[id === 'vday' ? 'day' : 'time'] = +c.dataset.i; }; });
+    const bk = $('#vBook'); if (bk) bk.onclick = () => { RF.booked = true; toast('Viewing booked'); re(); };
+  }
+  if (k === 'bid') {
+    const sl = $('#bid'), show = () => { $('#bidV').innerHTML = px(ask * sl.value / 100, true); refreshPrices($('#bidV')); };
+    show(); sl.oninput = () => { RF.bid = sl.value / 100; show(); };
+    const send = $('#bidGo'); if (send) send.onclick = () => bidRound(ask, re);
+    const acc = $('#acc'); if (acc) acc.onclick = () => { RF.accepted = true; RF.final = RF.counter; RF.log.push(['me', 'I accept your price.'], ['seller', 'Great. Deal closed.']); re(); };
+  }
+  if (k === 'mode') $('#pm').onclick = e => { const b = e.target.closest('.opt'); if (!b) return; RF.pay = b.dataset.v; re(); };
+  if (k === 'loan') {
+    const ms = RF.ms;
+    if (ms === 0) $('#bk').onclick = e => { const b = e.target.closest('.opt'); if (!b) return; RF.bank = b.dataset.v; RF.ms = 1; toast('Connected to ' + RF.bank); re(); };
+    if (ms === 1) { $('#ld').onclick = e => { const li = e.target.closest('li'); if (!li) return; RF.docs[li.dataset.i] = 1; re(); }; $('#ldGo').onclick = () => { RF.ms = 2; re(); }; }
+    if (ms === 2) setTimeout(() => { if (curView === 'reserve' && RF.ms === 2) { RF.ms = 3; re(); } }, RM ? 100 : 2000);
+    if (ms === 3) { const la = $('#la'); la.oninput = () => { RF.loanAmt = +la.value; $('#laV').innerHTML = px(RF.loanAmt); refreshPrices($('#laV')); }; $('#paGo').onclick = () => { RF.ms = 4; re(); }; }
+    if (ms === 4) $('#lnGo').onclick = () => { RF.loan = { amount: RF.loanAmt, rate: .048, term: 25, bank: RF.bank, pmt: pmt(RF.loanAmt, .048, 25) }; RF.ms = 5; toast('Loan approved'); re(); };
+  }
+  if (k === 'pay') { const d = $('#depGo'); if (d) d.onclick = () => { d.hidden = true; $('#spin').hidden = false; setTimeout(() => { RF.paid = true; toast('Deposit received'); re(); }, RM ? 100 : 1500); }; }
+  if (k === 'sign') {
+    const cv = $('#sig'); cv.width = cv.clientWidth; const c = cv.getContext('2d'); c.lineWidth = 2.6; c.lineCap = 'round'; c.strokeStyle = '#0A2A2E'; let d = false;
+    const pt = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    cv.onpointerdown = e => { d = true; cv.setPointerCapture(e.pointerId); const [x, y] = pt(e); c.beginPath(); c.moveTo(x, y); };
+    cv.onpointermove = e => { if (!d) return; const [x, y] = pt(e); c.lineTo(x, y); c.stroke(); if (!RF.sig) { RF.sig = true; $('#rsNext').disabled = false; } };
+    cv.onpointerup = () => d = false;
+    $('#sigClr').onclick = () => { c.clearRect(0, 0, cv.width, cv.height); RF.sig = false; $('#rsNext').disabled = true; };
+  }
+  scrollTo(0, 0);
+}
+function bidRound(ask, re) {
+  RF.round++; RF.counter = 0; const bid = Math.round(ask * RF.bid / 5000) * 5000, ratio = bid / ask;
+  RF.log.push(['me', 'My offer: ' + money(bid, true)]);
+  if (ratio >= .97) { RF.accepted = true; RF.final = bid; RF.log.push(['seller', 'Accepted. Deal closed.']); }
+  else if (ratio >= .93 || RF.round >= 3) { RF.counter = RF.round >= 3 ? Math.round(ask * .985 / 5000) * 5000 : Math.round((bid + ask * .985) / 2 / 5000) * 5000; RF.log.push(['seller', (RF.round >= 3 ? 'My final price: ' : 'I can do ') + money(RF.counter, true)]); }
+  else { RF.counter = 0; RF.log.push(['seller', 'Too far below what I need. Please come closer to the asking price.']); }
+  re();
+}
+function finishReady() {
+  const p = byId(S.pid), ref = 'ARK-' + (hash(p.id + RF.final) % 900000 + 100000);
+  S.res = { kind: 'res', pid: p.id, price: RF.final, loan: RF.loan, ref };
+  const el = V.reserve;
+  el.innerHTML = `<div class="wrap fin"><canvas id="cf"></canvas><div class="okc big">${ICON.check}</div><h1>${p.name} is nearly yours</h1><p class="lead">Contract signed at ${px(RF.final)}. Reference <b>${ref}</b>.</p>
+   <ol class="next"><li><b>This week</b><span>We book your appointment at the DLD trustee office.</span></li><li><b>Transfer day</b><span>${RF.loan ? 'The bank pays the loan amount and you pay your balance. ' : 'You pay the balance. '}Fees are settled at the trustee office.</span></li><li><b>After transfer</b><span>Title deed in your name, then ${RF.loan ? 'mortgage instalment reminders' : 'service charge reminders'}.</span></li></ol>${feedbackHTML()}
+   <div class="row"><button class="btn btn-primary" id="toTrack" data-magnetic>Track my purchase ${ICON.arrow}</button><button class="btn btn-ghost" id="toHome">Keep browsing</button></div></div>`;
+  $('#toTrack').onclick = () => goTracker(); $('#toHome').onclick = () => go('home');
+  confetti($('#cf')); bindFeedback(el); toast('Contract signed');
+}
+
+/* ---------- journey map (design thinking) ---------- */
+function renderJourney() {
+  const J = [['Discover', 'What can I afford, and where?', 'Many portals, unclear total cost', 'Three questions, ranked matches'], ['Options', 'Off-plan or ready?', 'Mixed listings, old data', 'One toggle, same clear cards'], ['See in 3D', 'Is this my exact home?', 'Brochure renders only', 'Pick floor and unit, look around'], ['Analyse', 'Is it a good deal?', 'No cost or return view', 'Area returns, yield, total cost, model'], ['Advice', 'Do I need an agent?', 'Pushy or absent', 'Call or meet, only if you want'], ['Deal', 'How do I secure it?', 'Unclear EOI, bids by phone', 'EOI online, or viewing and bidding'], ['Pay and register', 'Where does my money go?', 'Bank paperwork, hidden fees', 'Escrow, loan steps, DLD status'], ['Own', 'What happens next?', 'Missed instalments, lost files', 'Reminders, vault, follow-ups']];
+  const W = 1600, pts = a => a.map((v, i) => [((i + .5) / 8 * W).toFixed(0), (110 - v * 100).toFixed(0)]), line = a => pts(a).map((p, i) => (i ? 'L' : 'M') + p.join(',')).join(' ');
+  const wo = [.55, .42, .5, .3, .26, .36, .2, .5], wi = [.62, .66, .8, .76, .8, .76, .72, .92];
+  $('#jm').innerHTML = `<svg viewBox="0 0 ${W} 120" preserveAspectRatio="none" class="curve" role="img" aria-label="Buyer confidence across stages, higher with ARKO"><path d="${line(wo)}" class="c0" pathLength="1"/><path d="${line(wi)}" class="c1" pathLength="1"/></svg>
+   <div class="legend2"><span><i class="l0"></i>Typical journey</span><span><i class="l1"></i>With ARKO</span><span class="mini">Buyer confidence, illustrative</span></div>
+   <div class="jm-cols">${J.map((s, i) => `<div class="jc"><h4>${s[0]}</h4><small>You ask</small><p>${s[1]}</p><small>Usual friction</small><p>${s[2]}</p><small>ARKO answer</small><p class="ans">${s[3]}</p></div>`).join('')}</div>`;
+  reveal($('#jm'));
+}
+fetch('/api/config').then(r => r.ok ? r.json() : null).then(c => { if (c && c.supportPhone) { SUPPORT.name = c.supportName || SUPPORT.name; SUPPORT.phone = c.supportPhone; const f = $('#supNum'); if (f) f.textContent = fmtPhone(SUPPORT.phone); } }).catch(() => { });
+(function () {
+  initHome(); const fn = $('#supNum'); if (fn) fn.textContent = fmtPhone(SUPPORT.phone); renderJourney();
+  const cs = $('#curSeg'); initSeg(cs, v => { S.cur = v; S.drawBud && S.drawBud(); refreshPrices(); S.renderIntent(); if (S.compare.length >= 2 && !$('#modal').hidden) compareModal(); });
+  document.addEventListener('click', e => {
+    const n = e.target.closest('[data-nav]'); if (n) { if (n.dataset.nav === 'tracker') goTracker(); else goHome(); return; }
+    const s = e.target.closest('[data-scroll]'); if (s) { e.preventDefault(); goHome(s.dataset.scroll); return; }
+    if (e.target.closest('#talkBtn,#talkBtn2')) { openAgent(); return; }
+    if (e.target.closest('[data-close]')) closeModal();
+  });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#modal').hidden) closeModal(); });
+  initCursor(); initTrail(); initHeroGL();
+  initRotator(); split($('#l1')); $('#l1').classList.add('in'); weightField($('#l1'));
+  initMarquee(); initMicro(); reveal(V.home);
+  const hd = $('.hd'); addEventListener('scroll', () => hd.classList.toggle('sc', scrollY > 20), { passive: true });
+  document.body.dataset.view = 'home'; document.body.classList.add('ready');
+})();
+</script></body></html>
