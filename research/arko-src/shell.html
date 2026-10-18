@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ARKO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>/*CSS*/</style></head>
+<body data-view="home">
+<canvas id="trail" aria-hidden="true"></canvas>
+<div id="cursor" aria-hidden="true"><div class="ring"><span></span></div><div class="dot"></div></div>
+<div id="app">
+<header class="hd"><div class="hd-in">
+  <button class="brand" data-nav="home" aria-label="ARKO home"><svg viewBox="0 0 32 32" width="28" height="28"><rect width="32" height="32" rx="9" fill="#0A2A2E"/><path d="M8 24V16a8 8 0 0 1 16 0v8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="16" cy="18" r="2.6" fill="#FF7A59"/></svg><span>ARKO</span></button>
+  <nav class="hd-nav"><button data-nav="home" class="on">Explore</button><button data-scroll="#journey">How it works</button><button data-nav="tracker">My purchase</button><button class="talk" id="talkBtn">Talk to us</button></nav>
+  <div class="seg" id="curSeg" aria-label="Currency"><button data-v="AED" aria-selected="true">AED</button><button data-v="USD" aria-selected="false">USD</button><button data-v="GBP" aria-selected="false">GBP</button><button data-v="INR" aria-selected="false">INR</button><span class="thumb"></span></div>
+</div></header>
+
+<main id="stage">
+<div id="v-home">
+ <section id="hero" class="hero"><canvas id="heroGL" aria-hidden="true"></canvas><div class="hero-fallback" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+   <p class="eyebrow pill-e"><span class="live"></span>Off-plan and ready homes, tracked to ownership</p>
+   <h1 id="h1"><span class="l1" id="l1">Own Dubai</span><span class="l2" id="rot"><span class="word">from anywhere.</span><span class="word">in minutes.</span><span class="word">with proof.</span></span></h1>
+   <p class="hero-p">Tell us why and how much. We show the homes, the 3D view, the numbers and every step to owning it, from EOI or viewing to DLD registration.</p>
+   <div class="intent" id="intent"><div class="int-h"><span id="intStep"></span><div class="dots" id="intDots"></div></div><div id="intBody"></div></div>
+   <div class="trustrow"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M8.8 12.2l2.3 2.3 4.2-4.6"/></svg> RERA-registered projects</span><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M8.8 12.2l2.3 2.3 4.2-4.6"/></svg> Escrow-protected payments</span><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M8.8 12.2l2.3 2.3 4.2-4.6"/></svg> DLD-tracked</span></div>
+  </div>
+  <div id="floaters" aria-label="Featured homes"></div>
+ </section>
+ <div class="mq" aria-hidden="true"><div class="mq-track"><span>Discover</span><i>◆</i><span>See in 3D</span><i>◆</i><span>Analyse</span><i>◆</i><span>Decide</span><i>◆</i><span>Pay</span><i>◆</i><span>Register</span><i>◆</i><span>Own</span><i>◆</i><span>Discover</span><i>◆</i><span>See in 3D</span><i>◆</i><span>Analyse</span><i>◆</i><span>Decide</span><i>◆</i><span>Pay</span><i>◆</i><span>Register</span><i>◆</i><span>Own</span><i>◆</i></div></div>
+
+ <section class="wrap sec" id="explore">
+  <div class="ex-h"><div><p class="eyebrow">Browse</p><h2 id="exTitle" data-split>Off-plan launches</h2><p class="sub" id="exSub">Express interest with an EOI and pay in instalments while it is built. Every project shows its RERA number and escrow account.</p></div>
+   <div class="seg" data-seg="market" aria-label="Market"><button data-v="off" aria-selected="true">Off-plan</button><button data-v="res" aria-selected="false">Resale</button><span class="thumb"></span></div></div>
+  <div class="filters"><label>Area<select id="fArea"></select></label><label>Budget<select id="fBud"></select></label><label id="fHandWrap">Handover<select id="fHand"><option value="">Any year</option><option value="28">By 2028</option><option value="29">2029 or later</option></select></label></div>
+  <div class="bar"><div class="chips"><button class="chip" data-f="water" aria-pressed="false">Waterfront</button><button class="chip" data-f="u15" aria-pressed="false">Under AED 1.5M</button><button class="chip" data-f="yield" aria-pressed="false">Best yield</button><button class="chip" data-f="plan50" data-off aria-pressed="false">50/50 plan</button><button class="chip" data-f="h28" data-off aria-pressed="false">Ready by 2028</button></div>
+   <div class="bar-r"><span id="count" class="count"></span><label class="sortl">Sort<select id="sort"><option value="featured">Featured</option><option value="low">Lowest price</option><option value="yield">Highest yield</option><option value="soon">Soonest handover</option></select></label></div></div>
+  <div id="grid" class="grid"></div>
+  <p class="demo-n">All projects, developers and prices in this prototype are fictional demo data. Images are illustrations.</p>
+ </section>
+
+ <section class="journey" id="journey"><div class="wrap">
+  <p class="eyebrow">How ARKO is designed</p><h2 data-split>Built around the buyer's journey</h2>
+  <p class="sub">We mapped every step a buyer takes, where they get stuck, and what ARKO does about it. Friction points are common buyer pain points and still to be validated in our survey.</p>
+  <ol class="dt"><li><b>Empathise</b><span>Talk to buyers and read their threads and reviews.</span></li><li><b>Define</b><span>How might we make each step feel certain?</span></li><li><b>Ideate</b><span>Total cost first, human help on demand, status always visible.</span></li><li><b>Prototype</b><span>The clickable journey you are using now.</span></li><li><b>Test</b><span>Tell us if a step was clear. We change what is not.</span></li></ol>
+  <div class="jm-wrap"><div class="jm" id="jm"></div></div>
+  <ul class="princ"><li><b>Show the total cost early</b><span>No surprise fees at the end.</span></li><li><b>A person when you want one</b><span>Call or meet, never forced.</span></li><li><b>Always know where you are</b><span>One tracker for DLD, payments and documents.</span></li></ul>
+</div></section>
+
+ <footer class="ft wrap"><b>ARKO</b><p>Prototype for demonstration only. Not an offer to sell property, and not a licensed brokerage. Figures are illustrative. Fee amounts and timelines must be confirmed with DLD, RERA and the developer before any real purchase.</p></footer>
+</div>
+<div id="v-project" hidden></div>
+<div id="v-reserve" hidden></div>
+<div id="v-tracker" hidden></div>
+</main>
+
+<div id="tray" class="tray"><div id="trayThumbs" class="thumbs"></div><span id="trayTxt"></span><button class="btn btn-primary sm" id="trayGo" disabled>Compare</button></div>
+<nav class="tabbar"><button data-nav="home">Explore</button><button id="talkBtn2">Talk to us</button><button data-nav="tracker">My purchase</button></nav>
+<div id="modal" hidden></div><div id="toasts" aria-live="polite"></div>
+</div>
+<script type="application/json" id="dld">null</script>
+<script>/*JS*/</script></body></html>

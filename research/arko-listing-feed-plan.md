@@ -23,3 +23,11 @@ Status: plan only. The prototype still runs on fictional demo data and illustrat
 1. Email the three sources above with the question list.
 2. Load DLD CSVs into ARKO's analysis (area growth, median price per sqft, yield).
 3. When a feed exists, fill the field map in `arko-feed-adapter.mjs` and run its self-test.
+
+## DLD open data: how it is wired
+1. Download the Transactions CSV from the DLD open-data page (a captcha is needed, so this step is manual).
+2. `python3 dld-ingest.py Transactions.csv dld-area-stats.json` gives per-area median AED/sqft, 12-month and 3-year growth, sales count and off-plan share. Areas with fewer than 15 sales in a window get no value. Check the `AREA_MAP` names in the script against your file.
+3. From `arko-src/`, run `python3 build2.py ../dld-area-stats.json` to rebuild the page with the data inside. It writes `artifact.html`. Areas with DLD data show a "DLD data" tag on the Analysis card; the rest stay marked "demo".
+4. Rental yield still needs the DLD rent-contracts dataset. It is not wired yet.
+
+The pipeline was tested on a synthetic file only (known 10% yearly growth gave 9.8% and 33% over 3 years). The published page contains no DLD numbers yet.

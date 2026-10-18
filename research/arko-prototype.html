@@ -166,6 +166,7 @@ select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='htt
 @media(max-width:640px){.opts,.opts.b3{grid-template-columns:1fr}.intent{padding:18px}.intent h3{font-size:22px}.next-st{flex-direction:column;gap:4px}.filters label{min-width:44%;flex:1}}
 .ins{grid-template-columns:repeat(3,1fr)}.two-big .big{font-size:30px}.card-s .big{font-size:34px}
 @media(max-width:960px){.ins{grid-template-columns:1fr}}
+.src{font:600 11px var(--body);letter-spacing:.04em;color:var(--teal2);background:var(--mint);padding:3px 8px;border-radius:99px;margin-left:6px;text-transform:none}.src.demo{background:var(--line);color:var(--ink2)}
 </style>
 
 <canvas id="trail" aria-hidden="true"></canvas>
@@ -220,6 +221,7 @@ select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='htt
 <nav class="tabbar"><button data-nav="home">Explore</button><button id="talkBtn2">Talk to us</button><button data-nav="tracker">My purchase</button></nav>
 <div id="modal" hidden></div><div id="toasts" aria-live="polite"></div>
 </div>
+<script type="application/json" id="dld">null</script>
 <script>/* ---------- utilities and shared state ---------- */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -1129,8 +1131,10 @@ const px = (aed, full) => `<span class="px" data-aed="${Math.round(aed)}"${full 
 const DEP = 40000;
 let tw3d = null, spy = null, lookRaf = 0;
 
-const medOf = it => it.med || Math.round(it.ppsf * (.95 + R(hash(it.id))() * .1));
-const areaStats = it => { const r = R(hash(it.area)); return { g1: +(4 + r() * 7).toFixed(1), g3: Math.round(14 + r() * 20), yld: +(5.2 + r() * 2).toFixed(1), supply: ['Low', 'Balanced', 'Rising'][Math.floor(r() * 3)], demand: Math.round(70 + r() * 25) }; };
+const DLD = (() => { try { const d = JSON.parse($('#dld').textContent); return d && d.areas ? d : null; } catch (e) { return null; } })();
+const dldOf = it => DLD && DLD.areas[it.area];
+const medOf = it => (dldOf(it) && dldOf(it).medPpsf) || it.med || Math.round(it.ppsf * (.95 + R(hash(it.id))() * .1));
+const areaStats = it => { const r = R(hash(it.area)), d = dldOf(it), o = { g1: +(4 + r() * 7).toFixed(1), g3: Math.round(14 + r() * 20), yld: +(5.2 + r() * 2).toFixed(1), supply: ['Low', 'Balanced', 'Rising'][Math.floor(r() * 3)], demand: Math.round(70 + r() * 25) }; if (d) { if (d.g1 != null) o.g1 = d.g1; if (d.g3 != null) o.g3 = d.g3; o.real = true; o.n12 = d.n12; } return o; };
 const priceOf = it => it.type === 'off' ? (S.unit ? S.unit.price : it.from) : it.price;
 const sizeOf = it => it.type === 'off' ? (S.unit ? S.unit.size : it.types[0][1]) : it.size;
 const feesOf = (it, price) => { const off = it.type === 'off'; return { dld: price * .04, trustee: 4000 * 1.05, admin: 580, agency: off ? 0 : price * .02 * 1.05 }; };
@@ -1192,9 +1196,9 @@ function viewHTML(it) {
 }
 function analysisHTML(it) {
   const off = it.type === 'off', a = areaStats(it), med = medOf(it), vs = (it.ppsf / med - 1) * 100, max = Math.max(it.ppsf, med) * 1.1;
-  return `<section id="pjAn" class="sec"><h2 data-split>The numbers behind the price</h2><p class="sub">Area returns, rental yield, total cost and a return model you can adjust. Demo figures, not advice.</p>
+  return `<section id="pjAn" class="sec"><h2 data-split>The numbers behind the price</h2><p class="sub">Area returns, rental yield, total cost and a return model you can adjust. ${DLD ? 'Area growth and median price are from DLD open data to ' + DLD.asOf + ' where the area has enough sales; other figures are demo values.' : 'All figures are illustrative demo values.'} Not advice.</p>
   <div class="ins">
-   <div class="card-s"><h4>Area returns · ${it.area}</h4><div class="two-big"><div><div class="big">+${a.g1}%</div><small>price growth, last 12 months</small></div><div><div class="big">+${a.g3}%</div><small>last 3 years</small></div></div>
+   <div class="card-s"><h4>Area returns · ${it.area}${a.real ? ' <span class="src">DLD data, ' + a.n12 + ' sales in 12 months</span>' : ' <span class="src demo">demo</span>'}</h4><div class="two-big"><div><div class="big">+${a.g1}%</div><small>price growth, last 12 months</small></div><div><div class="big">+${a.g3}%</div><small>last 3 years</small></div></div>
     ${bar('This home', it.ppsf, max, 'AED ' + it.ppsf.toLocaleString(), 'hi')}${bar('Area median', med, max, 'AED ' + med.toLocaleString())}<p class="mini">${Math.abs(vs).toFixed(1)}% ${vs > 0 ? 'above' : 'below'} the area median per sqft. Supply is ${a.supply.toLowerCase()}; rental demand ${a.demand}/100.</p>
     <svg viewBox="0 0 300 80" class="spark" role="img" aria-label="Price trend rising"><path d="${sparkPath(it)}" pathLength="1"/></svg></div>
    <div class="card-s"><h4>Rental yield</h4><div class="big" id="yNet"></div><small class="mini">net, after service charges</small>${bar('Gross yield', it.yld, 9, it.yld + '%', 'hi')}${bar('Area average', a.yld, 9, a.yld + '%')}<p class="mini">Estimated rent about ${px(it.type === 'off' ? it.from * it.yld / 100 : it.rent)} a year.${off ? ' Rent starts after handover, ' + it.ho + '.' : ''}</p></div>
