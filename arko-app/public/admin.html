@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>ARKO Owner</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4F6F5;--card:#fff;--ink:#0A2A2E;--ink2:#52666A;--line:rgba(10,42,46,.12);--teal:#0E7C79;--teal2:#095C5A;--coral:#FF7A59;--mint:#C6EEE4;--sand:#FFE7D6;--bad:#C2432B;--r:18px;--disp:'Bricolage Grotesque',system-ui,sans-serif;--body:Figtree,system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--body)}[hidden]{display:none!important}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer}
+h1,h2,h3{font-family:var(--disp);margin:0;letter-spacing:-.02em}h2{font-size:22px}h3{font-size:16px;margin-bottom:10px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.top{position:sticky;top:0;z-index:5;background:rgba(244,246,245,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}.top .wrap{display:flex;align-items:center;gap:18px;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}
+.brand{font:800 20px var(--disp);letter-spacing:.14em}.brand small{font:600 11px var(--body);letter-spacing:.08em;color:var(--ink2);margin-left:8px;text-transform:uppercase}
+nav{display:flex;gap:4px;flex-wrap:wrap}nav button{border:0;background:none;padding:8px 14px;border-radius:99px;font-weight:600;color:var(--ink2)}nav button.on{background:var(--ink);color:#fff}nav .badge{background:var(--coral);color:#fff;border-radius:99px;padding:1px 7px;font-size:12px;margin-left:6px}
+.right{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:13px;color:var(--ink2)}
+.btn{border:0;border-radius:99px;padding:9px 16px;font-weight:700;background:var(--ink);color:#fff}.btn.ghost{background:rgba(10,42,46,.08);color:var(--ink)}.btn.go{background:var(--teal)}.btn.bad{background:var(--bad)}.btn.sm{padding:6px 12px;font-size:13px}.btn:disabled{opacity:.4}
+main{padding:22px 0 60px}.grid{display:grid;gap:16px}.kpis{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}.two{grid-template-columns:1.4fr 1fr}.three{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:0 1px 2px rgba(10,42,46,.06)}
+.kpi small{display:block;font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}.kpi b{font:700 32px var(--disp)}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}.row:last-child{border:0}.row .n{font-family:var(--mono);font-size:13px}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;flex:1;margin:0 12px}.bar i{display:block;height:100%;background:var(--teal);border-radius:4px}
+.fun{display:grid;grid-template-columns:200px 1fr 60px;gap:10px;align-items:center;padding:6px 0;font-size:14px}.fun .bar{margin:0;height:14px}.fun .bar i{background:var(--coral)}.fun small{color:var(--ink2);font-family:var(--mono)}
+.chart{width:100%;height:150px}.chart rect{fill:var(--teal)}.chart text{font:500 10px var(--mono);fill:var(--ink2)}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{font:600 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}.scroll{overflow-x:auto}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-weight:700;font-size:12px;background:var(--line)}.pill.pending{background:var(--sand);color:#8A4A1F}.pill.accepted,.pill.contacted{background:var(--mint);color:var(--teal2)}.pill.rejected,.pill.closed{background:#F6D9D2;color:var(--bad)}.pill.countered{background:#DDE8FF;color:#2B4DA3}.pill.new{background:var(--sand);color:#8A4A1F}
+.bid{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}.bid.pend{border-color:var(--coral);background:#FFF8F4}.bid .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}.bid .money{font:700 22px var(--disp)}.bid .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}.bid input{padding:7px 10px;border:1px solid var(--line);border-radius:10px;width:230px}.log{font-size:13px;color:var(--ink2);margin-top:8px}
+.feed .row{font-family:var(--mono);font-size:12.5px}.feed .t{color:var(--ink2);width:70px}.feed .tp{width:80px;font-weight:700}.feed .nm{flex:1;word-break:break-all}
+.login{max-width:380px;margin:12vh auto;text-align:center}.login input{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);margin:14px 0}.err{color:var(--bad);font-weight:600;margin-top:8px}
+.muted{color:var(--ink2)}.ok{color:var(--teal2)}.warn{color:var(--bad)}.sel{padding:7px 10px;border-radius:10px;border:1px solid var(--line);background:#fff}
+@media(max-width:860px){.two{grid-template-columns:1fr}.fun{grid-template-columns:130px 1fr 44px}}
+</style></head><body>
+<div id="gate" class="login card"><h1 class="brand">ARKO</h1><p class="muted">Owner dashboard</p><form id="lf"><input id="tok" type="password" placeholder="Admin token" autocomplete="current-password"><button class="btn" style="width:100%">Sign in</button></form><p class="err" id="lerr" hidden></p><p class="muted" style="font-size:13px;margin-top:14px">The token is the ADMIN_TOKEN set on the server. It stays in this tab only.</p></div>
+
+<div id="app" hidden>
+<div class="top"><div class="wrap"><div class="brand">ARKO<small>Owner</small></div>
+<nav id="nav"><button data-t="overview" class="on">Overview</button><button data-t="bids">Bids<span class="badge" id="bBadge" hidden></span></button><button data-t="leads">Leads<span class="badge" id="lBadge" hidden></span></button><button data-t="live">Live</button><button data-t="backend">Backend</button></nav>
+<div class="right"><span id="upd">–</span><button class="btn ghost sm" id="out">Sign out</button></div></div></div>
+<main class="wrap">
+<section id="t-overview"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap"><h2>Traffic and clicks</h2><select class="sel" id="days"><option value="1">Last 24 hours</option><option value="7" selected>Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select></div>
+<div class="grid kpis" id="kpis"></div>
+<div class="grid two" style="margin-top:16px"><div class="card"><h3>Visitors per day</h3><svg class="chart" id="chart" role="img" aria-label="Visitors per day"></svg></div><div class="card"><h3>Journey funnel</h3><div id="funnel"></div></div></div>
+<div class="grid three" style="margin-top:16px"><div class="card"><h3>What people click</h3><div id="clicks"></div></div><div class="card"><h3>Homes opened</h3><div id="homes"></div></div><div class="card"><h3>Where they come from</h3><div id="refs"></div><h3 style="margin-top:16px">Devices</h3><div id="devs"></div></div></div></section>
+
+<section id="t-bids" hidden><h2 style="margin-bottom:14px">Bids on ready homes</h2><div id="bidList"></div></section>
+<section id="t-leads" hidden><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><h2>Call-back and meeting requests</h2><button class="btn ghost sm" id="csv">Export CSV</button></div><div class="card scroll"><table><thead><tr><th>When received</th><th>Name</th><th>Phone</th><th>Type</th><th>Wants</th><th>About</th><th>Status</th></tr></thead><tbody id="leadRows"></tbody></table></div></section>
+<section id="t-live" hidden><h2 style="margin-bottom:14px">Live activity</h2><div class="card feed" id="feed"></div></section>
+<section id="t-backend" hidden><h2 style="margin-bottom:14px">Backend health</h2><div class="grid kpis" id="hk"></div><div class="grid two" style="margin-top:16px"><div class="card scroll"><h3>Requests since last restart</h3><table><thead><tr><th>Route</th><th>Calls</th><th>Errors</th><th>Avg ms</th><th>Max ms</th></tr></thead><tbody id="routes"></tbody></table></div><div class="card"><h3>Storage</h3><div id="files"></div><h3 style="margin-top:16px">Recent errors</h3><div id="errs"></div></div></div></section>
+</main></div>
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const aed=n=>'AED '+Math.round(n).toLocaleString('en-US');
+let TOKEN=null,TAB='overview',timer=null,CACHE={};
+try{TOKEN=sessionStorage.getItem('arkoAdmin')}catch{}
+async function api(path,opt={}){const r=await fetch(path,{...opt,headers:{...(opt.headers||{}),Authorization:'Bearer '+TOKEN,'Content-Type':'application/json'}});if(r.status===401||r.status===429){throw new Error(r.status===429?'Too many attempts. Wait 15 minutes.':'Wrong token')}if(r.status===404)throw new Error('Owner access is not enabled on the server (set ADMIN_TOKEN).');if(!r.ok)throw new Error('Request failed ('+r.status+')');return r.json()}
+const ago=t=>{const s=(Date.now()-Date.parse(t))/1000;return s<60?Math.round(s)+'s ago':s<3600?Math.round(s/60)+' min ago':s<86400?Math.round(s/3600)+' h ago':Math.round(s/86400)+' d ago'};
+const LABEL={'#ctaGo':'Main button (Start EOI / Book viewing)','#vBook':'Book viewing','#rsNext':'Continue in a flow','#rsBack':'Back in a flow','#bdSend':'Send offer','#bdNew':'Send new offer','#bdAcc':'Accept counter','#agGo':'Submit call or meeting request','#agCopy':'Copy support number','#talkBtn':'Talk to us (header)','#talkBtn2':'Talk to us (mobile bar)','#trayGo':'Compare homes','#toTrack':'Track my purchase','#pjBack':'Back to all homes','#depGo':'Pay deposit','#payGo':'Pay EOI','#vUae':'Verify with UAE Pass','#vPass':'Verify with passport','#curSeg':'Currency','save':'Save home','goal:own':'Goal: live in it','goal:invest':'Goal: invest','kind:off':'Chose off-plan','kind:res':'Chose ready','a:accept':'Owner action'};const nice=n=>LABEL[n]||(n.startsWith('card:')?'Opened card '+n.slice(5):n.startsWith('agent:')?'Specialist: '+n.slice(6):n.startsWith('bud:')?'Budget up to '+(+n.slice(4)||'any'):n);
+const bars=(rows,max,fmt=v=>v)=>rows.length?rows.map(r=>`<div class="row"><span>${esc(r.name)}</span><span class="bar"><i style="width:${Math.max(3,r.v/max*100)}%"></i></span><span class="n">${fmt(r.v)}</span></div>`).join(''):'<p class="muted">Nothing yet.</p>';
+
+async function login(t){TOKEN=t;try{await api('/api/admin/health');try{sessionStorage.setItem('arkoAdmin',t)}catch{}$('#gate').hidden=true;$('#app').hidden=false;start();return true}catch(e){TOKEN=null;try{sessionStorage.removeItem('arkoAdmin')}catch{}$('#lerr').textContent=e.message;$('#lerr').hidden=false;return false}}
+$('#lf').onsubmit=e=>{e.preventDefault();login($('#tok').value.trim())};
+$('#out').onclick=()=>{try{sessionStorage.removeItem('arkoAdmin')}catch{}location.reload()};
+$('#nav').onclick=e=>{const b=e.target.closest('button');if(!b)return;TAB=b.dataset.t;$$('#nav button').forEach(x=>x.classList.toggle('on',x===b));$$('main section').forEach(s=>s.hidden=s.id!=='t-'+TAB);refresh()};
+$('#days').onchange=refresh;
+
+async function refresh(){try{
+ const [bids,leads]=await Promise.all([api('/api/admin/bids'),api('/api/admin/leads')]);CACHE.bids=bids;CACHE.leads=leads;
+ const pb=bids.filter(b=>b.status==='pending').length,nl=leads.filter(l=>l.status==='new').length;
+ $('#bBadge').hidden=!pb;$('#bBadge').textContent=pb;$('#lBadge').hidden=!nl;$('#lBadge').textContent=nl;
+ if(TAB==='overview')await overview();if(TAB==='bids')renderBids();if(TAB==='leads')renderLeads();if(TAB==='live')await live();if(TAB==='backend')await backend();
+ $('#upd').textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}catch(e){$('#upd').textContent=e.message}}
+function start(){refresh();clearInterval(timer);timer=setInterval(()=>{if(!document.hidden)refresh()},10000)}
+
+async function overview(){const s=await api('/api/admin/summary?days='+$('#days').value);
+ const k=[['Visitors',s.visitors],['Page views',s.pageviews],['Interactions',s.events],['Reached a specialist',s.funnel[3].visitors],['Leads and bids',s.funnel[4].visitors]];
+ $('#kpis').innerHTML=k.map(([l,v])=>`<div class="card kpi"><small>${l}</small><b>${v.toLocaleString('en-US')}</b></div>`).join('');
+ const mx=Math.max(1,...s.series.map(d=>d.visitors)),W=600,H=130,bw=W/s.series.length;
+ $('#chart').setAttribute('viewBox',`0 0 ${W} ${H+20}`);$('#chart').innerHTML=s.series.map((d,i)=>{const h=d.visitors/mx*H;return `<rect x="${i*bw+1}" y="${H-h}" width="${Math.max(2,bw-2)}" height="${h}" rx="2"><title>${esc(d.day)}: ${d.visitors}</title></rect>`}).join('')+`<text x="0" y="${H+14}">${esc(s.series[0].day.slice(5))}</text><text x="${W}" y="${H+14}" text-anchor="end">${esc(s.series[s.series.length-1].day.slice(5))}</text><text x="0" y="10">peak ${mx}</text>`;
+ const f0=Math.max(1,s.funnel[0].visitors);$('#funnel').innerHTML=s.funnel.map(f=>`<div class="fun"><span>${esc(f.label)}</span><span class="bar"><i style="width:${f.visitors/f0*100}%"></i></span><small>${f.visitors}</small></div>`).join('');
+ $('#clicks').innerHTML=bars(s.topClicks.map(c=>({name:nice(c.name),v:c.n})),Math.max(1,...s.topClicks.map(c=>c.n)));
+ $('#homes').innerHTML=s.topHomes.length?s.topHomes.map(h=>`<div class="row"><span>${esc(h.name)}</span><span class="n">${h.views} views · ${h.visitors} people</span></div>`).join(''):'<p class="muted">No home opened yet.</p>';
+ $('#refs').innerHTML=bars(s.referrers.map(r=>({name:r.name,v:r.n})),Math.max(1,...s.referrers.map(r=>r.n)));
+ $('#devs').innerHTML=`<div class="row"><span>Mobile</span><span class="n">${s.devices.mobile}</span></div><div class="row"><span>Desktop</span><span class="n">${s.devices.desktop}</span></div>`}
+
+function renderBids(){const b=CACHE.bids;if(!b.length){$('#bidList').innerHTML='<div class="card muted">No bids yet. They appear here as soon as a buyer sends an offer on a ready home.</div>';return}
+ $('#bidList').innerHTML=b.map(x=>{const pend=x.status==='pending';return `<div class="bid ${pend?'pend':''}" data-id="${esc(x.id)}"><div class="h"><div><b>${esc(x.homeName||x.homeId)}</b> <span class="pill ${esc(x.status)}">${esc(x.status)}</span><div class="muted">${esc(x.name)} · <a href="tel:${esc(x.phone)}">${esc(x.phone)}</a> · ${esc(ago(x.at))}</div></div><div style="text-align:right"><div class="money">${aed(x.counter&&x.status==='countered'?x.counter:x.amount)}</div><div class="muted">asking ${aed(x.ask)} · ${((x.amount/x.ask-1)*100).toFixed(1)}%</div></div></div>
+ ${pend?`<div class="acts"><button class="btn go sm" data-a="accept">Accept ${aed(x.amount)}</button><input type="number" min="1" step="5000" placeholder="Counter, AED (asking ${Math.round(x.ask/1000)}K)" class="ci"><button class="btn ghost sm" data-a="counter">Counter</button><button class="btn bad sm" data-a="reject">Decline</button></div>`:''}
+ <div class="log">${x.log.map(l=>`${esc(l.by)}: ${esc(l.text)}${l.amount?' '+aed(l.amount):''} (${esc(ago(l.at))})`).join('<br>')}</div></div>`}).join('')}
+$('#bidList').onclick=async e=>{const btn=e.target.closest('button[data-a]');if(!btn)return;const card=btn.closest('.bid'),a=btn.dataset.a,body={action:a};
+ if(a==='counter'){const v=+$('.ci',card).value;if(!(v>0)){$('.ci',card).focus();return}body.counter=v}
+ if(a==='accept'&&!confirm('Accept this offer? The buyer will see it straight away.'))return;
+ if(a==='reject'&&!confirm('Decline this offer?'))return;
+ btn.disabled=true;try{await api('/api/admin/bids/'+card.dataset.id,{method:'POST',body:JSON.stringify(body)});refresh()}catch(er){alert(er.message);btn.disabled=false}};
+
+function renderLeads(){const l=CACHE.leads;$('#leadRows').innerHTML=l.length?l.map(x=>`<tr data-id="${esc(x.id)}"><td>${esc(ago(x.at))}<br><span class="muted">${esc(x.at.slice(0,16).replace('T',' '))}</span></td><td>${esc(x.name)}</td><td><a href="tel:${esc(x.phone)}">${esc(x.phone)}</a></td><td>${x.kind==='call'?'Call back':'Meeting'}</td><td>${esc(x.when)}</td><td>${esc(x.home||'')}</td><td><select class="sel st"><option ${x.status==='new'?'selected':''}>new</option><option ${x.status==='contacted'?'selected':''}>contacted</option><option ${x.status==='closed'?'selected':''}>closed</option></select></td></tr>`).join(''):'<tr><td colspan="7" class="muted">No requests yet.</td></tr>'}
+$('#leadRows').onchange=async e=>{const s=e.target.closest('.st');if(!s)return;await api('/api/admin/leads/'+s.closest('tr').dataset.id,{method:'POST',body:JSON.stringify({status:s.value})});refresh()};
+$('#csv').onclick=()=>{const q=v=>'"'+String(v??'').replace(/"/g,'""').replace(/^([=+\-@])/,"'$1")+'"';const rows=[['received','name','phone','type','wants','about','status'],...CACHE.leads.map(x=>[x.at,x.name,x.phone,x.kind,x.when,x.home,x.status])];const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.map(r=>r.map(q).join(',')).join('\n')],{type:'text/csv'}));a.download='arko-leads.csv';a.click()};
+
+async function live(){const ev=await api('/api/admin/events?limit=120');$('#feed').innerHTML=ev.length?ev.map(e=>`<div class="row"><span class="t">${esc(e.t.slice(11,19))}</span><span class="tp">${esc(e.type)}</span><span class="nm">${esc(e.name)}${e.props?' <span class="muted">'+esc(JSON.stringify(e.props))+'</span>':''}</span><span class="muted">${esc(e.sid.slice(0,6))} · ${esc(e.dev)}</span></div>`).join(''):'<p class="muted">No activity yet.</p>'}
+
+async function backend(){const h=await api('/api/admin/health');
+ const k=[['Status','Running'],['Uptime',h.uptimeMin<120?h.uptimeMin+' min':Math.round(h.uptimeMin/60)+' h'],['Memory',h.memoryMb+' MB'],['Disk free',h.disk?h.disk.freeMb+' MB':'n/a'],['Pending bids',h.counts.pending],['DLD data',h.dld?h.dld.asOf:'none'],['Slack alerts',h.webhook?'On':'Off']];
+ $('#hk').innerHTML=k.map(([l,v])=>`<div class="card kpi"><small>${l}</small><b style="font-size:24px">${esc(v)}</b></div>`).join('');
+ $('#routes').innerHTML=h.routes.map(r=>`<tr><td>${esc(r.route)}</td><td>${r.n}</td><td class="${r.errors?'warn':''}">${r.errors}</td><td>${r.avgMs}</td><td>${r.maxMs}</td></tr>`).join('');
+ $('#files').innerHTML=Object.entries(h.files).map(([n,f])=>`<div class="row"><span>${esc(n)}</span><span class="n">${f?f.kb+' KB':'empty'}</span></div>`).join('')+`<p class="muted" style="margin-top:8px;font-size:13px">Events kept ${h.retentionDays.events} days, leads ${h.retentionDays.leads} days.</p>`;
+ $('#errs').innerHTML=h.errors.length?h.errors.map(e=>`<div class="row"><span>${esc(e.route)}: ${esc(e.message)}</span><span class="n">${esc(ago(e.at))}</span></div>`).join(''):'<p class="ok">No errors since the last restart.</p>'}
+if(TOKEN)login(TOKEN);
+</script></body></html>

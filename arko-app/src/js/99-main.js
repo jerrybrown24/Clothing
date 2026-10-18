@@ -8,10 +8,10 @@ function renderJourney() {
    <div class="jm-cols">${J.map((s, i) => `<div class="jc"><h4>${s[0]}</h4><small>You ask</small><p>${s[1]}</p><small>Usual friction</small><p>${s[2]}</p><small>ARKO answer</small><p class="ans">${s[3]}</p></div>`).join('')}</div>`;
   reveal($('#jm'));
 }
-fetch('/api/config').then(r => r.ok ? r.json() : null).then(c => { if (c && c.supportPhone) { SUPPORT.name = c.supportName || SUPPORT.name; SUPPORT.phone = c.supportPhone; const f = $('#supNum'); if (f) f.textContent = fmtPhone(SUPPORT.phone); } }).catch(() => { });
+fetch('/api/config').then(r => r.ok ? r.json() : null).then(c => { trackReady(!!(c && c.supportPhone)); if (c && c.supportPhone) { SUPPORT.name = c.supportName || SUPPORT.name; SUPPORT.phone = c.supportPhone; const f = $('#supNum'); if (f) f.textContent = fmtPhone(SUPPORT.phone); } }).catch(() => { trackReady(false); });
 (function () {
   initHome(); const fn = $('#supNum'); if (fn) fn.textContent = fmtPhone(SUPPORT.phone); renderJourney();
-  const cs = $('#curSeg'); initSeg(cs, v => { S.cur = v; S.drawBud && S.drawBud(); refreshPrices(); S.renderIntent(); if (S.compare.length >= 2 && !$('#modal').hidden) compareModal(); });
+  const cs = $('#curSeg'); initSeg(cs, v => { track('currency', v); S.cur = v; S.drawBud && S.drawBud(); refreshPrices(); S.renderIntent(); if (S.compare.length >= 2 && !$('#modal').hidden) compareModal(); });
   document.addEventListener('click', e => {
     const n = e.target.closest('[data-nav]'); if (n) { if (n.dataset.nav === 'tracker') goTracker(); else goHome(); return; }
     const s = e.target.closest('[data-scroll]'); if (s) { e.preventDefault(); goHome(s.dataset.scroll); return; }
@@ -23,5 +23,5 @@ fetch('/api/config').then(r => r.ok ? r.json() : null).then(c => { if (c && c.su
   initRotator(); split($('#l1')); $('#l1').classList.add('in'); weightField($('#l1'));
   initMarquee(); initMicro(); reveal(V.home);
   const hd = $('.hd'); addEventListener('scroll', () => hd.classList.toggle('sc', scrollY > 20), { passive: true });
-  document.body.dataset.view = 'home'; document.body.classList.add('ready');
+  document.body.dataset.view = 'home'; document.body.classList.add('ready'); track('view', 'home');
 })();

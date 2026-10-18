@@ -1,6 +1,6 @@
 /* ---------- ready-home flow: viewing, bidding, cash or loan, payment, DLD ---------- */
 const RF0 = { step: 0, mode: 'In person', day: 0, time: 0, booked: false, bid: .97, round: 0, log: [], accepted: false, final: 0, counter: 0, pay: null, bank: null, docs: {}, ms: 0, valued: false, loanAmt: 0, loan: null, paid: false, sig: false };
-let RF = {};
+let RF = {}, RF_POLL = 0;
 const BANKS = ['Gulfstream Bank', 'Falcon Commercial', 'Oasis Islamic Bank', 'Meridian National'];
 const LDOCS = ['Emirates ID and passport', 'Salary certificate', 'Last 6 months bank statements', 'Liability letter', 'Signed offer on the property'];
 const rkeys = () => ['view', 'bid', 'mode', ...(RF.pay === 'loan' ? ['loan'] : []), 'pay', 'sign'];
@@ -9,11 +9,12 @@ const dayLabels = () => [...Array(5)].map((_, i) => new Date(Date.now() + (i + 1
 const TIMES = ['10:00', '12:30', '16:00', '18:30'];
 
 function openViewing() {
+  clearInterval(RF_POLL);
   RF = JSON.parse(JSON.stringify(RF0)); RF.docs = {}; RF.log = [];
   go('reserve', renderReady);
 }
 function renderReady() {
-  const p = byId(S.pid), keys = rkeys(), k = keys[RF.step], el = V.reserve, ask = p.price;
+  const p = byId(S.pid), keys = rkeys(), k = keys[RF.step], el = V.reserve, ask = p.price; track('ready_step', p.id + ':' + k);
   const fp = RF.final || ask, f = feesOf(p, fp);
   const side = `<aside class="rs-side"><div class="rs-img"><img alt="" src="${imgFor(p)}"></div><h3>${p.name}</h3><p>${p.unit} · ${p.area}</p><div class="ln"><span>Asking price</span>${px(ask)}</div>${RF.accepted ? `<div class="ln"><span>Agreed price</span><b>${px(RF.final)}</b></div>` : ''}${RF.pay ? `<div class="ln"><span>Payment</span><b>${RF.pay === 'loan' ? 'Bank loan' : 'Cash'}</b></div>` : ''}<p class="mini">${ICON.lock} Deposit and transfer go through a DLD trustee office.</p></aside>`;
   const bar = `<ol class="stepper">${keys.map((s, i) => `<li class="${i < RF.step ? 'done' : i === RF.step ? 'cur' : ''}"><i>${i < RF.step ? ICON.check : i + 1}</i><span>${RNAME[s]}</span></li>`).join('')}</ol>`;
@@ -25,6 +26,18 @@ function renderReady() {
      <div class="seg" id="vmode"><button data-v="In person" aria-selected="${RF.mode === 'In person'}">In person</button><button data-v="Live video" aria-selected="${RF.mode === 'Live video'}">Live video</button><span class="thumb"></span></div>
      <p class="mini mt">Day</p>${chips('vday', dayLabels(), RF.day)}<p class="mini mt">Time</p>${chips('vtime', TIMES, RF.time)}
      ${RF.booked ? `<div class="vf-res"><div class="okc">${ICON.check}</div><b>Viewing booked</b><span>${RF.mode}, ${dayLabels()[RF.day]} at ${TIMES[RF.time]}. (Demo) Continue once you have viewed the home.</span></div>` : `<button class="btn btn-primary mt" id="vBook">Book viewing</button>`}`;
+  } else if (k === 'bid' && LIVE) {
+    ok = RF.accepted; nextLbl = 'Continue';
+    const st = RF.bidStatus, bubbles = (RF.bidLog || []).map(l => `<div class="bub ${l.by === 'buyer' ? 'me' : 'seller'}">${l.text}${l.amount ? ': ' + money(l.amount, true) : ''}</div>`).join('');
+    const slider = `<div class="bid"><div class="big" id="bidV"></div><input type="range" id="bid" min="90" max="100" step="0.5" value="${(RF.bid * 100).toFixed(1)}"></div>`;
+    const who = `<label class="fld">Your name<input id="bdName" autocomplete="name" maxlength="80" value="${RF.bname || ''}"></label><label class="fld">Mobile number<input id="bdPhone" type="tel" autocomplete="tel" maxlength="20" placeholder="+971 50 000 0000" value="${RF.bphone || ''}"></label><input id="bdWeb" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"><label class="chk"><input type="checkbox" id="bdOk"><span>I agree that ARKO may contact me about this offer and store my details for that purpose.</span></label>`;
+    let body;
+    if (!RF.bidId) body = `${slider}${who}<p class="err" id="bdErr" role="alert" hidden></p><button class="btn btn-primary mt" id="bdSend" disabled>Send offer to the seller</button>`;
+    else if (st === 'pending') body = `<div class="vf-res"><div class="spin"></div><b>Offer sent: ${money(RF.bidAmount, true)}</b><span>Waiting for the seller. You can keep this page open. It updates by itself.</span></div><div class="bubs">${bubbles}</div>`;
+    else if (st === 'countered') body = `<div class="bubs">${bubbles}</div><div class="card-s"><b>The seller counters at ${money(RF.bidCounter, true)}</b></div><div class="row l"><button class="btn btn-primary" id="bdAcc">Accept ${money(RF.bidCounter, true)}</button></div><h4 class="mt">Or send a new offer</h4>${slider}<button class="btn btn-ghost" id="bdNew">Send new offer</button>`;
+    else if (st === 'rejected') body = `<div class="bubs">${bubbles}</div><div class="card-s"><b>The seller declined that offer.</b><p class="mini">You can send a new offer closer to the asking price.</p></div>${slider}<button class="btn btn-primary mt" id="bdNew">Send new offer</button>`;
+    else body = `<div class="bubs">${bubbles}</div><div class="vf-res"><div class="okc">${ICON.check}</div><b>Deal closed at ${px(RF.final)}</b><span>Offer accepted by the seller.</span></div>`;
+    panel = `<h2>Make your offer</h2><p class="sub">Asking price ${px(ask)}. Your offer goes to the seller, who accepts, counters or declines.</p>${body}`;
   } else if (k === 'bid') {
     ok = RF.accepted; nextLbl = 'Continue';
     const bubbles = RF.log.map(l => `<div class="bub ${l[0]}">${l[1]}</div>`).join('');
@@ -68,7 +81,29 @@ function renderReady() {
     ['vday', 'vtime'].forEach(id => { const b = $('#' + id); b.onclick = e => { const c = e.target.closest('.chip'); if (!c) return; $$('.chip', b).forEach(x => x.setAttribute('aria-pressed', String(x === c))); RF[id === 'vday' ? 'day' : 'time'] = +c.dataset.i; }; });
     const bk = $('#vBook'); if (bk) bk.onclick = () => { RF.booked = true; toast('Viewing booked'); re(); };
   }
-  if (k === 'bid') {
+  clearInterval(RF_POLL);
+  if (k === 'bid' && LIVE) {
+    const sl = $('#bid'), show = () => { $('#bidV').innerHTML = px(ask * sl.value / 100, true); refreshPrices($('#bidV')); };
+    if (sl) { show(); sl.oninput = () => { RF.bid = sl.value / 100; show(); }; }
+    const sync = d => { RF.bidStatus = d.status; RF.bidAmount = d.amount; RF.bidCounter = d.counter; RF.bidLog = d.log; RF.bidUpd = d.updated; if (d.status === 'accepted') { RF.accepted = true; RF.final = d.amount; } };
+    const call = async (u, opt) => { const r = await fetch(u, { ...opt, headers: { 'Content-Type': 'application/json' } }); if (!r.ok) throw new Error(r.status); return r.json(); };
+    const snd = $('#bdSend');
+    if (snd) {
+      const chk = () => { snd.disabled = !($('#bdName').value.trim().length >= 2 && $('#bdPhone').value.replace(/\D/g, '').length >= 7 && $('#bdOk').checked); };
+      ['bdName', 'bdPhone', 'bdOk'].forEach(i => $('#' + i).addEventListener('input', chk));
+      snd.onclick = async () => {
+        snd.disabled = true; snd.textContent = 'Sending…'; RF.bname = $('#bdName').value.trim(); RF.bphone = $('#bdPhone').value.trim();
+        try { const d = await call('/api/bids', { method: 'POST', body: JSON.stringify({ homeId: p.id, homeName: p.name, ask, amount: ask * RF.bid, name: RF.bname, phone: RF.bphone, consent: true, website: $('#bdWeb').value }) }); RF.bidId = d.id; RF.bidToken = d.token; sync(d); track('bid', p.id); re(); }
+        catch (e) { snd.disabled = false; snd.textContent = 'Send offer to the seller'; const er = $('#bdErr'); er.textContent = 'We could not send the offer. Please check the details, or call ' + SUPPORT.name + ' on ' + fmtPhone(SUPPORT.phone) + '.'; er.hidden = false; }
+      };
+    }
+    const nw = $('#bdNew'); if (nw) nw.onclick = async () => { nw.disabled = true; try { sync(await call('/api/bids/' + RF.bidId + '/respond', { method: 'POST', body: JSON.stringify({ token: RF.bidToken, action: 'offer', amount: ask * RF.bid }) })); re(); } catch (e) { nw.disabled = false; toast('Could not send the offer', 'info'); } };
+    const ac = $('#bdAcc'); if (ac) ac.onclick = async () => { ac.disabled = true; try { sync(await call('/api/bids/' + RF.bidId + '/respond', { method: 'POST', body: JSON.stringify({ token: RF.bidToken, action: 'accept_counter' }) })); re(); } catch (e) { ac.disabled = false; toast('Could not accept', 'info'); } };
+    if (RF.bidId && (RF.bidStatus === 'pending')) RF_POLL = setInterval(async () => {
+      if (curView !== 'reserve' || rkeys()[RF.step] !== 'bid') return clearInterval(RF_POLL);
+      try { const d = await call('/api/bids/' + RF.bidId + '?token=' + RF.bidToken); if (d.updated !== RF.bidUpd) { sync(d); toast(d.status === 'accepted' ? 'The seller accepted your offer' : 'The seller replied', 'ok'); re(); } } catch (e) { /* keep trying */ }
+    }, 4000);
+  } else if (k === 'bid') {
     const sl = $('#bid'), show = () => { $('#bidV').innerHTML = px(ask * sl.value / 100, true); refreshPrices($('#bidV')); };
     show(); sl.oninput = () => { RF.bid = sl.value / 100; show(); };
     const send = $('#bidGo'); if (send) send.onclick = () => bidRound(ask, re);

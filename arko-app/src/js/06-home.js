@@ -4,7 +4,7 @@ let curView = 'home';
 
 function showView(name) {
   for (const k in V) V[k].hidden = (k !== name);
-  curView = name; document.body.dataset.view = name; scrollTo(0, 0);
+  curView = name; document.body.dataset.view = name; scrollTo(0, 0); track('view', name);
   $$('[data-nav]').forEach(b => b.classList.toggle('on', b.dataset.nav === (name === 'tracker' ? 'tracker' : 'home')));
   reveal(V[name]);
   if (name === 'home') $$('.seg', V.home).forEach(s => s._place && s._place());
@@ -83,6 +83,7 @@ async function renderCards(anim = true) {
 }
 function setMarket(v, scroll) {
   if (S.market === v) return;
+  track('market', v);
   S.market = v;
   $$('.seg[data-seg="market"]').forEach(s => { $$('button', s).forEach(b => b.setAttribute('aria-selected', String(b.dataset.v === v))); s._place && s._place(); });
   const off = v === 'off';
@@ -168,7 +169,7 @@ function renderIntent() {
 S.renderIntent = renderIntent;
 function applyIntent() {
   const sel = $('#fBud'); sel.value = S.bud ? String(S.bud) : '';
-  S.sort = 'featured'; $('#sort').value = 'featured';
+  S.sort = 'featured'; $('#sort').value = 'featured'; track('intent', S.goal + ' / ' + (S.bud || 'any') + ' / ' + S.market);
   renderCards(true); $('#explore').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
   toast('Showing homes that match');
 }

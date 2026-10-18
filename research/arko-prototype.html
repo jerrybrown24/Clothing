@@ -312,6 +312,37 @@ function toast(msg, kind = 'ok') {
 /* call support; the server can override these through /api/config */
 const SUPPORT = { name: 'Ajinkya', phone: '+971586352359' };
 
+/* ---------- usage tracking: no cookies, no names, no phone numbers ---------- */
+let LIVE = null;                       /* null until /api/config answers; false when there is no backend */
+const TQ = [];
+const SID = (() => { try { let s = sessionStorage.getItem('arkoSid'); if (!s) { s = Math.random().toString(36).slice(2, 12) + Date.now().toString(36); sessionStorage.setItem('arkoSid', s); } return s; } catch (e) { return 'x' + Math.random().toString(36).slice(2, 12); } })();
+const DNT = navigator.doNotTrack === '1' || window.doNotTrack === '1';
+const REF = (() => { try { return document.referrer ? new URL(document.referrer).host : ''; } catch (e) { return ''; } })();
+let refSent = false;
+function sendEvent(e) {
+  const body = JSON.stringify(e);
+  try { if (navigator.sendBeacon && navigator.sendBeacon('/api/event', new Blob([body], { type: 'application/json' }))) return; } catch (x) { /* fall through */ }
+  fetch('/api/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: true }).catch(() => { });
+}
+function track(type, name = '', props) {
+  if (DNT || LIVE === false) return;
+  const e = { sid: SID, type, name: String(name).slice(0, 80), view: document.body ? document.body.dataset.view || '' : '' };
+  if (props) e.props = props;
+  if (!refSent && REF) { e.ref = REF; refSent = true; }
+  if (LIVE === null) { TQ.push(e); return; }
+  sendEvent(e);
+}
+function trackReady(on) { LIVE = on; if (on) TQ.splice(0).forEach(sendEvent); else TQ.length = 0; }
+function clickName(el) {
+  if (el.dataset.track) return el.dataset.track;
+  if (el.classList.contains('card')) return 'card:' + el.dataset.id;
+  if (el.id) return '#' + el.id;
+  for (const k of ['goal', 'bud', 'kind', 'agent', 'nav', 'scroll', 'a', 'f', 'v', 'open', 'rm']) if (el.dataset[k] != null) return k + ':' + el.dataset[k];
+  if (el.classList.contains('save')) return 'save';
+  return (el.getAttribute('aria-label') || el.textContent || el.tagName).replace(/\s+/g, ' ').trim().slice(0, 40);
+}
+document.addEventListener('click', e => { const el = e.target.closest && e.target.closest('button,a,[role=button],.card,.opt,.chip,.u,.fc'); if (el && !el.closest('#toasts')) track('click', clickName(el)); }, true);
+
 /* ---------- DUMMY DATA: fictional projects and developers; real Dubai communities only ---------- */
 const PROJ = [
   { id: 'azure-reach', name: 'Azure Reach', dev: 'Tidewater Developments', area: 'Dubai Marina', mood: 'dusk', kind: 'tower', set: 'water', seed: 11,
@@ -917,7 +948,7 @@ let curView = 'home';
 
 function showView(name) {
   for (const k in V) V[k].hidden = (k !== name);
-  curView = name; document.body.dataset.view = name; scrollTo(0, 0);
+  curView = name; document.body.dataset.view = name; scrollTo(0, 0); track('view', name);
   $$('[data-nav]').forEach(b => b.classList.toggle('on', b.dataset.nav === (name === 'tracker' ? 'tracker' : 'home')));
   reveal(V[name]);
   if (name === 'home') $$('.seg', V.home).forEach(s => s._place && s._place());
@@ -996,6 +1027,7 @@ async function renderCards(anim = true) {
 }
 function setMarket(v, scroll) {
   if (S.market === v) return;
+  track('market', v);
   S.market = v;
   $$('.seg[data-seg="market"]').forEach(s => { $$('button', s).forEach(b => b.setAttribute('aria-selected', String(b.dataset.v === v))); s._place && s._place(); });
   const off = v === 'off';
@@ -1081,7 +1113,7 @@ function renderIntent() {
 S.renderIntent = renderIntent;
 function applyIntent() {
   const sel = $('#fBud'); sel.value = S.bud ? String(S.bud) : '';
-  S.sort = 'featured'; $('#sort').value = 'featured';
+  S.sort = 'featured'; $('#sort').value = 'featured'; track('intent', S.goal + ' / ' + (S.bud || 'any') + ' / ' + S.market);
   renderCards(true); $('#explore').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
   toast('Showing homes that match');
 }
@@ -1148,7 +1180,7 @@ const FEES = price => ({ dld: price * .04, trustee: 4000 * 1.05, admin: 580 });
 
 function openItem(id, srcImg) {
   const it = byId(id); if (!it) return;
-  S.pid = id; S.unit = null; S.planKey = it.plan || null;
+  S.pid = id; S.unit = null; S.planKey = it.plan || null; track('home', id, { n: it.name });
   if (srcImg && !RM) srcImg.style.viewTransitionName = 'hero';
   go('project', () => buildProject(it), () => { if (srcImg) srcImg.style.viewTransitionName = ''; });
 }
@@ -1347,6 +1379,7 @@ async function sendLead(payload) {
   return r.json();
 }
 function openAgent(mode) {
+  track('agent', mode || 'menu');
   const sup = SUPPORT, tel = fmtPhone(sup.phone);
   const days = [...Array(5)].map((_, i) => new Date(Date.now() + (i + 1) * 864e5).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }));
   const chips = (id, arr, sel) => `<div class="chipset" id="${id}">${arr.map((x, i) => `<button type="button" class="chip" aria-pressed="${i === sel}" data-v="${x}">${x}</button>`).join('')}</div>`;
@@ -1369,6 +1402,7 @@ function openAgent(mode) {
     const when = mode === 'call' ? sel('agWhen') : sel('agDay') + ' at ' + sel('agTime'), item = byId(S.pid);
     go.disabled = true; go.textContent = 'Sending…'; $('#agErr').hidden = true;
     try {
+      track('lead', mode);
       await sendLead({ kind: mode, name: $('#agName').value.trim(), phone: $('#agPhone').value.trim(), when, home: item ? item.name : '', budget: S.bud || 0, goal: S.goal || '', consent: $('#agOk').checked, website: $('#agWeb').value });
       S.agent = { mode, when }; setAdvSt();
       $('#modal .sheet').innerHTML = `<button class="x" data-close aria-label="Close">${ICON.close || ICON.x}</button><div class="okc">${ICON.check}</div><h2>${mode === 'call' ? 'Call back requested' : 'Meeting booked'}</h2><p class="sub">${mode === 'call' ? 'We will call you: ' + when + '.' : when + ', ARKO lounge, Business Bay.'} If it is urgent, call ${sup.name} on <b>${tel}</b>.</p><button class="btn btn-primary" data-close>Done</button>`;
@@ -1392,7 +1426,7 @@ function openReserve() {
   go('reserve', renderReserve, () => { });
 }
 function renderReserve() {
-  const p = byId(S.pid), u = S.unit, el = V.reserve, k = S.step;
+  const p = byId(S.pid), u = S.unit, el = V.reserve, k = S.step; track('eoi_step', p.id + ':' + k);
   const price = u.price, f = FEES(price);
   const side = `<aside class="rs-side"><div class="rs-img"><img alt="" src="${imgFor(p)}"></div><h3>${p.name}</h3><p>${u.type} · ${u.size} sqft · unit ${u.no}</p><div class="ln"><span>Price</span>${px(price)}</div><div class="ln"><span>Plan</span><b>${S.planKey}</b></div><div class="ln"><span>EOI amount</span>${px(DEP)}</div><p class="mini">${ICON.lock} Paid straight into the project escrow account.</p></aside>`;
   const bar = `<ol class="stepper">${STEPS.map((s, i) => `<li class="${i < k ? 'done' : i === k ? 'cur' : ''}"><i>${i < k ? ICON.check : i + 1}</i><span>${s}</span></li>`).join('')}</ol>`;
@@ -1576,7 +1610,7 @@ function buildTracker() {
 
 /* ---------- ready-home flow: viewing, bidding, cash or loan, payment, DLD ---------- */
 const RF0 = { step: 0, mode: 'In person', day: 0, time: 0, booked: false, bid: .97, round: 0, log: [], accepted: false, final: 0, counter: 0, pay: null, bank: null, docs: {}, ms: 0, valued: false, loanAmt: 0, loan: null, paid: false, sig: false };
-let RF = {};
+let RF = {}, RF_POLL = 0;
 const BANKS = ['Gulfstream Bank', 'Falcon Commercial', 'Oasis Islamic Bank', 'Meridian National'];
 const LDOCS = ['Emirates ID and passport', 'Salary certificate', 'Last 6 months bank statements', 'Liability letter', 'Signed offer on the property'];
 const rkeys = () => ['view', 'bid', 'mode', ...(RF.pay === 'loan' ? ['loan'] : []), 'pay', 'sign'];
@@ -1585,11 +1619,12 @@ const dayLabels = () => [...Array(5)].map((_, i) => new Date(Date.now() + (i + 1
 const TIMES = ['10:00', '12:30', '16:00', '18:30'];
 
 function openViewing() {
+  clearInterval(RF_POLL);
   RF = JSON.parse(JSON.stringify(RF0)); RF.docs = {}; RF.log = [];
   go('reserve', renderReady);
 }
 function renderReady() {
-  const p = byId(S.pid), keys = rkeys(), k = keys[RF.step], el = V.reserve, ask = p.price;
+  const p = byId(S.pid), keys = rkeys(), k = keys[RF.step], el = V.reserve, ask = p.price; track('ready_step', p.id + ':' + k);
   const fp = RF.final || ask, f = feesOf(p, fp);
   const side = `<aside class="rs-side"><div class="rs-img"><img alt="" src="${imgFor(p)}"></div><h3>${p.name}</h3><p>${p.unit} · ${p.area}</p><div class="ln"><span>Asking price</span>${px(ask)}</div>${RF.accepted ? `<div class="ln"><span>Agreed price</span><b>${px(RF.final)}</b></div>` : ''}${RF.pay ? `<div class="ln"><span>Payment</span><b>${RF.pay === 'loan' ? 'Bank loan' : 'Cash'}</b></div>` : ''}<p class="mini">${ICON.lock} Deposit and transfer go through a DLD trustee office.</p></aside>`;
   const bar = `<ol class="stepper">${keys.map((s, i) => `<li class="${i < RF.step ? 'done' : i === RF.step ? 'cur' : ''}"><i>${i < RF.step ? ICON.check : i + 1}</i><span>${RNAME[s]}</span></li>`).join('')}</ol>`;
@@ -1601,6 +1636,18 @@ function renderReady() {
      <div class="seg" id="vmode"><button data-v="In person" aria-selected="${RF.mode === 'In person'}">In person</button><button data-v="Live video" aria-selected="${RF.mode === 'Live video'}">Live video</button><span class="thumb"></span></div>
      <p class="mini mt">Day</p>${chips('vday', dayLabels(), RF.day)}<p class="mini mt">Time</p>${chips('vtime', TIMES, RF.time)}
      ${RF.booked ? `<div class="vf-res"><div class="okc">${ICON.check}</div><b>Viewing booked</b><span>${RF.mode}, ${dayLabels()[RF.day]} at ${TIMES[RF.time]}. (Demo) Continue once you have viewed the home.</span></div>` : `<button class="btn btn-primary mt" id="vBook">Book viewing</button>`}`;
+  } else if (k === 'bid' && LIVE) {
+    ok = RF.accepted; nextLbl = 'Continue';
+    const st = RF.bidStatus, bubbles = (RF.bidLog || []).map(l => `<div class="bub ${l.by === 'buyer' ? 'me' : 'seller'}">${l.text}${l.amount ? ': ' + money(l.amount, true) : ''}</div>`).join('');
+    const slider = `<div class="bid"><div class="big" id="bidV"></div><input type="range" id="bid" min="90" max="100" step="0.5" value="${(RF.bid * 100).toFixed(1)}"></div>`;
+    const who = `<label class="fld">Your name<input id="bdName" autocomplete="name" maxlength="80" value="${RF.bname || ''}"></label><label class="fld">Mobile number<input id="bdPhone" type="tel" autocomplete="tel" maxlength="20" placeholder="+971 50 000 0000" value="${RF.bphone || ''}"></label><input id="bdWeb" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"><label class="chk"><input type="checkbox" id="bdOk"><span>I agree that ARKO may contact me about this offer and store my details for that purpose.</span></label>`;
+    let body;
+    if (!RF.bidId) body = `${slider}${who}<p class="err" id="bdErr" role="alert" hidden></p><button class="btn btn-primary mt" id="bdSend" disabled>Send offer to the seller</button>`;
+    else if (st === 'pending') body = `<div class="vf-res"><div class="spin"></div><b>Offer sent: ${money(RF.bidAmount, true)}</b><span>Waiting for the seller. You can keep this page open. It updates by itself.</span></div><div class="bubs">${bubbles}</div>`;
+    else if (st === 'countered') body = `<div class="bubs">${bubbles}</div><div class="card-s"><b>The seller counters at ${money(RF.bidCounter, true)}</b></div><div class="row l"><button class="btn btn-primary" id="bdAcc">Accept ${money(RF.bidCounter, true)}</button></div><h4 class="mt">Or send a new offer</h4>${slider}<button class="btn btn-ghost" id="bdNew">Send new offer</button>`;
+    else if (st === 'rejected') body = `<div class="bubs">${bubbles}</div><div class="card-s"><b>The seller declined that offer.</b><p class="mini">You can send a new offer closer to the asking price.</p></div>${slider}<button class="btn btn-primary mt" id="bdNew">Send new offer</button>`;
+    else body = `<div class="bubs">${bubbles}</div><div class="vf-res"><div class="okc">${ICON.check}</div><b>Deal closed at ${px(RF.final)}</b><span>Offer accepted by the seller.</span></div>`;
+    panel = `<h2>Make your offer</h2><p class="sub">Asking price ${px(ask)}. Your offer goes to the seller, who accepts, counters or declines.</p>${body}`;
   } else if (k === 'bid') {
     ok = RF.accepted; nextLbl = 'Continue';
     const bubbles = RF.log.map(l => `<div class="bub ${l[0]}">${l[1]}</div>`).join('');
@@ -1644,7 +1691,29 @@ function renderReady() {
     ['vday', 'vtime'].forEach(id => { const b = $('#' + id); b.onclick = e => { const c = e.target.closest('.chip'); if (!c) return; $$('.chip', b).forEach(x => x.setAttribute('aria-pressed', String(x === c))); RF[id === 'vday' ? 'day' : 'time'] = +c.dataset.i; }; });
     const bk = $('#vBook'); if (bk) bk.onclick = () => { RF.booked = true; toast('Viewing booked'); re(); };
   }
-  if (k === 'bid') {
+  clearInterval(RF_POLL);
+  if (k === 'bid' && LIVE) {
+    const sl = $('#bid'), show = () => { $('#bidV').innerHTML = px(ask * sl.value / 100, true); refreshPrices($('#bidV')); };
+    if (sl) { show(); sl.oninput = () => { RF.bid = sl.value / 100; show(); }; }
+    const sync = d => { RF.bidStatus = d.status; RF.bidAmount = d.amount; RF.bidCounter = d.counter; RF.bidLog = d.log; RF.bidUpd = d.updated; if (d.status === 'accepted') { RF.accepted = true; RF.final = d.amount; } };
+    const call = async (u, opt) => { const r = await fetch(u, { ...opt, headers: { 'Content-Type': 'application/json' } }); if (!r.ok) throw new Error(r.status); return r.json(); };
+    const snd = $('#bdSend');
+    if (snd) {
+      const chk = () => { snd.disabled = !($('#bdName').value.trim().length >= 2 && $('#bdPhone').value.replace(/\D/g, '').length >= 7 && $('#bdOk').checked); };
+      ['bdName', 'bdPhone', 'bdOk'].forEach(i => $('#' + i).addEventListener('input', chk));
+      snd.onclick = async () => {
+        snd.disabled = true; snd.textContent = 'Sending…'; RF.bname = $('#bdName').value.trim(); RF.bphone = $('#bdPhone').value.trim();
+        try { const d = await call('/api/bids', { method: 'POST', body: JSON.stringify({ homeId: p.id, homeName: p.name, ask, amount: ask * RF.bid, name: RF.bname, phone: RF.bphone, consent: true, website: $('#bdWeb').value }) }); RF.bidId = d.id; RF.bidToken = d.token; sync(d); track('bid', p.id); re(); }
+        catch (e) { snd.disabled = false; snd.textContent = 'Send offer to the seller'; const er = $('#bdErr'); er.textContent = 'We could not send the offer. Please check the details, or call ' + SUPPORT.name + ' on ' + fmtPhone(SUPPORT.phone) + '.'; er.hidden = false; }
+      };
+    }
+    const nw = $('#bdNew'); if (nw) nw.onclick = async () => { nw.disabled = true; try { sync(await call('/api/bids/' + RF.bidId + '/respond', { method: 'POST', body: JSON.stringify({ token: RF.bidToken, action: 'offer', amount: ask * RF.bid }) })); re(); } catch (e) { nw.disabled = false; toast('Could not send the offer', 'info'); } };
+    const ac = $('#bdAcc'); if (ac) ac.onclick = async () => { ac.disabled = true; try { sync(await call('/api/bids/' + RF.bidId + '/respond', { method: 'POST', body: JSON.stringify({ token: RF.bidToken, action: 'accept_counter' }) })); re(); } catch (e) { ac.disabled = false; toast('Could not accept', 'info'); } };
+    if (RF.bidId && (RF.bidStatus === 'pending')) RF_POLL = setInterval(async () => {
+      if (curView !== 'reserve' || rkeys()[RF.step] !== 'bid') return clearInterval(RF_POLL);
+      try { const d = await call('/api/bids/' + RF.bidId + '?token=' + RF.bidToken); if (d.updated !== RF.bidUpd) { sync(d); toast(d.status === 'accepted' ? 'The seller accepted your offer' : 'The seller replied', 'ok'); re(); } } catch (e) { /* keep trying */ }
+    }, 4000);
+  } else if (k === 'bid') {
     const sl = $('#bid'), show = () => { $('#bidV').innerHTML = px(ask * sl.value / 100, true); refreshPrices($('#bidV')); };
     show(); sl.oninput = () => { RF.bid = sl.value / 100; show(); };
     const send = $('#bidGo'); if (send) send.onclick = () => bidRound(ask, re);
@@ -1699,10 +1768,10 @@ function renderJourney() {
    <div class="jm-cols">${J.map((s, i) => `<div class="jc"><h4>${s[0]}</h4><small>You ask</small><p>${s[1]}</p><small>Usual friction</small><p>${s[2]}</p><small>ARKO answer</small><p class="ans">${s[3]}</p></div>`).join('')}</div>`;
   reveal($('#jm'));
 }
-fetch('/api/config').then(r => r.ok ? r.json() : null).then(c => { if (c && c.supportPhone) { SUPPORT.name = c.supportName || SUPPORT.name; SUPPORT.phone = c.supportPhone; const f = $('#supNum'); if (f) f.textContent = fmtPhone(SUPPORT.phone); } }).catch(() => { });
+fetch('/api/config').then(r => r.ok ? r.json() : null).then(c => { trackReady(!!(c && c.supportPhone)); if (c && c.supportPhone) { SUPPORT.name = c.supportName || SUPPORT.name; SUPPORT.phone = c.supportPhone; const f = $('#supNum'); if (f) f.textContent = fmtPhone(SUPPORT.phone); } }).catch(() => { trackReady(false); });
 (function () {
   initHome(); const fn = $('#supNum'); if (fn) fn.textContent = fmtPhone(SUPPORT.phone); renderJourney();
-  const cs = $('#curSeg'); initSeg(cs, v => { S.cur = v; S.drawBud && S.drawBud(); refreshPrices(); S.renderIntent(); if (S.compare.length >= 2 && !$('#modal').hidden) compareModal(); });
+  const cs = $('#curSeg'); initSeg(cs, v => { track('currency', v); S.cur = v; S.drawBud && S.drawBud(); refreshPrices(); S.renderIntent(); if (S.compare.length >= 2 && !$('#modal').hidden) compareModal(); });
   document.addEventListener('click', e => {
     const n = e.target.closest('[data-nav]'); if (n) { if (n.dataset.nav === 'tracker') goTracker(); else goHome(); return; }
     const s = e.target.closest('[data-scroll]'); if (s) { e.preventDefault(); goHome(s.dataset.scroll); return; }
@@ -1714,6 +1783,6 @@ fetch('/api/config').then(r => r.ok ? r.json() : null).then(c => { if (c && c.su
   initRotator(); split($('#l1')); $('#l1').classList.add('in'); weightField($('#l1'));
   initMarquee(); initMicro(); reveal(V.home);
   const hd = $('.hd'); addEventListener('scroll', () => hd.classList.toggle('sc', scrollY > 20), { passive: true });
-  document.body.dataset.view = 'home'; document.body.classList.add('ready');
+  document.body.dataset.view = 'home'; document.body.classList.add('ready'); track('view', 'home');
 })();
 </script>

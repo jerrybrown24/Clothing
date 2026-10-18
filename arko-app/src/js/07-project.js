@@ -14,7 +14,7 @@ const FEES = price => ({ dld: price * .04, trustee: 4000 * 1.05, admin: 580 });
 
 function openItem(id, srcImg) {
   const it = byId(id); if (!it) return;
-  S.pid = id; S.unit = null; S.planKey = it.plan || null;
+  S.pid = id; S.unit = null; S.planKey = it.plan || null; track('home', id, { n: it.name });
   if (srcImg && !RM) srcImg.style.viewTransitionName = 'hero';
   go('project', () => buildProject(it), () => { if (srcImg) srcImg.style.viewTransitionName = ''; });
 }
@@ -213,6 +213,7 @@ async function sendLead(payload) {
   return r.json();
 }
 function openAgent(mode) {
+  track('agent', mode || 'menu');
   const sup = SUPPORT, tel = fmtPhone(sup.phone);
   const days = [...Array(5)].map((_, i) => new Date(Date.now() + (i + 1) * 864e5).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }));
   const chips = (id, arr, sel) => `<div class="chipset" id="${id}">${arr.map((x, i) => `<button type="button" class="chip" aria-pressed="${i === sel}" data-v="${x}">${x}</button>`).join('')}</div>`;
@@ -235,6 +236,7 @@ function openAgent(mode) {
     const when = mode === 'call' ? sel('agWhen') : sel('agDay') + ' at ' + sel('agTime'), item = byId(S.pid);
     go.disabled = true; go.textContent = 'Sending…'; $('#agErr').hidden = true;
     try {
+      track('lead', mode);
       await sendLead({ kind: mode, name: $('#agName').value.trim(), phone: $('#agPhone').value.trim(), when, home: item ? item.name : '', budget: S.bud || 0, goal: S.goal || '', consent: $('#agOk').checked, website: $('#agWeb').value });
       S.agent = { mode, when }; setAdvSt();
       $('#modal .sheet').innerHTML = `<button class="x" data-close aria-label="Close">${ICON.close || ICON.x}</button><div class="okc">${ICON.check}</div><h2>${mode === 'call' ? 'Call back requested' : 'Meeting booked'}</h2><p class="sub">${mode === 'call' ? 'We will call you: ' + when + '.' : when + ', ARKO lounge, Business Bay.'} If it is urgent, call ${sup.name} on <b>${tel}</b>.</p><button class="btn btn-primary" data-close>Done</button>`;

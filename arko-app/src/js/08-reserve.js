@@ -10,7 +10,7 @@ function openReserve() {
   go('reserve', renderReserve, () => { });
 }
 function renderReserve() {
-  const p = byId(S.pid), u = S.unit, el = V.reserve, k = S.step;
+  const p = byId(S.pid), u = S.unit, el = V.reserve, k = S.step; track('eoi_step', p.id + ':' + k);
   const price = u.price, f = FEES(price);
   const side = `<aside class="rs-side"><div class="rs-img"><img alt="" src="${imgFor(p)}"></div><h3>${p.name}</h3><p>${u.type} · ${u.size} sqft · unit ${u.no}</p><div class="ln"><span>Price</span>${px(price)}</div><div class="ln"><span>Plan</span><b>${S.planKey}</b></div><div class="ln"><span>EOI amount</span>${px(DEP)}</div><p class="mini">${ICON.lock} Paid straight into the project escrow account.</p></aside>`;
   const bar = `<ol class="stepper">${STEPS.map((s, i) => `<li class="${i < k ? 'done' : i === k ? 'cur' : ''}"><i>${i < k ? ICON.check : i + 1}</i><span>${s}</span></li>`).join('')}</ol>`;
