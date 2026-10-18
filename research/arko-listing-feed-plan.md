@@ -25,9 +25,15 @@ Status: plan only. The prototype still runs on fictional demo data and illustrat
 3. When a feed exists, fill the field map in `arko-feed-adapter.mjs` and run its self-test.
 
 ## DLD open data: how it is wired
-1. Download the Transactions CSV from the DLD open-data page (a captcha is needed, so this step is manual).
-2. `python3 dld-ingest.py Transactions.csv dld-area-stats.json` gives per-area median AED/sqft, 12-month and 3-year growth, sales count and off-plan share. Areas with fewer than 15 sales in a window get no value. Check the `AREA_MAP` names in the script against your file.
-3. From `arko-src/`, run `python3 build2.py ../dld-area-stats.json` to rebuild the page with the data inside. It writes `artifact.html`. Areas with DLD data show a "DLD data" tag on the Analysis card; the rest stay marked "demo".
-4. Rental yield still needs the DLD rent-contracts dataset. It is not wired yet.
+Built from the two files you uploaded on 18 Oct 2026.
+1. `python3 dld-ingest.py Transactions.csv dld-area-stats.json residential_sale_index.csv`
+2. From `arko-src/`: `python3 build2.py ../dld-area-stats.json` rebuilds the page with the data inside.
+3. What the page now shows for the 10 mapped areas: median AED per sqft (single-unit flat sales, 1 Jan to 16 Oct 2026), off-plan vs ready price gap, share of off-plan sales, sales count. Dubai-wide flat price growth comes from the index file.
+4. Limits: the transactions file covers 9.5 months, so no area growth figure is shown (a few months of mixed off-plan and ready sales would mislead). The index file stops at May 2024. Rental yield still needs DLD's rent-contracts data. The Springs has no flat figure (villas). Area name mapping, especially Dubai Hills and MBR City, needs a local check.
 
-The pipeline was tested on a synthetic file only (known 10% yearly growth gave 9.8% and 33% over 3 years). The published page contains no DLD numbers yet.
+## Getting this automatically instead of uploading
+- **No public live feed of listings or transactions exists.** DLD's open data is a CSV that has to be downloaded behind a captcha, and the official feed is refreshed on DLD's schedule, not in real time.
+- **Dubai Pulse (data.dubai)**: DLD publishes the same datasets there. Registered users can reach datasets through its API (OAuth credentials from your Dubai Pulse account). Check the dataset page for the API option and its limits. This is the route to automate.
+- **DLD API Gateway** (dubailand.gov.ae/en/eservices/api-gateway): Mollak, Trakheesi and Oqood. These are for licensed parties (developers, brokers, escrow and service-charge entities) and need DLD registration. They carry project-level and permit data, which suits ARKO once the brokerage is licensed.
+- **Third-party APIs** resell the same DLD data as JSON. Easier, but check the licence and cost, and that DLD is credited as the source.
+- **Recommended setup:** a nightly job on a small server pulls the Dubai Pulse API, runs `dld-ingest.py`, writes `dld-area-stats.json`, and the site reads that file. ARKO then always shows data up to the last DLD refresh, with the as-of date on screen.

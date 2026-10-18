@@ -221,7 +221,100 @@ select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='htt
 <nav class="tabbar"><button data-nav="home">Explore</button><button id="talkBtn2">Talk to us</button><button data-nav="tracker">My purchase</button></nav>
 <div id="modal" hidden></div><div id="toasts" aria-live="polite"></div>
 </div>
-<script type="application/json" id="dld">null</script>
+<script type="application/json" id="dld">{
+ "source": "Dubai Land Department open data",
+ "from": "2026-01-01",
+ "asOf": "2026-10-16",
+ "rows": 100781,
+ "areas": {
+  "Dubai Marina": {
+   "dldArea": "DUBAI MARINA",
+   "n": 1410,
+   "medPpsf": 1912,
+   "offMed": 2643,
+   "readyMed": 1851,
+   "offShare": 8
+  },
+  "Downtown Dubai": {
+   "dldArea": "BURJ KHALIFA",
+   "n": 1451,
+   "medPpsf": 2719,
+   "offMed": 3440,
+   "readyMed": 2461,
+   "offShare": 29
+  },
+  "Palm Jumeirah": {
+   "dldArea": "PALM JUMEIRAH",
+   "n": 755,
+   "medPpsf": 3558,
+   "offMed": 5823,
+   "readyMed": 2677,
+   "offShare": 35
+  },
+  "Dubai Hills Estate": {
+   "dldArea": "DUBAI HILLS",
+   "n": 758,
+   "medPpsf": 2290,
+   "offMed": 2265,
+   "readyMed": 2301,
+   "offShare": 21
+  },
+  "Business Bay": {
+   "dldArea": "BUSINESS BAY",
+   "n": 3708,
+   "medPpsf": 2402,
+   "offMed": 2693,
+   "readyMed": 1845,
+   "offShare": 53
+  },
+  "Jumeirah Village Circle": {
+   "dldArea": "JUMEIRAH VILLAGE CIRCLE",
+   "n": 7587,
+   "medPpsf": 1452,
+   "offMed": 1559,
+   "readyMed": 1270,
+   "offShare": 58
+  },
+  "Dubai Creek Harbour": {
+   "dldArea": "DUBAI CREEK HARBOUR",
+   "n": 1012,
+   "medPpsf": 2317,
+   "offMed": 2330,
+   "readyMed": 2315,
+   "offShare": 11
+  },
+  "MBR City": {
+   "dldArea": "MEYDAN ONE",
+   "n": 999,
+   "medPpsf": 2071,
+   "offMed": 2274,
+   "readyMed": 1971,
+   "offShare": 35
+  },
+  "Al Furjan": {
+   "dldArea": "AL FURJAN",
+   "n": 1098,
+   "medPpsf": 1351,
+   "offMed": 1425,
+   "readyMed": 1265,
+   "offShare": 54
+  },
+  "Jumeirah Lake Towers": {
+   "dldArea": "JUMEIRAH LAKES TOWERS",
+   "n": 1048,
+   "medPpsf": 1578,
+   "offMed": 2217,
+   "readyMed": 1435,
+   "offShare": 41
+  }
+ },
+ "city": {
+  "asOf": "2024-05",
+  "flat12m": 13.5,
+  "flat3y": 65.9,
+  "note": "Dubai-wide flat price index, DLD"
+ }
+}</script>
 <script>/* ---------- utilities and shared state ---------- */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -1134,7 +1227,7 @@ let tw3d = null, spy = null, lookRaf = 0;
 const DLD = (() => { try { const d = JSON.parse($('#dld').textContent); return d && d.areas ? d : null; } catch (e) { return null; } })();
 const dldOf = it => DLD && DLD.areas[it.area];
 const medOf = it => (dldOf(it) && dldOf(it).medPpsf) || it.med || Math.round(it.ppsf * (.95 + R(hash(it.id))() * .1));
-const areaStats = it => { const r = R(hash(it.area)), d = dldOf(it), o = { g1: +(4 + r() * 7).toFixed(1), g3: Math.round(14 + r() * 20), yld: +(5.2 + r() * 2).toFixed(1), supply: ['Low', 'Balanced', 'Rising'][Math.floor(r() * 3)], demand: Math.round(70 + r() * 25) }; if (d) { if (d.g1 != null) o.g1 = d.g1; if (d.g3 != null) o.g3 = d.g3; o.real = true; o.n12 = d.n12; } return o; };
+const areaStats = it => { const r = R(hash(it.area)), d = dldOf(it), o = { g1: +(4 + r() * 7).toFixed(1), g3: Math.round(14 + r() * 20), yld: +(5.2 + r() * 2).toFixed(1), supply: ['Low', 'Balanced', 'Rising'][Math.floor(r() * 3)], demand: Math.round(70 + r() * 25) }; if (d) { o.real = true; o.n = d.n; o.offMed = d.offMed; o.readyMed = d.readyMed; o.offShare = d.offShare; } return o; };
 const priceOf = it => it.type === 'off' ? (S.unit ? S.unit.price : it.from) : it.price;
 const sizeOf = it => it.type === 'off' ? (S.unit ? S.unit.size : it.types[0][1]) : it.size;
 const feesOf = (it, price) => { const off = it.type === 'off'; return { dld: price * .04, trustee: 4000 * 1.05, admin: 580, agency: off ? 0 : price * .02 * 1.05 }; };
@@ -1196,11 +1289,11 @@ function viewHTML(it) {
 }
 function analysisHTML(it) {
   const off = it.type === 'off', a = areaStats(it), med = medOf(it), vs = (it.ppsf / med - 1) * 100, max = Math.max(it.ppsf, med) * 1.1;
-  return `<section id="pjAn" class="sec"><h2 data-split>The numbers behind the price</h2><p class="sub">Area returns, rental yield, total cost and a return model you can adjust. ${DLD ? 'Area growth and median price are from DLD open data to ' + DLD.asOf + ' where the area has enough sales; other figures are demo values.' : 'All figures are illustrative demo values.'} Not advice.</p>
+  return `<section id="pjAn" class="sec"><h2 data-split>The numbers behind the price</h2><p class="sub">Area returns, rental yield, total cost and a return model you can adjust. ${DLD ? 'Median price per sqft comes from DLD open data (flat sales to ' + DLD.asOf + ') where the area has enough sales; project prices, yields and the return model are demo values.' : 'All figures are illustrative demo values.'} Not advice.</p>
   <div class="ins">
-   <div class="card-s"><h4>Area returns · ${it.area}${a.real ? ' <span class="src">DLD data, ' + a.n12 + ' sales in 12 months</span>' : ' <span class="src demo">demo</span>'}</h4><div class="two-big"><div><div class="big">+${a.g1}%</div><small>price growth, last 12 months</small></div><div><div class="big">+${a.g3}%</div><small>last 3 years</small></div></div>
-    ${bar('This home', it.ppsf, max, 'AED ' + it.ppsf.toLocaleString(), 'hi')}${bar('Area median', med, max, 'AED ' + med.toLocaleString())}<p class="mini">${Math.abs(vs).toFixed(1)}% ${vs > 0 ? 'above' : 'below'} the area median per sqft. Supply is ${a.supply.toLowerCase()}; rental demand ${a.demand}/100.</p>
-    <svg viewBox="0 0 300 80" class="spark" role="img" aria-label="Price trend rising"><path d="${sparkPath(it)}" pathLength="1"/></svg></div>
+   <div class="card-s"><h4>Area returns · ${it.area}${a.real ? ' <span class="src">DLD data, ' + a.n + ' sales</span>' : ' <span class="src demo">demo</span>'}</h4>${a.real ? `<div class="two-big"><div><div class="big">AED ${med.toLocaleString()}</div><small>median per sqft, flats sold ${DLD.from.slice(0, 7)} to ${DLD.asOf.slice(0, 7)}</small></div><div><div class="big">${a.offMed && a.readyMed ? (a.offMed / a.readyMed - 1 >= 0 ? '+' : '') + Math.round((a.offMed / a.readyMed - 1) * 100) + '%' : '–'}</div><small>off-plan vs ready price</small></div></div>` : `<div class="two-big"><div><div class="big">+${a.g1}%</div><small>price growth, last 12 months (demo)</small></div><div><div class="big">+${a.g3}%</div><small>last 3 years (demo)</small></div></div>`}
+    ${bar('This home', it.ppsf, max, 'AED ' + it.ppsf.toLocaleString(), 'hi')}${bar('Area median', med, max, 'AED ' + med.toLocaleString())}<p class="mini">${Math.abs(vs).toFixed(1)}% ${vs > 0 ? 'above' : 'below'} the area median per sqft${a.real ? ` (${a.offShare}% of these sales were off-plan)` : ''}. ${a.real ? '' : `Supply is ${a.supply.toLowerCase()}; rental demand ${a.demand}/100.`}</p>
+    ${a.real && DLD.city ? `<p class="mini">Dubai-wide, flat prices rose ${DLD.city.flat12m}% in the 12 months to ${DLD.city.asOf}, the latest month in DLD's index file.</p>` : `<svg viewBox="0 0 300 80" class="spark" role="img" aria-label="Illustrative price trend"><path d="${sparkPath(it)}" pathLength="1"/></svg>`}</div>
    <div class="card-s"><h4>Rental yield</h4><div class="big" id="yNet"></div><small class="mini">net, after service charges</small>${bar('Gross yield', it.yld, 9, it.yld + '%', 'hi')}${bar('Area average', a.yld, 9, a.yld + '%')}<p class="mini">Estimated rent about ${px(it.type === 'off' ? it.from * it.yld / 100 : it.rent)} a year.${off ? ' Rent starts after handover, ' + it.ho + '.' : ''}</p></div>
    <div class="card-s"><h4>Total project cost</h4><div id="costBox"></div></div>
    <div class="card-s wide"><h4>Return model</h4><div class="mdl"><div class="mdl-in">

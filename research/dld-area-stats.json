@@ -1,0 +1,94 @@
+{
+ "source": "Dubai Land Department open data",
+ "from": "2026-01-01",
+ "asOf": "2026-10-16",
+ "rows": 100781,
+ "areas": {
+  "Dubai Marina": {
+   "dldArea": "DUBAI MARINA",
+   "n": 1410,
+   "medPpsf": 1912,
+   "offMed": 2643,
+   "readyMed": 1851,
+   "offShare": 8
+  },
+  "Downtown Dubai": {
+   "dldArea": "BURJ KHALIFA",
+   "n": 1451,
+   "medPpsf": 2719,
+   "offMed": 3440,
+   "readyMed": 2461,
+   "offShare": 29
+  },
+  "Palm Jumeirah": {
+   "dldArea": "PALM JUMEIRAH",
+   "n": 755,
+   "medPpsf": 3558,
+   "offMed": 5823,
+   "readyMed": 2677,
+   "offShare": 35
+  },
+  "Dubai Hills Estate": {
+   "dldArea": "DUBAI HILLS",
+   "n": 758,
+   "medPpsf": 2290,
+   "offMed": 2265,
+   "readyMed": 2301,
+   "offShare": 21
+  },
+  "Business Bay": {
+   "dldArea": "BUSINESS BAY",
+   "n": 3708,
+   "medPpsf": 2402,
+   "offMed": 2693,
+   "readyMed": 1845,
+   "offShare": 53
+  },
+  "Jumeirah Village Circle": {
+   "dldArea": "JUMEIRAH VILLAGE CIRCLE",
+   "n": 7587,
+   "medPpsf": 1452,
+   "offMed": 1559,
+   "readyMed": 1270,
+   "offShare": 58
+  },
+  "Dubai Creek Harbour": {
+   "dldArea": "DUBAI CREEK HARBOUR",
+   "n": 1012,
+   "medPpsf": 2317,
+   "offMed": 2330,
+   "readyMed": 2315,
+   "offShare": 11
+  },
+  "MBR City": {
+   "dldArea": "MEYDAN ONE",
+   "n": 999,
+   "medPpsf": 2071,
+   "offMed": 2274,
+   "readyMed": 1971,
+   "offShare": 35
+  },
+  "Al Furjan": {
+   "dldArea": "AL FURJAN",
+   "n": 1098,
+   "medPpsf": 1351,
+   "offMed": 1425,
+   "readyMed": 1265,
+   "offShare": 54
+  },
+  "Jumeirah Lake Towers": {
+   "dldArea": "JUMEIRAH LAKES TOWERS",
+   "n": 1048,
+   "medPpsf": 1578,
+   "offMed": 2217,
+   "readyMed": 1435,
+   "offShare": 41
+  }
+ },
+ "city": {
+  "asOf": "2024-05",
+  "flat12m": 13.5,
+  "flat3y": 65.9,
+  "note": "Dubai-wide flat price index, DLD"
+ }
+}
