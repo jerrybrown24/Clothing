@@ -1,4 +1,4 @@
-<title>Manzil</title>
+<title>ARKO</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>:root{--bg:#F7F5F0;--ink:#0A2A2E;--ink2:#4B6165;--line:rgba(10,42,46,.12);--teal:#0E7C79;--teal2:#095C5A;--coral:#FF7A59;--mint:#C6EEE4;--sky:#D3E9F7;--sand:#FFD9B8;--card:#fff;--glass:rgba(255,255,255,.66);--r:22px;--sh:0 1px 2px rgba(10,42,46,.06),0 12px 32px -12px rgba(10,42,46,.16);--ease:cubic-bezier(.2,.8,.2,1);--disp:'Bricolage Grotesque',system-ui,sans-serif;--body:Figtree,system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace}
 *{box-sizing:border-box}html{scroll-padding-top:90px}[hidden]{display:none!important}
@@ -129,14 +129,51 @@ select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='htt
 #cursor .ring.big~.dot{opacity:0}
 .stepper li.cur i{color:var(--ink)}
 @media(max-width:640px){.dp{display:none}.hd{padding:10px 12px}.brand{font-size:19px}.brand svg{width:24px}.hd-in{gap:8px}#curSeg button{padding:7px 9px;font-size:12px}.cta .btn{white-space:nowrap}#cursor,#trail{display:none}}
+/* ---- ARKO revision ---- */
+.brand span{letter-spacing:.14em;font-weight:800}
+.talk{background:var(--ink)!important;color:#fff!important}.talk:hover{background:var(--teal2)!important}
+.intent{margin-top:30px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.3);padding:22px 24px;border-radius:28px;box-shadow:var(--sh);max-width:760px}
+.int-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font:600 12px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--teal)}
+.dots{display:flex;gap:8px}.dots i{width:28px;height:6px;border-radius:3px;background:var(--line);transition:all .4s var(--ease)}.dots i.cur{background:var(--coral);width:44px}.dots i.done{background:var(--teal)}
+.intent h3{font-size:26px;margin-bottom:14px}.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.opts.b3{grid-template-columns:repeat(3,1fr)}
+.opt{text-align:left;padding:16px 18px;border-radius:18px;border:1.5px solid var(--line);background:rgba(255,255,255,.7);transition:all .25s var(--ease)}.opt:hover{border-color:var(--teal);transform:translateY(-3px)}.opt.hit,.opt.sel{background:var(--ink);color:#fff;border-color:var(--ink)}.opt b{display:block;font:700 17px var(--disp)}.opt span{font-size:13px;opacity:.7}
+.int-sum{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.int-sum h3{margin:0;font-size:22px}
+.match{position:absolute;right:12px;bottom:12px;padding:5px 10px;border-radius:99px;background:var(--mint);font:700 12px var(--body);color:var(--teal2)}
+.filters{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0 0}.filters label{display:flex;flex-direction:column;gap:4px;font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);min-width:150px}.filters .bar{margin:0}
+.journey{background:linear-gradient(180deg,var(--bg),#EDF5F2);padding:80px 0}
+.dt{list-style:none;margin:30px 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;counter-reset:d}.dt li{background:#fff;border-radius:18px;padding:16px;box-shadow:var(--sh)}.dt b{display:block;font:700 18px var(--disp);color:var(--teal)}.dt span{font-size:13px;color:var(--ink2)}
+.jm-wrap{overflow-x:auto;padding-bottom:10px}.jm{min-width:1600px}.curve{width:100%;height:120px;display:block}.curve path{fill:none;stroke-width:3;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;animation:dr 2.4s var(--ease) forwards}.c0{stroke:#9AAFB2;stroke-dasharray:6 6!important;stroke-dashoffset:0!important;animation:none!important}.c1{stroke:var(--teal)}
+.legend2{display:flex;gap:18px;align-items:center;font-size:13px;margin:6px 0 14px}.legend2 span{display:flex;align-items:center;gap:6px}.legend2 i{width:22px;height:0;border-top:3px solid var(--teal)}.legend2 i.l0{border-top:3px dashed #9AAFB2}
+.jm-cols{display:grid;grid-template-columns:repeat(8,1fr);gap:12px}.jc{background:#fff;border-radius:18px;padding:16px;box-shadow:var(--sh)}.jc h4{font:700 17px var(--disp);margin-bottom:8px}.jc small{display:block;font:600 10px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin-top:8px}.jc p{font-size:13px}.jc .ans{font-weight:600;color:var(--teal2)}
+.princ{list-style:none;margin:24px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.princ li{background:var(--ink);color:#fff;border-radius:18px;padding:18px}.princ b{display:block;font:700 18px var(--disp)}.princ span{font-size:13px;opacity:.75}
+.two-big{display:flex;gap:24px;margin-bottom:12px}.two-big small{font-size:12px;color:var(--ink2)}.big.pos{color:var(--teal)}.big.neg{color:#C2432B}
+.card-s.wide{grid-column:1/-1}.card-s.hl{background:var(--mint)}
+.mdl{display:grid;grid-template-columns:1fr 1.5fr;gap:28px}.mdl-in{display:grid;gap:14px;align-content:start}.mdl-in label{display:grid;gap:6px;font-weight:600;font-size:14px}.mdl-in label b{float:right;font:500 13px var(--mono);color:var(--teal2)}.mdl input[type=range],.fld input[type=range]{width:100%;accent-color:var(--coral)}
+.mo{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.mo small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);font-weight:600}.mo b{font:700 18px var(--disp)}.mo .pos b{color:var(--teal)}.mo .neg b{color:#C2432B}
+.roi{display:flex;align-items:baseline;gap:12px;margin:16px 0 8px}.bars{display:flex;gap:6px;align-items:flex-end;height:110px}.bars div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;gap:4px;font:500 10px var(--mono);color:var(--ink2);text-align:center}.bars i{display:block;height:calc(var(--h)*.8%);min-height:3px;background:var(--teal);border-radius:4px 4px 0 0;transition:height .6s var(--ease)}.bars .n i{background:#E58A74}
+.adv{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:26px}.adv p{margin-bottom:14px}.row.l{justify-content:flex-start}.adv-st{margin-top:12px;font-weight:700;color:var(--teal2);font-size:14px}
+.path{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.path li{display:flex;gap:12px;background:#fff;border-radius:18px;padding:16px;box-shadow:var(--sh)}.path li>b{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:700 13px var(--mono)}.path h4{font:700 16px var(--disp)}.path span{font-size:13px;color:var(--ink2)}.mt2{margin-top:36px;margin-bottom:12px}
+.look{position:relative;height:520px;border-radius:28px;overflow:hidden;background:var(--sky);touch-action:pan-y;outline:none}.look img{position:absolute;left:50%;top:0;height:100%;width:auto;min-width:170%;margin-left:-85%;max-width:none;object-fit:cover;transition:opacity .2s}.look.sw img{opacity:0}.look-ui{position:absolute;left:14px;right:14px;bottom:14px;display:flex;justify-content:space-between;align-items:center}.look-h{background:var(--glass);padding:7px 12px;border-radius:99px;font-size:13px;font-weight:600}
+.plan svg{width:100%;margin:12px 0}.plan rect{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}.plan text{font:600 11px var(--body);fill:var(--ink)}
+.chipset{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.fld{display:grid;gap:6px;font-weight:600;font-size:14px;margin-top:16px}.fld input:not([type=range]){padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);font-size:16px;background:#fff}
+.conn{display:flex;gap:8px;justify-content:center;margin:20px 0}.conn span{width:14px;height:14px;border-radius:50%;background:var(--teal);animation:cn 1s infinite}.conn span:nth-child(2){animation-delay:.15s}.conn span:nth-child(3){animation-delay:.3s}@keyframes cn{50%{transform:translateY(-10px);opacity:.4}}
+.bid{margin:20px 0 8px}.bid input{width:100%;accent-color:var(--coral)}.bubs{display:grid;gap:8px;margin:14px 0}.bub{max-width:80%;padding:10px 14px;border-radius:16px;font-size:14px;animation:pin .4s var(--ease)}.bub.me{justify-self:end;background:var(--ink);color:#fff}.bub.seller{background:var(--bg)}
+.big-st{margin:18px 0}.mini-st li.cur{color:var(--ink);font-weight:700}.mini-st li.cur i{background:var(--coral)}
+.next-st{display:flex;gap:12px;align-items:baseline;background:#FFF5F1;border-radius:18px;padding:14px 20px;margin-bottom:20px}.next-st b{font:700 12px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--coral)}.next-st span{font-size:15px}
+.fb{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;font-size:14px;color:var(--ink2)}
+.act li.up{opacity:.6}.act li.up i{background:var(--line)}
+@media(max-width:960px){.mdl{grid-template-columns:1fr}.mo{grid-template-columns:repeat(2,1fr)}.look{height:400px}}
+@media(max-width:640px){.opts,.opts.b3{grid-template-columns:1fr}.intent{padding:18px}.intent h3{font-size:22px}.next-st{flex-direction:column;gap:4px}.filters label{min-width:44%;flex:1}}
+.ins{grid-template-columns:repeat(3,1fr)}.two-big .big{font-size:30px}.card-s .big{font-size:34px}
+@media(max-width:960px){.ins{grid-template-columns:1fr}}
 </style>
 
 <canvas id="trail" aria-hidden="true"></canvas>
 <div id="cursor" aria-hidden="true"><div class="ring"><span></span></div><div class="dot"></div></div>
 <div id="app">
 <header class="hd"><div class="hd-in">
-  <button class="brand" data-nav="home" aria-label="Manzil home"><svg viewBox="0 0 32 32" width="28" height="28"><rect width="32" height="32" rx="9" fill="#0E7C79"/><path d="M8 23V12l8-5 8 5v11" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/><circle cx="16" cy="17" r="2.6" fill="#FF7A59"/></svg><span>Manzil</span></button>
-  <nav class="hd-nav"><button data-nav="home" class="on">Explore</button><button data-scroll="#fit">Find your fit</button><button data-nav="tracker">My purchase</button></nav>
+  <button class="brand" data-nav="home" aria-label="ARKO home"><svg viewBox="0 0 32 32" width="28" height="28"><rect width="32" height="32" rx="9" fill="#0A2A2E"/><path d="M8 24V16a8 8 0 0 1 16 0v8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="16" cy="18" r="2.6" fill="#FF7A59"/></svg><span>ARKO</span></button>
+  <nav class="hd-nav"><button data-nav="home" class="on">Explore</button><button data-scroll="#journey">How it works</button><button data-nav="tracker">My purchase</button><button class="talk" id="talkBtn">Talk to us</button></nav>
   <div class="seg" id="curSeg" aria-label="Currency"><button data-v="AED" aria-selected="true">AED</button><button data-v="USD" aria-selected="false">USD</button><button data-v="GBP" aria-selected="false">GBP</button><button data-v="INR" aria-selected="false">INR</button><span class="thumb"></span></div>
 </div></header>
 
@@ -144,43 +181,35 @@ select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='htt
 <div id="v-home">
  <section id="hero" class="hero"><canvas id="heroGL" aria-hidden="true"></canvas><div class="hero-fallback" aria-hidden="true"></div>
   <div class="wrap hero-in">
-   <p class="eyebrow pill-e"><span class="live"></span>Off-plan homes, tracked from reservation to keys</p>
+   <p class="eyebrow pill-e"><span class="live"></span>Off-plan and ready homes, tracked to ownership</p>
    <h1 id="h1"><span class="l1" id="l1">Own Dubai</span><span class="l2" id="rot"><span class="word">from anywhere.</span><span class="word">in minutes.</span><span class="word">with proof.</span></span></h1>
-   <p class="hero-p">Browse new launches, see the real unit in 3D, reserve into a regulated escrow account and watch DLD registration, construction and payments in one place.</p>
-   <form class="search" onsubmit="return false">
-    <div class="seg" data-seg="market" aria-label="Market"><button data-v="off" aria-selected="true">Off-plan</button><button data-v="res" aria-selected="false">Resale</button><span class="thumb"></span></div>
-    <label>Area<select id="fArea"></select></label><label>Budget<select id="fBud"></select></label>
-    <label id="fHandWrap">Handover<select id="fHand"><option value="">Any year</option><option value="28">By 2028</option><option value="29">2029 or later</option></select></label>
-    <button class="btn btn-primary" id="fGo" data-magnetic>Show homes <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-   </form>
+   <p class="hero-p">Tell us why and how much. We show the homes, the 3D view, the numbers and every step to owning it, from EOI or viewing to DLD registration.</p>
+   <div class="intent" id="intent"><div class="int-h"><span id="intStep"></span><div class="dots" id="intDots"></div></div><div id="intBody"></div></div>
    <div class="trustrow"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M8.8 12.2l2.3 2.3 4.2-4.6"/></svg> RERA-registered projects</span><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M8.8 12.2l2.3 2.3 4.2-4.6"/></svg> Escrow-protected payments</span><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M8.8 12.2l2.3 2.3 4.2-4.6"/></svg> DLD-tracked</span></div>
   </div>
   <div id="floaters" aria-label="Featured homes"></div>
  </section>
- <div class="mq" aria-hidden="true"><div class="mq-track"><span>Browse</span><i>◆</i><span>Compare</span><i>◆</i><span>Reserve</span><i>◆</i><span>Register</span><i>◆</i><span>Track</span><i>◆</i><span>Move in</span><i>◆</i><span>Browse</span><i>◆</i><span>Compare</span><i>◆</i><span>Reserve</span><i>◆</i><span>Register</span><i>◆</i><span>Track</span><i>◆</i><span>Move in</span><i>◆</i></div></div>
+ <div class="mq" aria-hidden="true"><div class="mq-track"><span>Discover</span><i>◆</i><span>See in 3D</span><i>◆</i><span>Analyse</span><i>◆</i><span>Decide</span><i>◆</i><span>Pay</span><i>◆</i><span>Register</span><i>◆</i><span>Own</span><i>◆</i><span>Discover</span><i>◆</i><span>See in 3D</span><i>◆</i><span>Analyse</span><i>◆</i><span>Decide</span><i>◆</i><span>Pay</span><i>◆</i><span>Register</span><i>◆</i><span>Own</span><i>◆</i></div></div>
 
  <section class="wrap sec" id="explore">
-  <div class="ex-h"><div><p class="eyebrow">Browse</p><h2 id="exTitle" data-split>Off-plan launches</h2><p class="sub" id="exSub">Pay in instalments while it is built. Every project shows its RERA number and escrow account before you commit.</p></div>
+  <div class="ex-h"><div><p class="eyebrow">Browse</p><h2 id="exTitle" data-split>Off-plan launches</h2><p class="sub" id="exSub">Express interest with an EOI and pay in instalments while it is built. Every project shows its RERA number and escrow account.</p></div>
    <div class="seg" data-seg="market" aria-label="Market"><button data-v="off" aria-selected="true">Off-plan</button><button data-v="res" aria-selected="false">Resale</button><span class="thumb"></span></div></div>
+  <div class="filters"><label>Area<select id="fArea"></select></label><label>Budget<select id="fBud"></select></label><label id="fHandWrap">Handover<select id="fHand"><option value="">Any year</option><option value="28">By 2028</option><option value="29">2029 or later</option></select></label></div>
   <div class="bar"><div class="chips"><button class="chip" data-f="water" aria-pressed="false">Waterfront</button><button class="chip" data-f="u15" aria-pressed="false">Under AED 1.5M</button><button class="chip" data-f="yield" aria-pressed="false">Best yield</button><button class="chip" data-f="plan50" data-off aria-pressed="false">50/50 plan</button><button class="chip" data-f="h28" data-off aria-pressed="false">Ready by 2028</button></div>
    <div class="bar-r"><span id="count" class="count"></span><label class="sortl">Sort<select id="sort"><option value="featured">Featured</option><option value="low">Lowest price</option><option value="yield">Highest yield</option><option value="soon">Soonest handover</option></select></label></div></div>
   <div id="grid" class="grid"></div>
   <p class="demo-n">All projects, developers and prices in this prototype are fictional demo data. Images are illustrations.</p>
  </section>
 
- <section class="how"><div class="wrap">
-  <p class="eyebrow">How it works</p><h2 data-split>From first look to keys</h2>
-  <ol class="hw">
-   <li data-reveal><b>01</b><h4>Find</h4><p>Filter by budget and handover, or answer three questions and we rank the best matches.</p></li>
-   <li data-reveal><b>02</b><h4>See</h4><p>Turn the tower in 3D, pick your floor and unit, check price against the area.</p></li>
-   <li data-reveal><b>03</b><h4>Reserve</h4><p>Verify once, sign online and pay into the project's escrow account.</p></li>
-   <li data-reveal><b>04</b><h4>Track</h4><p>DLD registration, construction, escrow and every instalment, with reminders.</p></li>
-  </ol></div></section>
+ <section class="journey" id="journey"><div class="wrap">
+  <p class="eyebrow">How ARKO is designed</p><h2 data-split>Built around the buyer's journey</h2>
+  <p class="sub">We mapped every step a buyer takes, where they get stuck, and what ARKO does about it. Friction points are common buyer pain points and still to be validated in our survey.</p>
+  <ol class="dt"><li><b>Empathise</b><span>Talk to buyers and read their threads and reviews.</span></li><li><b>Define</b><span>How might we make each step feel certain?</span></li><li><b>Ideate</b><span>Total cost first, human help on demand, status always visible.</span></li><li><b>Prototype</b><span>The clickable journey you are using now.</span></li><li><b>Test</b><span>Tell us if a step was clear. We change what is not.</span></li></ol>
+  <div class="jm-wrap"><div class="jm" id="jm"></div></div>
+  <ul class="princ"><li><b>Show the total cost early</b><span>No surprise fees at the end.</span></li><li><b>A person when you want one</b><span>Call or meet, never forced.</span></li><li><b>Always know where you are</b><span>One tracker for DLD, payments and documents.</span></li></ul>
+</div></section>
 
- <section class="wrap sec" id="fit"><div class="fit"><div class="fit-l"><p class="eyebrow">Find your fit</p><h2 data-split>Not sure where to start?</h2><p class="sub">Three quick questions. We will rank the homes that suit you.</p><div class="dots" id="fitDots"></div></div>
-  <div class="fit-r"><div id="quiz"></div><div id="fitRes" hidden></div></div></div></section>
-
- <footer class="ft wrap"><b>Manzil</b><p>Prototype for demonstration only. Not an offer to sell property, and not a licensed brokerage. Figures are illustrative. Fee amounts and timelines must be confirmed with DLD, RERA and the developer before any real purchase.</p></footer>
+ <footer class="ft wrap"><b>ARKO</b><p>Prototype for demonstration only. Not an offer to sell property, and not a licensed brokerage. Figures are illustrative. Fee amounts and timelines must be confirmed with DLD, RERA and the developer before any real purchase.</p></footer>
 </div>
 <div id="v-project" hidden></div>
 <div id="v-reserve" hidden></div>
@@ -188,7 +217,7 @@ select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='htt
 </main>
 
 <div id="tray" class="tray"><div id="trayThumbs" class="thumbs"></div><span id="trayTxt"></span><button class="btn btn-primary sm" id="trayGo" disabled>Compare</button></div>
-<nav class="tabbar"><button data-nav="home">Explore</button><button data-scroll="#fit">Find your fit</button><button data-nav="tracker">My purchase</button></nav>
+<nav class="tabbar"><button data-nav="home">Explore</button><button id="talkBtn2">Talk to us</button><button data-nav="tracker">My purchase</button></nav>
 <div id="modal" hidden></div><div id="toasts" aria-live="polite"></div>
 </div>
 <script>/* ---------- utilities and shared state ---------- */
@@ -207,7 +236,7 @@ const SYM = { AED: 'AED ', USD: '$', GBP: '£', INR: '₹' };
 const S = {
   cur: 'AED', market: 'off', filters: new Set(), sort: 'featured',
   saved: new Set(), compare: [],
-  pid: null, floor: 22, unit: null, planKey: null,
+  goal: null, bud: 0, intStep: 0, agent: null, pid: null, floor: 22, unit: null, planKey: null,
   res: null,            // confirmed reservation {pid, unit, planKey, dep}
   month: 12, playing: false, step: 0, quiz: {}
 };
@@ -912,7 +941,7 @@ function cardHTML(it) {
   <div class="ph"><img alt="Illustrated render of ${it.name}" class="cimg"><span class="shim"></span>
     <div class="badges"><span class="b ${off ? 'b-off' : 'b-res'}">${off ? 'Off-plan' : 'Ready'}</span><span class="b">${off ? 'Handover ' + it.ho : (it.tenant ? 'Tenanted' : 'Vacant')}</span></div>
     <button class="save" aria-label="Save ${it.name}" aria-pressed="${S.saved.has(it.id)}">${ICON.heart}</button>
-    <span class="ver">${ICON.shield}<span>${off ? 'RERA project checked' : 'Title checked'}</span></span>
+    ${S.goal?`<span class="match">${fitOf(it)}% match</span>`:''}<span class="ver">${ICON.shield}<span>${off ? 'RERA project checked' : 'Title checked'}</span></span>
   </div>
   <div class="cb">
     <div class="r1"><h3>${it.name}</h3><span class="yl">${it.yld}% est. yield</span></div>
@@ -932,6 +961,7 @@ function listItems() {
   if (f.has('u15')) a = a.filter(x => x.from < 1.5e6);
   if (S.market === 'off') { if (f.has('plan50')) a = a.filter(x => x.plan === '50/50'); if (f.has('h28')) a = a.filter(x => x.hy <= 2028); }
   const so = S.sort;
+  if (S.goal && so === 'featured' && !f.has('yield')) return a.sort((x, y) => fitOf(y) - fitOf(x));
   if (f.has('yield') || so === 'yield') a.sort((x, y) => y.yld - x.yld);
   else if (so === 'low') a.sort((x, y) => x.from - y.from);
   else if (so === 'soon' && S.market === 'off') a.sort((x, y) => x.hm - y.hm);
@@ -1012,50 +1042,50 @@ function compareModal() {
   openModal(`<h2>Side by side</h2><p class="sub">Highlighted cells lead on that measure. Figures are illustrative demo data.</p><div class="tbl"><table><thead><tr><th></th>${head}</tr></thead><tbody>${body}</tbody></table></div>`, 'wide');
 }
 
-/* ----- find your fit ----- */
-const QUIZ = [
-  { q: 'What is the home for?', k: 'goal', o: [['live', 'Live in it', 'A place to settle'], ['rent', 'Rental income', 'Steady yield'], ['grow', 'Capital growth', 'Buy early, sell later'], ['holiday', 'Holiday home', 'Sea, sun, short stays']] },
-  { q: 'What budget feels comfortable?', k: 'bud', o: [[1e6, 'Up to ' + 'AED 1M', ''], [1.5e6, 'Up to AED 1.5M', ''], [2.5e6, 'Up to AED 2.5M', ''], [9e6, 'Above AED 2.5M', '']], money: true },
-  { q: 'When do you want the keys?', k: 'when', o: [[2028, 'By end of 2028', 'Less waiting'], [2029, '2029 is fine', 'More choice'], [2030, 'No rush', 'Best payment plans']] }
-];
+/* ----- fit score (used for match badges) ----- */
 function fitScore(p, a) {
   let s = 50;
   if (a.goal === 'live') s += (p.set === 'park' ? 14 : 4) + (p.ot - 90) * 1.2;
   if (a.goal === 'rent') s += (p.yld - 5.5) * 9 + (p.metro.includes('metro') ? 4 : 0);
-  if (a.goal === 'grow') s += Math.max(0, (1.1 - p.ppsf / p.med) * 80) + (100 - p.sold) * .12 + (p.floors > 20 ? 6 : 0);
-  if (a.goal === 'holiday') s += (p.set === 'water' ? 18 : 0) + (p.tags.includes('Waterfront') ? 6 : 0);
   if (p.from > a.bud) s -= Math.min(40, (p.from - a.bud) / a.bud * 70); else s += 6;
-  if (a.when === 2028) s += p.hy <= 2028 ? 16 : -10; else if (a.when === 2029) s += p.hy === 2029 ? 8 : 2; else s += p.plan === '50/50' ? 10 : 0;
+  s += p.hy <= 2028 ? 4 : 2;
   return clamp(Math.round(s), 35, 98);
 }
-function renderQuiz() {
-  const box = $('#quiz'), n = Object.keys(S.quiz).length;
-  $('#fitDots').innerHTML = QUIZ.map((_, i) => `<i class="${i < n ? 'done' : i === n ? 'cur' : ''}"></i>`).join('');
-  if (n >= QUIZ.length) return showFit();
-  const q = QUIZ[n];
-  $('#fitRes').hidden = true; box.hidden = false;
-  box.innerHTML = `<div class="q-step"><p class="eyebrow">Question ${n + 1} of ${QUIZ.length}</p><h3>${q.q}</h3><div class="opts">${q.o.map(([v, l, d]) => `<button class="opt" data-k="${q.k}" data-v="${v}" data-cursor="Pick"><b>${q.money ? (v >= 9e6 ? 'Above ' + money(2.5e6) : 'Up to ' + money(v)) : l}</b><span>${d}</span></button>`).join('')}</div></div>`;
+function fitOf(it) {
+  const a = { goal: S.goal === 'invest' ? 'rent' : 'live', bud: S.bud || 9e6 };
+  if (it.type === 'off') return fitScore(it, a);
+  let s = 55 + (a.goal === 'rent' ? (it.yld - 5.5) * 9 + (it.tenant ? 5 : 0) : (it.tenant ? -4 : 8) + (it.built >= 2018 ? 4 : 0));
+  if (it.from > a.bud) s -= Math.min(40, (it.from - a.bud) / a.bud * 70); else s += 6;
+  return clamp(Math.round(s), 35, 98);
 }
-function showFit() {
-  const a = S.quiz, ranked = PROJ.map(p => ({ p, s: fitScore(p, a) })).sort((x, y) => y.s - x.s).slice(0, 3);
-  $('#quiz').hidden = true; const res = $('#fitRes'); res.hidden = false;
-  res.innerHTML = `<div class="fit-top"><div><p class="eyebrow">Your top matches</p><h3>Three homes that fit</h3></div><button class="btn btn-ghost" id="fitAgain">Start again</button></div><div class="fit-list">${ranked.map(({ p, s }, i) => {
-    const why = []; if (a.goal === 'rent') why.push(p.yld + '% est. yield'); if (a.goal === 'live') why.push(p.set === 'park' ? 'Green, family setting' : 'Strong amenities'); if (a.goal === 'grow') why.push(`${Math.abs((p.ppsf / p.med - 1) * 100).toFixed(0)}% ${p.ppsf > p.med ? 'above' : 'below'} area median price`); if (a.goal === 'holiday') why.push(p.set === 'water' ? 'Waterfront setting' : 'Quiet retreat');
-    why.push('Handover ' + p.ho); why.push(p.ot + '% on-time developer');
-    return `<article class="fit-card" data-open="${p.id}" tabindex="0" role="button" data-tilt data-cursor="View" style="--d:${i * 120}ms"><div class="ring" style="--p:${s}"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="19"/><circle class="v" cx="22" cy="22" r="19" pathLength="100"/></svg><b>${s}%</b></div><div><h4>${p.name}</h4><p>${p.area} · from <span class="px" data-aed="${p.from}">${money(p.from)}</span></p><ul>${why.slice(0, 3).map(w => `<li>${w}</li>`).join('')}</ul></div></article>`;
-  }).join('')}</div>`;
-  requestAnimationFrame(() => res.classList.add('in'));
+
+/* ----- Discover: why, budget, off-plan or ready ----- */
+const BUDS = [1e6, 1.5e6, 2.5e6, 4e6, 0];
+function renderIntent() {
+  const body = $('#intBody'), st = S.intStep || 0;
+  $('#intDots').innerHTML = [0, 1, 2].map(i => `<i class="${i < st ? 'done' : i === st ? 'cur' : ''}"></i>`).join('');
+  $('#intStep').textContent = st < 3 ? 'Step ' + (st + 1) + ' of 3' : 'Your starting point';
+  if (st === 0) body.innerHTML = `<h3>Why are you buying?</h3><div class="opts"><button class="opt" data-goal="own" data-cursor="Pick"><b>To live in it</b><span>A home for me or my family</span></button><button class="opt" data-goal="invest" data-cursor="Pick"><b>To invest</b><span>Rental income or resale gain</span></button></div>`;
+  else if (st === 1) body.innerHTML = `<h3>What budget feels right?</h3><div class="opts b3">${BUDS.map(b => `<button class="opt" data-bud="${b}"><b>${b ? 'Up to ' + money(b) : 'Show everything'}</b></button>`).join('')}</div>`;
+  else if (st === 2) body.innerHTML = `<h3>What are you looking for?</h3><div class="opts"><button class="opt" data-kind="off" data-cursor="Pick"><b>Off-plan</b><span>Express interest, pay while it is built</span></button><button class="opt" data-kind="res" data-cursor="Pick"><b>Ready</b><span>View, bid and move in or rent out</span></button></div>`;
+  else body.innerHTML = `<div class="int-sum"><div><h3>${S.goal === 'invest' ? 'Investing' : 'Buying to live in'} · ${S.bud ? 'up to ' + money(S.bud) : 'any budget'} · ${S.market === 'off' ? 'Off-plan' : 'Ready homes'}</h3><p class="mini">Homes below are ranked by how well they match.</p></div><button class="btn btn-ghost sm" data-reset>Change</button></div>`;
+}
+S.renderIntent = renderIntent;
+function applyIntent() {
+  const sel = $('#fBud'); sel.value = S.bud ? String(S.bud) : '';
+  S.sort = 'featured'; $('#sort').value = 'featured';
+  renderCards(true); $('#explore').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+  toast('Showing homes that match');
 }
 
 function initHome() {
   $('#fArea').innerHTML = '<option value="">All areas</option>' + AREAS.map(a => `<option>${a}</option>`).join('');
-  const budgets = [['', 'Any budget'], [1e6, 'Up to AED 1M'], [1.5e6, 'Up to AED 1.5M'], [2.5e6, 'Up to AED 2.5M'], [4e6, 'Up to AED 4M']];
+  const budgets = [['', 'Any budget'], [1e6], [1.5e6], [2.5e6], [4e6]];
   const drawBud = () => { const v = $('#fBud').value; $('#fBud').innerHTML = budgets.map(([x, l]) => `<option value="${x}">${x ? 'Up to ' + money(x) : l}</option>`).join(''); $('#fBud').value = v; };
   drawBud(); S.drawBud = drawBud;
   $$('.seg[data-seg="market"]').forEach(s => initSeg(s, v => setMarket(v)));
   ['fArea', 'fBud', 'fHand'].forEach(id => $('#' + id).addEventListener('change', () => renderCards(true)));
   $('#sort').addEventListener('change', e => { S.sort = e.target.value; renderCards(true); });
-  $('#fGo').addEventListener('click', e => { e.preventDefault(); renderCards(true); $('#explore').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' }); });
   $$('.chip[data-f]').forEach(c => c.addEventListener('click', () => {
     const k = c.dataset.f, on = c.getAttribute('aria-pressed') !== 'true';
     c.setAttribute('aria-pressed', String(on)); on ? S.filters.add(k) : S.filters.delete(k); renderCards(true);
@@ -1071,10 +1101,17 @@ function initHome() {
   grid.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('card')) { e.preventDefault(); openItem(e.target.dataset.id, $('img', e.target)); } });
   $('#trayThumbs').addEventListener('click', e => { const b = e.target.closest('[data-rm]'); if (!b) return; S.compare = S.compare.filter(x => x !== b.dataset.rm); $$('.card', grid).forEach(c => { const i = $('.cmp input', c); if (i) i.checked = S.compare.includes(c.dataset.id); }); updateTray(); });
   $('#trayGo').addEventListener('click', compareModal);
-  $('#quiz').addEventListener('click', e => { const o = e.target.closest('.opt'); if (!o) return; const v = o.dataset.k === 'goal' ? o.dataset.v : +o.dataset.v; S.quiz[o.dataset.k] = v; o.classList.add('hit'); setTimeout(renderQuiz, 280); });
-  $('#fitRes').addEventListener('click', e => { if (e.target.closest('#fitAgain')) { S.quiz = {}; $('#fitRes').classList.remove('in'); renderQuiz(); return; } const c = e.target.closest('[data-open]'); if (c) openItem(c.dataset.open, null); });
-  $('#fitRes').addEventListener('keydown', e => { const c = e.target.closest && e.target.closest('[data-open]'); if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openItem(c.dataset.open, null); } });
-  renderQuiz();
+  /* intent flow */
+  $('#intent').addEventListener('click', e => {
+    const g = e.target.closest('[data-goal]'), b = e.target.closest('[data-bud]'), k = e.target.closest('[data-kind]'), r = e.target.closest('[data-reset]');
+    if (g) { S.goal = g.dataset.goal; S.intStep = 1; }
+    else if (b) { S.bud = +b.dataset.bud; S.intStep = 2; }
+    else if (k) { S.intStep = 3; if (S.market !== k.dataset.kind) setMarket(k.dataset.kind); applyIntent(); }
+    else if (r) { S.intStep = 0; S.goal = null; S.bud = 0; renderCards(false); }
+    else return;
+    renderIntent();
+  });
+  S.intStep = 0; renderIntent();
   /* hero floaters */
   const fl = $('#floaters');
   fl.innerHTML = [PROJ[0], PROJ[3], PROJ[2]].map((p, i) => `<div class="fl fl${i + 1}" data-depth="${[.9, 1.5, 1.1][i]}"><div class="fc" data-tilt data-cursor="View" data-open="${p.id}"><img alt="" src="${imgFor(p)}"><div><b>${p.name}</b><span>${p.area} · <span class="px" data-aed="${p.from}">${money(p.from)}</span></span></div></div></div>`).join('');
@@ -1087,16 +1124,23 @@ function initHome() {
   renderCards(false);
 }
 
-/* ---------- project detail, resale detail ---------- */
+/* ---------- home detail: 3D view, analysis, advice, deal ---------- */
 const px = (aed, full) => `<span class="px" data-aed="${Math.round(aed)}"${full ? ' data-full="1"' : ''}>${money(aed, full)}</span>`;
 const DEP = 40000;
-let tw3d = null, spy = null;
+let tw3d = null, spy = null, lookRaf = 0;
+
+const medOf = it => it.med || Math.round(it.ppsf * (.95 + R(hash(it.id))() * .1));
+const areaStats = it => { const r = R(hash(it.area)); return { g1: +(4 + r() * 7).toFixed(1), g3: Math.round(14 + r() * 20), yld: +(5.2 + r() * 2).toFixed(1), supply: ['Low', 'Balanced', 'Rising'][Math.floor(r() * 3)], demand: Math.round(70 + r() * 25) }; };
+const priceOf = it => it.type === 'off' ? (S.unit ? S.unit.price : it.from) : it.price;
+const sizeOf = it => it.type === 'off' ? (S.unit ? S.unit.size : it.types[0][1]) : it.size;
+const feesOf = (it, price) => { const off = it.type === 'off'; return { dld: price * .04, trustee: 4000 * 1.05, admin: 580, agency: off ? 0 : price * .02 * 1.05 }; };
+const FEES = price => ({ dld: price * .04, trustee: 4000 * 1.05, admin: 580 });
 
 function openItem(id, srcImg) {
   const it = byId(id); if (!it) return;
   S.pid = id; S.unit = null; S.planKey = it.plan || null;
   if (srcImg && !RM) srcImg.style.viewTransitionName = 'hero';
-  go('project', () => { buildProject(it); }, () => { if (srcImg) srcImg.style.viewTransitionName = ''; });
+  go('project', () => buildProject(it), () => { if (srcImg) srcImg.style.viewTransitionName = ''; });
 }
 function sparkPath(p) {
   const r = R(p.seed + 5), pts = []; let v = .74;
@@ -1104,149 +1148,214 @@ function sparkPath(p) {
   const mx = Math.max(...pts), mn = Math.min(...pts);
   return pts.map((y, i) => `${i ? 'L' : 'M'}${(i / 11 * 300).toFixed(1)},${(70 - (y - mn) / (mx - mn) * 58).toFixed(1)}`).join('');
 }
-function bar(label, val, max, txt, cls = '') {
-  return `<div class="hb ${cls}"><span>${label}</span><div><i style="--w:${(val / max * 100).toFixed(1)}"></i></div><b>${txt}</b></div>`;
+const bar = (label, val, max, txt, cls = '') => `<div class="hb ${cls}"><span>${label}</span><div><i style="--w:${(clamp(val / max, 0, 1) * 100).toFixed(1)}"></i></div><b>${txt}</b></div>`;
+
+/* ----- return model ----- */
+function model(it, price, o) {
+  const off = it.type === 'off', size = sizeOf(it), f = feesOf(it, price), fees = f.dld + f.trustee + f.admin + f.agency;
+  const rent0 = price * it.yld / 100, svc0 = (it.svc || 14) * size, start = off ? it.hm / 12 : 0, rate = .048;
+  const loan = price * o.ltv, equity = price - loan + fees; let net = 0; const prof = [];
+  for (let y = 1; y <= o.yrs; y++) {
+    const act = clamp(y - start, 0, 1), rent = rent0 * Math.pow(1 + o.rg, Math.max(0, y - 1 - start)), svc = svc0 * Math.pow(1.03, y - 1);
+    net += act * (rent - svc - loan * rate);
+    prof.push(net + price * Math.pow(1 + o.g, y) * .98 - price - fees);
+  }
+  const profit = prof[prof.length - 1], roi = profit / equity;
+  return { fees, equity, net, exit: price * Math.pow(1 + o.g, o.yrs), profit, roi, ann: roi > -1 ? Math.pow(1 + roi, 1 / o.yrs) - 1 : -1, prof, netYield: (rent0 - svc0) / price * 100, rent0, start };
 }
+
+/* ----- section builders ----- */
+function headerHTML(it) {
+  const off = it.type === 'off';
+  const kp = off ? [['From', px(it.from)], ['Handover', it.ho], ['Est. yield', it.yld + '%'], ['Developer on time', it.ot + '%']] : [['Price', px(it.price)], ['Size', it.size + ' sqft'], ['Rent / yr', px(it.rent)], ['Yield', it.yld + '%']];
+  const tags = off ? it.tags.map(t => `<span class="tag">${t}</span>`).join('') + `<span class="tag tag-ok">${ICON.shield} RERA ${it.rera}</span>` : `<span class="tag">${it.view} view</span><span class="tag">${it.tenant ? 'Tenanted' : 'Vacant'}</span><span class="tag tag-ok">${ICON.shield} Title checked</span>`;
+  return `<header class="pj-head"><div class="pj-gal"><div class="pj-main"><img id="pjHero" alt="Illustrated render of ${it.name}"></div>
+    ${off ? `<div class="pj-thumbs" role="tablist">${[['ext', 'Day'], ['dusk', 'Dusk'], ['int', 'Interior']].map(([v, l], i) => `<button role="tab" aria-selected="${i === 0}" data-v="${v}" data-cursor="Show"><img alt="" data-v="${v}"><span>${l}</span></button>`).join('')}</div>` : ''}
+    <p class="note">Illustrated renders for this demo. A live version would show official images.</p></div>
+  <div class="pj-title"><p class="eyebrow">${it.area} · ${off ? it.dev : it.unit}</p><h1 data-split>${it.name}</h1><p class="lead">${off ? it.blurb : `${it.beds ? it.beds + ' bedroom' : 'Studio'} ${it.view.toLowerCase()}-view home, built ${it.built}. Service charge AED ${it.svc} per sqft.`}</p>
+  <div class="tags">${tags}</div><div class="kpis">${kp.map(([l, v]) => `<div><small>${l}</small><b>${v}</b></div>`).join('')}</div>
+  ${off ? `<div class="sold"><div class="sold-t"><span>${it.sold}% sold</span><span>${it.units} homes</span></div><div class="meter"><i style="--w:${it.sold}"></i></div></div>` : ''}</div></header>`;
+}
+function planSVG(beds) {
+  const n = Math.max(beds, 0), rooms = [['Living and dining', 10, 10, 210, 150], ['Kitchen', 10, 160, 210, 70]];
+  if (!n) rooms.push(['Sleeping area', 220, 10, 170, 130], ['Bath', 220, 140, 170, 90]);
+  else { const h = 130 / n; for (let i = 0; i < n; i++) rooms.push([i ? 'Bedroom ' + (i + 1) : 'Main bedroom', 220, 10 + i * h, 170, h]); rooms.push(['Bath', 220, 140, 170, 90]); }
+  return `<svg viewBox="0 0 400 240" role="img" aria-label="Schematic floor plan">${rooms.map(([l, x, y, w, h]) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6"/><text x="${x + w / 2}" y="${y + h / 2 + 4}" text-anchor="middle">${l}</text>`).join('')}</svg>`;
+}
+function viewHTML(it) {
+  if (it.type === 'off') return `<section id="pjHome" class="sec"><h2 data-split>See your exact home in 3D</h2><p class="sub">Drag the tower to turn it. Tap a floor, then choose a unit.</p>
+    <div class="pick"><div class="tw-box"><canvas id="tw" tabindex="0" aria-label="3D tower. Use arrow keys to change floor." data-cursor="Drag"></canvas><div class="tw-ctl"><button class="btn btn-ghost sm" id="fUp" aria-label="Floor up">▲</button><span id="fNo">Floor ${S.floor}</span><button class="btn btn-ghost sm" id="fDn" aria-label="Floor down">▼</button></div></div>
+    <div class="units"><div class="units-h"><h3 id="uTitle"></h3><span class="legend"><i class="a"></i>Available <i class="h"></i>Held <i class="s"></i>Sold</span></div><div id="uList"></div><div class="u-prev" id="uPrev"></div></div></div></section>`;
+  return `<section id="pjHome" class="sec"><h2 data-split>Look around before you visit</h2><p class="sub">Drag to look around, then compare with the floor plan.</p>
+    <div class="pick"><div class="look" id="look" tabindex="0" data-cursor="Look around"><img id="lookImg" alt="Illustrated view"><div class="look-ui"><div class="seg" id="lookSeg"><button data-v="int" aria-selected="true">Inside</button><button data-v="ext" aria-selected="false">Outside</button><span class="thumb"></span></div><span class="look-h">Drag to look around</span></div></div>
+    <div class="units"><h3>Floor plan</h3><div class="plan">${planSVG(it.beds)}</div><div class="ln"><span>Size</span><b>${it.size} sqft</b></div><div class="ln"><span>Bedrooms</span><b>${it.beds || 'Studio'}</b></div><div class="ln"><span>View</span><b>${it.view}</b></div><p class="mini">Schematic only. A live version would load the real plan.</p></div></div></section>`;
+}
+function analysisHTML(it) {
+  const off = it.type === 'off', a = areaStats(it), med = medOf(it), vs = (it.ppsf / med - 1) * 100, max = Math.max(it.ppsf, med) * 1.1;
+  return `<section id="pjAn" class="sec"><h2 data-split>The numbers behind the price</h2><p class="sub">Area returns, rental yield, total cost and a return model you can adjust. Demo figures, not advice.</p>
+  <div class="ins">
+   <div class="card-s"><h4>Area returns · ${it.area}</h4><div class="two-big"><div><div class="big">+${a.g1}%</div><small>price growth, last 12 months</small></div><div><div class="big">+${a.g3}%</div><small>last 3 years</small></div></div>
+    ${bar('This home', it.ppsf, max, 'AED ' + it.ppsf.toLocaleString(), 'hi')}${bar('Area median', med, max, 'AED ' + med.toLocaleString())}<p class="mini">${Math.abs(vs).toFixed(1)}% ${vs > 0 ? 'above' : 'below'} the area median per sqft. Supply is ${a.supply.toLowerCase()}; rental demand ${a.demand}/100.</p>
+    <svg viewBox="0 0 300 80" class="spark" role="img" aria-label="Price trend rising"><path d="${sparkPath(it)}" pathLength="1"/></svg></div>
+   <div class="card-s"><h4>Rental yield</h4><div class="big" id="yNet"></div><small class="mini">net, after service charges</small>${bar('Gross yield', it.yld, 9, it.yld + '%', 'hi')}${bar('Area average', a.yld, 9, a.yld + '%')}<p class="mini">Estimated rent about ${px(it.type === 'off' ? it.from * it.yld / 100 : it.rent)} a year.${off ? ' Rent starts after handover, ' + it.ho + '.' : ''}</p></div>
+   <div class="card-s"><h4>Total project cost</h4><div id="costBox"></div></div>
+   <div class="card-s wide"><h4>Return model</h4><div class="mdl"><div class="mdl-in">
+     <label>Hold for <b id="vYrs"></b><input type="range" id="mYrs" min="3" max="10" value="5"></label>
+     <label>Price growth a year <b id="vG"></b><input type="range" id="mG" min="0" max="12" step="0.5" value="5"></label>
+     <label>Rent growth a year <b id="vR"></b><input type="range" id="mR" min="0" max="8" step="0.5" value="3"></label>
+     <label>Mortgage <b id="vL"></b><input type="range" id="mL" min="0" max="70" step="5" value="${off ? 0 : 50}"></label>
+     <p class="mini">Mortgage at 4.8% interest-only for simplicity. Selling costs 2%.</p></div>
+    <div class="mdl-out" id="mOut"></div></div></div>
+  </div></section>`;
+}
+function adviceHTML() {
+  return `<section id="pjAdv" class="sec"><h2 data-split>Want someone to talk it through?</h2><p class="sub">Optional. You can carry on by yourself at any point.</p>
+  <div class="adv"><div class="card-s"><h4>I am comfortable on my own</h4><p class="mini">Everything you need is on this page. Go straight to the deal steps.</p><button class="btn btn-ghost" data-jump="pjDeal">See how the deal works ${ICON.arrow}</button></div>
+  <div class="card-s hl"><h4>Talk to a specialist</h4><p class="mini">A licensed adviser walks you through price, payment and paperwork.</p><div class="row l"><button class="btn btn-primary" data-agent="call" data-magnetic>Call me</button><button class="btn btn-ghost" data-agent="meet">Meet in person</button></div><p class="adv-st" id="advSt"></p></div></div></section>`;
+}
+function dealHTML(it) {
+  const off = it.type === 'off';
+  const steps = off ? [['EOI', 'Reserve with AED 40,000 into escrow'], ['Deal closed', 'Sign the sale agreement'], ['Initial payment', '10% booking to escrow'], ['Charges', 'DLD 4% and trustee fee'], ['DLD registration', 'Oqood issued for your unit'], ['Instalments', 'Reminders and follow-ups'], ['Handover', 'Keys and title deed']]
+    : [['Viewing', 'In person or on live video'], ['Bidding', 'Make an offer, hear back'], ['Deal closed', 'Agree the price'], ['Cash or loan', 'Loan: bank, documents, valuation, approvals'], ['Initial payment', '10% deposit'], ['Charges', 'DLD 4%, trustee, agency'], ['DLD registration', 'Title transferred'], ['Ownership', 'Title deed in your name']];
+  return `<section id="pjDeal" class="sec"><h2 data-split>Your deal, step by step</h2><p class="sub">This is the full path from here to ${off ? 'handover' : 'owning the home'}. We show where you are at every step.</p>
+  <ol class="path">${steps.map(([t, d], i) => `<li><b>${i + 1}</b><div><h4>${t}</h4><span>${d}</span></div></li>`).join('')}</ol>
+  ${off ? `<h3 class="mt2">Choose a payment plan</h3><div class="seg" id="planSeg" role="tablist">${Object.keys(PLANS).map(k => `<button role="tab" aria-selected="${k === S.planKey}" data-v="${k}">${k}</button>`).join('')}<span class="thumb"></span></div><div class="pay"><div class="pay-l" id="payTbl"></div><div class="pay-r" id="payCost"></div></div>` : ''}
+  <h3 class="mt2">How your money is protected</h3>
+  <div class="flow">${off ? `<div class="fn"><b>You</b><span>Pay the EOI and instalments</span></div><i>${ICON.arrow}</i><div class="fn hl"><b>Project escrow account</b><span>Regulated bank, one account per project</span></div><i>${ICON.arrow}</i><div class="fn"><b>Developer</b><span>Paid as RERA-certified milestones are met</span></div>`
+    : `<div class="fn"><b>You</b><span>Pay the deposit and balance</span></div><i>${ICON.arrow}</i><div class="fn hl"><b>DLD trustee office</b><span>Transfer is signed and paid here</span></div><i>${ICON.arrow}</i><div class="fn"><b>Seller</b><span>Paid when the title moves to you</span></div>`}</div>
+  <ul class="checks"><li>${ICON.check}<div><b>${off ? 'RERA project registration' : 'Title checked'}</b><span>${off ? it.rera + ' (demo number)' : 'Ownership and any mortgage on the unit are verified first'}</span></div></li><li>${ICON.check}<div><b>Registered at DLD</b><span>${off ? 'Your purchase is recorded on the Oqood register through a trustee office' : 'The sale is recorded in your name at the DLD'}</span></div></li><li>${ICON.check}<div><b>Independent role</b><span>ARKO does not hold your money. Payments go to the account shown.</span></div></li></ul></section>`;
+}
+
+/* ----- build ----- */
 function buildProject(it) {
-  if (tw3d) { tw3d.destroy(); tw3d = null; } if (spy) spy.disconnect();
-  const el = V.project;
-  if (it.type === 'res') return buildResale(it, el);
-  const p = it, vs = ((p.ppsf / p.med - 1) * 100);
-  S.floor = clamp(S.floor, 1, p.floors);
-  el.innerHTML = `
-  <div class="wrap pj">
-    <button class="btn btn-ghost sm" id="pjBack">${ICON.back}<span>All homes</span></button>
-    <header class="pj-head">
-      <div class="pj-gal">
-        <div class="pj-main"><img id="pjHero" alt="Illustrated render of ${p.name}"></div>
-        <div class="pj-thumbs" role="tablist">${[['ext', 'Day'], ['dusk', 'Dusk'], ['int', 'Interior']].map(([v, l], i) => `<button role="tab" aria-selected="${i === 0}" data-v="${v}" data-cursor="Show"><img alt="" data-v="${v}"><span>${l}</span></button>`).join('')}</div>
-        <p class="note">Illustrated renders for this demo. A live version would show the developer's official images.</p>
-      </div>
-      <div class="pj-title">
-        <p class="eyebrow">${p.area} · ${p.dev}</p>
-        <h1 data-split>${p.name}</h1>
-        <p class="lead">${p.blurb}</p>
-        <div class="tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}<span class="tag tag-ok">${ICON.shield} RERA ${p.rera}</span></div>
-        <div class="kpis">
-          <div><small>From</small><b>${px(p.from)}</b></div>
-          <div><small>Handover</small><b>${p.ho}</b></div>
-          <div><small>Est. yield</small><b>${p.yld}%</b></div>
-          <div><small>Developer on time</small><b>${p.ot}%</b></div>
-        </div>
-        <div class="sold"><div class="sold-t"><span>${p.sold}% sold</span><span>${p.units} homes</span></div><div class="meter"><i style="--w:${p.sold}"></i></div></div>
-      </div>
-    </header>
-    <nav class="subnav" id="subnav">${[['pjHome', 'Pick your home'], ['pjIns', 'Insights'], ['pjPay', 'Payment plan'], ['pjSafe', 'How your money is protected']].map(([id, l]) => `<a href="#${id}" data-to="${id}">${l}</a>`).join('')}</nav>
-
-    <section id="pjHome" class="sec"><h2 data-split>Pick your exact home</h2><p class="sub">Drag the tower to turn it. Tap a floor, then choose a unit.</p>
-      <div class="pick">
-        <div class="tw-box"><canvas id="tw" tabindex="0" aria-label="3D tw3d. Use arrow keys to change floor." data-cursor="Drag"></canvas>
-          <div class="tw-ctl"><button class="btn btn-ghost sm" id="fUp" aria-label="Floor up">▲</button><span id="fNo">Floor ${S.floor}</span><button class="btn btn-ghost sm" id="fDn" aria-label="Floor down">▼</button></div></div>
-        <div class="units"><div class="units-h"><h3 id="uTitle"></h3><span class="legend"><i class="a"></i>Available <i class="h"></i>Held <i class="s"></i>Sold</span></div><div id="uList"></div>
-          <div class="u-prev" id="uPrev"></div></div>
-      </div>
-    </section>
-
-    <section id="pjIns" class="sec"><h2 data-split>What the numbers say</h2><p class="sub">How this project compares with the area. Demo figures, not advice.</p>
-      <div class="ins">
-        <div class="card-s"><h4>Price per sqft</h4>${bar(p.name, p.ppsf, Math.max(p.ppsf, p.med) * 1.1, 'AED ' + p.ppsf.toLocaleString(), 'hi')}${bar(p.area + ' median', p.med, Math.max(p.ppsf, p.med) * 1.1, 'AED ' + p.med.toLocaleString())}<p class="mini">${Math.abs(vs).toFixed(1)}% ${vs > 0 ? 'above' : 'below'} the area median. ${vs > 0 ? 'Premium usually reflects the view or amenities.' : 'Priced under comparable homes nearby.'}</p></div>
-        <div class="card-s"><h4>Area price trend, last 12 quarters</h4><svg viewBox="0 0 300 80" class="spark" role="img" aria-label="Rising price trend"><path d="${sparkPath(p)}" pathLength="1"/></svg><p class="mini">Illustrative series for the demo.</p></div>
-        <div class="card-s"><h4>Rental outlook</h4><div class="big">${p.yld}%<small> gross yield</small></div><p class="mini">On a ${px(p.from)} home this is about ${px(p.from * p.yld / 100)} a year before service charges.</p></div>
-        <div class="card-s"><h4>Developer record</h4>${bar('Delivered on time', p.ot, 100, p.ot + '%', 'hi')}${bar('Units sold', p.sold, 100, p.sold + '%')}<p class="mini">${p.metro}.</p></div>
-      </div>
-    </section>
-
-    <section id="pjPay" class="sec"><h2 data-split>Payment plan and total cost</h2><p class="sub">Choose a plan. Everything you owe is shown up front, including government fees.</p>
-      <div class="seg" id="planSeg" role="tablist">${Object.keys(PLANS).map(k => `<button role="tab" aria-selected="${k === S.planKey}" data-v="${k}">${k}</button>`).join('')}<span class="thumb"></span></div>
-      <div class="pay"><div class="pay-l" id="payTbl"></div><div class="pay-r" id="payCost"></div></div>
-    </section>
-
-    <section id="pjSafe" class="sec"><h2 data-split>Your money never sits with us</h2><p class="sub">The same protections apply to every off-plan purchase in Dubai.</p>
-      <div class="flow"><div class="fn"><b>You</b><span>Pay the reservation and instalments</span></div><i>${ICON.arrow}</i><div class="fn hl"><b>Project escrow account</b><span>Regulated bank, one account per project</span></div><i>${ICON.arrow}</i><div class="fn"><b>Developer</b><span>Paid only as RERA-certified construction milestones are met</span></div></div>
-      <ul class="checks">
-        <li>${ICON.check}<div><b>RERA project registration</b><span>${p.rera} (demo number)</span></div></li>
-        <li>${ICON.check}<div><b>Sale registered at DLD</b><span>Your purchase is recorded on the Oqood off-plan register through a trustee office</span></div></li>
-        <li>${ICON.check}<div><b>Every step is tracked</b><span>See DLD status, construction progress, escrow and payments in one place after you reserve</span></div></li>
-        <li>${ICON.check}<div><b>Independent broker role</b><span>We never hold buyer funds. Payments go straight to the escrow account.</span></div></li>
-      </ul>
-    </section>
-  </div>
-  <div class="cta" id="cta"><div class="cta-in"><div><small id="ctaK">Selected</small><b id="ctaT"></b></div><button class="btn btn-primary" id="ctaGo" data-magnetic disabled>Reserve<span class="dp"> for AED 40,000</span> ${ICON.arrow}</button></div></div>`;
-  const hero = $('#pjHero'); hero.src = imgFor(p, 'ext'); if (!RM) hero.style.viewTransitionName = 'hero';
-  $$('.pj-thumbs img').forEach(i => { ensureImg(p, i.dataset.v).then(s => i.src = s); });
-  $('.pj-thumbs').addEventListener('click', e => {
-    const b = e.target.closest('button'); if (!b) return;
-    $$('.pj-thumbs button').forEach(x => x.setAttribute('aria-selected', String(x === b)));
-    ensureImg(p, b.dataset.v).then(s => { hero.classList.add('swap'); setTimeout(() => { hero.src = s; hero.classList.remove('swap'); }, 160); });
-  });
-  $('#pjBack').onclick = () => { if (tw3d) tw3d.destroy(); go('home', () => { hero.style.viewTransitionName = 'hero'; }, () => { }); };
-  reveal(el); refreshPrices(el);
-  /* subnav */
+  if (tw3d) { tw3d.destroy(); tw3d = null; } if (spy) spy.disconnect(); cancelAnimationFrame(lookRaf);
+  const el = V.project, off = it.type === 'off';
+  S.floor = off ? clamp(S.floor, 1, it.floors) : S.floor;
+  el.innerHTML = `<div class="wrap pj"><button class="btn btn-ghost sm" id="pjBack">${ICON.back}<span>All homes</span></button>${headerHTML(it)}
+   <nav class="subnav" id="subnav">${[['pjHome', '3D view'], ['pjAn', 'Analysis'], ['pjAdv', 'Advice'], ['pjDeal', 'Deal']].map(([id, l]) => `<a href="#${id}" data-to="${id}">${l}</a>`).join('')}</nav>
+   ${viewHTML(it)}${analysisHTML(it)}${adviceHTML()}${dealHTML(it)}</div>
+   <div class="cta" id="cta"><div class="cta-in"><div><small id="ctaK"></small><b id="ctaT"></b></div><button class="btn btn-primary" id="ctaGo" data-magnetic>${off ? 'Start EOI<span class="dp"> · AED 40,000</span>' : 'Book a viewing'} ${ICON.arrow}</button></div></div>`;
+  const hero = $('#pjHero'); hero.src = imgFor(it, 'ext'); if (!RM) hero.style.viewTransitionName = 'hero';
+  if (off) {
+    $$('.pj-thumbs img').forEach(i => ensureImg(it, i.dataset.v).then(s => i.src = s));
+    $('.pj-thumbs').addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      $$('.pj-thumbs button').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+      ensureImg(it, b.dataset.v).then(s => { hero.classList.add('swap'); setTimeout(() => { hero.src = s; hero.classList.remove('swap'); }, 160); });
+    });
+  }
+  $('#pjBack').onclick = () => go('home');
+  reveal(el);
   $$('#subnav a').forEach(a => a.onclick = e => { e.preventDefault(); $('#' + a.dataset.to).scrollIntoView({ behavior: RM ? 'auto' : 'smooth' }); });
+  el.onclick = e => {
+    const j = e.target.closest('[data-jump]'); if (j) $('#' + j.dataset.jump).scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+    const a = e.target.closest('[data-agent]'); if (a) openAgent(a.dataset.agent);
+  };
   spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) $$('#subnav a').forEach(a => a.classList.toggle('on', a.dataset.to === e.target.id)); }), { rootMargin: '-35% 0px -55% 0px' });
   $$('.sec', el).forEach(s => spy.observe(s));
-  /* tw3d + units */
-  tw3d = Tower3D($('#tw'), { floors: p.floors, twist: p.kind === 'tw3d' ? .035 : .015, mood: p.mood, sel: S.floor - 1, onPick: i => pickFloor(p, i + 1) });
-  $('#fUp').onclick = () => { pickFloor(p, Math.min(p.floors, S.floor + 1)); tw3d.setSel(S.floor - 1); };
-  $('#fDn').onclick = () => { pickFloor(p, Math.max(1, S.floor - 1)); tw3d.setSel(S.floor - 1); };
-  $('#uList').onclick = e => { const b = e.target.closest('.u'); if (!b || b.disabled) return; pickUnit(p, +b.dataset.no); };
-  pickFloor(p, S.floor, true);
-  /* plan */
-  initSeg($('#planSeg'), k => { S.planKey = k; renderPay(p); });
-  renderPay(p);
-  $('#ctaGo').onclick = () => openReserve();
+  if (off) {
+    tw3d = Tower3D($('#tw'), { floors: it.floors, twist: it.kind === 'tower' ? .035 : .015, mood: it.mood, sel: S.floor - 1, onPick: i => pickFloor(it, i + 1) });
+    $('#fUp').onclick = () => { pickFloor(it, Math.min(it.floors, S.floor + 1)); tw3d.setSel(S.floor - 1); };
+    $('#fDn').onclick = () => { pickFloor(it, Math.max(1, S.floor - 1)); tw3d.setSel(S.floor - 1); };
+    $('#uList').onclick = e => { const b = e.target.closest('.u'); if (!b || b.disabled) return; pickUnit(it, +b.dataset.no); };
+    initSeg($('#planSeg'), k => { S.planKey = k; renderPay(it); });
+    pickFloor(it, S.floor);
+    $('#ctaGo').onclick = () => openReserve();
+  } else {
+    initLook(it); renderCost(it); renderModel(it); setCTA(null);
+    $('#ctaGo').onclick = () => openViewing();
+  }
+  ['mYrs', 'mG', 'mR', 'mL'].forEach(id => $('#' + id).oninput = () => renderModel(it));
+  renderCost(it); renderModel(it); setAdvSt();
+  refreshPrices(el);
 }
-function pickFloor(p, f, first) {
-  S.floor = f; S.unit = null;
-  $('#fNo').textContent = 'Floor ' + f;
-  const us = unitsFor(p, f);
-  $('#uTitle').textContent = 'Floor ' + f + ' · ' + us.length + ' homes';
+function initLook(it) {
+  const box = $('#look'), img = $('#lookImg'); let x = 0, vx = 0, drag = false, lx = 0, t = 0;
+  const set = v => ensureImg(it, v).then(s => { img.src = s; });
+  set('int');
+  initSeg($('#lookSeg'), v => { box.classList.add('sw'); setTimeout(() => { set(v); box.classList.remove('sw'); }, 200); });
+  const lim = () => Math.max(0, img.offsetWidth - box.clientWidth) / 2;
+  box.addEventListener('pointerdown', e => { drag = true; lx = e.clientX; box.setPointerCapture(e.pointerId); });
+  box.addEventListener('pointermove', e => { if (!drag) return; const d = e.clientX - lx; lx = e.clientX; x += d; vx = d; });
+  box.addEventListener('pointerup', () => drag = false);
+  box.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') x += 40; if (e.key === 'ArrowRight') x -= 40; });
+  (function loop() { lookRaf = requestAnimationFrame(loop); if (!drag) { x += vx; vx *= .93; if (!RM && Math.abs(vx) < .05) { t += .01; x += Math.sin(t) * .25; } } x = clamp(x, -lim(), lim()); img.style.transform = `translateX(${x}px)`; })();
+}
+function renderCost(it) {
+  const price = priceOf(it), f = feesOf(it, price), tot = price + f.dld + f.trustee + f.admin + f.agency;
+  $('#costBox').innerHTML = `<div class="big">${px(tot)}</div><small class="mini">price plus government and admin fees</small><div class="ln"><span>${S.unit || it.type === 'res' ? 'Price' : 'Price, smallest home'}</span>${px(price)}</div><div class="ln"><span>DLD fee (4%)</span>${px(f.dld)}</div><div class="ln"><span>Trustee fee + VAT</span>${px(f.trustee)}</div><div class="ln"><span>Admin fees</span>${px(f.admin)}</div>${f.agency ? `<div class="ln"><span>Agency fee (2% + VAT)</span>${px(f.agency)}</div>` : '<div class="ln"><span>Agency fee</span><b>Paid by developer</b></div>'}<p class="mini">Indicative. Confirm every fee before a real purchase.</p>`;
+  const n = model(it, price, { yrs: 5, g: 0, rg: 0, ltv: 0 });
+  $('#yNet').textContent = n.netYield.toFixed(1) + '%';
+  refreshPrices($('#costBox'));
+}
+function renderModel(it) {
+  const o = { yrs: +$('#mYrs').value, g: +$('#mG').value / 100, rg: +$('#mR').value / 100, ltv: +$('#mL').value / 100 };
+  $('#vYrs').textContent = o.yrs + ' years'; $('#vG').textContent = (o.g * 100).toFixed(1) + '%'; $('#vR').textContent = (o.rg * 100).toFixed(1) + '%'; $('#vL').textContent = (o.ltv * 100).toFixed(0) + '% of price';
+  const m = model(it, priceOf(it), o), mx = Math.max(...m.prof.map(Math.abs), 1);
+  $('#mOut').innerHTML = `<div class="mo"><div><small>Cash you put in</small><b>${px(m.equity)}</b></div><div><small>Rent after costs</small><b>${px(m.net)}</b></div><div><small>Sale value</small><b>${px(m.exit)}</b></div><div class="${m.profit >= 0 ? 'pos' : 'neg'}"><small>Profit after selling</small><b>${px(m.profit)}</b></div></div>
+   <div class="roi"><span class="big ${m.roi >= 0 ? 'pos' : 'neg'}">${(m.roi * 100).toFixed(0)}%</span><small>total return on your cash · about ${(m.ann * 100).toFixed(1)}% a year</small></div>
+   <div class="bars" aria-label="Profit by year">${m.prof.map((v, i) => `<div class="${v >= 0 ? '' : 'n'}" style="--h:${(Math.abs(v) / mx * 100).toFixed(0)}"><i></i><span>Y${i + 1}</span></div>`).join('')}</div>${it.type === 'off' ? `<p class="mini">Rent and interest start after handover, ${it.ho}.</p>` : ''}`;
+  refreshPrices($('#mOut'));
+}
+function pickFloor(p, f) {
+  S.floor = f; S.unit = null; $('#fNo').textContent = 'Floor ' + f;
+  const us = unitsFor(p, f); $('#uTitle').textContent = 'Floor ' + f + ' · ' + us.length + ' homes';
   $('#uList').innerHTML = us.map(u => `<button class="u ${u.st}" data-no="${u.no}" ${u.st !== 'avail' ? 'disabled' : ''}><b>${u.no}</b><span>${u.type} · ${u.size} sqft · ${u.view} view</span><em>${u.st === 'avail' ? px(u.price) : u.st === 'held' ? 'Held' : 'Sold'}</em></button>`).join('');
   refreshPrices($('#uList'));
   const a = us.find(u => u.st === 'avail');
-  if (a) pickUnit(p, a.no, first); else { $('#uPrev').innerHTML = '<p class="mini">All homes on this floor are taken. Try another floor.</p>'; setCTA(null); }
+  if (a) pickUnit(p, a.no); else { $('#uPrev').innerHTML = '<p class="mini">All homes on this floor are taken. Try another floor.</p>'; setCTA(null); }
 }
-function pickUnit(p, no, first) {
+function pickUnit(p, no) {
   const u = unitsFor(p, S.floor).find(x => x.no === no); S.unit = u;
   $$('#uList .u').forEach(b => b.classList.toggle('sel', +b.dataset.no === no));
   $('#uPrev').innerHTML = `<div class="up-img"><img alt="Illustrated interior" src="${imgFor(p, 'int')}"></div><div class="up-t"><b>${u.type} · ${u.size} sqft</b><span>Unit ${u.no}, ${u.view} view</span><span class="mini">Interior render is illustrative.</span></div>`;
-  setCTA(u); if (S.planKey) renderPay(p);
+  setCTA(u); if ($('#costBox')) { renderCost(p); renderModel(p); } if ($('#payTbl')) renderPay(p);
 }
 function setCTA(u) {
   const p = byId(S.pid); if (!$('#cta')) return;
-  $('#ctaGo').disabled = !u;
-  $('#ctaK').textContent = u ? `${p.name} · unit ${u.no}` : 'Choose a home';
-  $('#ctaT').innerHTML = u ? px(u.price) : '–'; refreshPrices($('#cta'));
+  if (p.type === 'res') { $('#ctaGo').disabled = false; $('#ctaK').textContent = p.name; $('#ctaT').innerHTML = px(p.price); }
+  else { $('#ctaGo').disabled = !u; $('#ctaK').textContent = u ? `${p.name} · unit ${u.no}` : 'Choose a home'; $('#ctaT').innerHTML = u ? px(u.price) : '–'; }
+  refreshPrices($('#cta'));
 }
-const FEES = price => ({ dld: price * .04, trustee: 4000 * 1.05, admin: 580 });
 function renderPay(p) {
   const price = S.unit ? S.unit.price : p.from, sch = schedule(p, S.planKey), f = FEES(price);
   $('#payTbl').innerHTML = `<h4>Instalments for ${px(price)}</h4><div class="pt">${sch.map(x => `<div class="pr ${x.n === 'On handover' ? 'h' : ''}"><span>${x.n}</span><em>${x.m ? monthLabel(x.m) : 'Today'}</em><i style="--w:${x.pc * 2.2}"></i><b>${x.pc}%</b><b>${px(price * x.pc / 100)}</b></div>`).join('')}</div>`;
   const now = price * .10 + f.dld + f.trustee + f.admin;
-  $('#payCost').innerHTML = `<h4>Cash needed to start</h4><div class="big">${px(now)}</div>
-    <div class="ln"><span>Booking (10%)</span>${px(price * .1)}</div><div class="ln"><span>DLD registration fee (4%)</span>${px(f.dld)}</div><div class="ln"><span>Trustee office fee + VAT</span>${px(f.trustee)}</div><div class="ln"><span>Admin fees</span>${px(f.admin)}</div>
-    <p class="mini">Your AED 40,000 reservation counts towards the booking. Fee amounts are indicative and should be confirmed for a real purchase. Brokerage is paid by the developer, not by you.</p>`;
+  $('#payCost').innerHTML = `<h4>Cash needed to start</h4><div class="big">${px(now)}</div><div class="ln"><span>Booking (10%)</span>${px(price * .1)}</div><div class="ln"><span>DLD fee (4%)</span>${px(f.dld)}</div><div class="ln"><span>Trustee fee + VAT</span>${px(f.trustee)}</div><div class="ln"><span>Admin fees</span>${px(f.admin)}</div><p class="mini">Your AED 40,000 EOI counts towards the booking. Indicative amounts.</p>`;
   refreshPrices($('#v-project'));
 }
 
-/* ----- resale ----- */
-function buildResale(r, el) {
-  const f = FEES(r.price);
-  el.innerHTML = `<div class="wrap pj"><button class="btn btn-ghost sm" id="pjBack">${ICON.back}<span>All homes</span></button>
-  <header class="pj-head"><div class="pj-gal"><div class="pj-main"><img id="pjHero" alt="Illustrated render of ${r.name}"></div><p class="note">Illustrated render for this demo.</p></div>
-  <div class="pj-title"><p class="eyebrow">${r.area} · ${r.unit}</p><h1 data-split>${r.name}</h1>
-   <div class="tags"><span class="tag">${r.view} view</span><span class="tag">${r.tenant ? 'Tenanted' : 'Vacant'}</span><span class="tag tag-ok">${ICON.shield} Title checked</span></div>
-   <div class="kpis"><div><small>Price</small><b>${px(r.price)}</b></div><div><small>Size</small><b>${r.size} sqft</b></div><div><small>Rent / yr</small><b>${px(r.rent)}</b></div><div><small>Yield</small><b>${r.yld}%</b></div></div>
-   <div class="card-s mt"><h4>Costs to close</h4><div class="ln"><span>DLD transfer fee (4%)</span>${px(f.dld)}</div><div class="ln"><span>Trustee office fee + VAT</span>${px(f.trustee)}</div><div class="ln"><span>Agency fee (2% + VAT), usual</span>${px(r.price * .02 * 1.05)}</div><p class="mini">Indicative. Resale uses the Form F contract and a manager's cheque at the DLD trustee office.</p></div>
-   <button class="btn btn-primary mt" id="offer" data-magnetic>Make an offer ${ICON.arrow}</button></div></header></div>`;
-  $('#pjHero').src = imgFor(r, 'ext'); if (!RM) $('#pjHero').style.viewTransitionName = 'hero';
-  $('#pjBack').onclick = () => go('home');
-  $('#offer').onclick = () => openModal(`<h2>Make an offer</h2><p class="sub">Offers on ready homes open in a later phase of this prototype. For now, off-plan homes can be reserved end to end.</p><button class="btn btn-primary" data-close>Got it</button>`);
-  reveal(el); refreshPrices(el);
+/* ----- specialist: call centre or meeting ----- */
+function setAdvSt() {
+  const s = $('#advSt'); if (!s) return;
+  s.textContent = S.agent ? (S.agent.mode === 'call' ? 'Call requested: ' : 'Meeting booked: ') + S.agent.when : '';
+}
+function openAgent(mode) {
+  const days = [...Array(5)].map((_, i) => new Date(Date.now() + (i + 1) * 864e5).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }));
+  const chips = (id, arr, sel) => `<div class="chipset" id="${id}">${arr.map((x, i) => `<button class="chip" aria-pressed="${i === sel}" data-v="${x}">${x}</button>`).join('')}</div>`;
+  if (!mode) { openModal(`<h2>Talk to a specialist</h2><p class="sub">Choose how you would like to speak.</p><div class="opts"><button class="opt" data-agent="call"><b>Call me</b><span>Our call centre rings you</span></button><button class="opt" data-agent="meet"><b>Meet in person</b><span>At the ARKO lounge</span></button></div>`); $('#modal').onclick = e => { const a = e.target.closest('[data-agent]'); if (a) openAgent(a.dataset.agent); }; return; }
+  if (mode === 'call') openModal(`<h2>Connect me to the call centre</h2><p class="sub">A specialist will ring you. Demo only: no call is placed.</p><label class="fld">Mobile number<input id="agPhone" type="tel" placeholder="+971 50 000 0000" autocomplete="off"></label><p class="mini mt">When should we call?</p>${chips('agWhen', ['As soon as possible', 'This evening', 'Tomorrow morning'], 0)}<button class="btn btn-primary" id="agGo" disabled>Connect me</button>`);
+  else openModal(`<h2>Meet a specialist</h2><p class="sub">ARKO lounge, Business Bay (demo address). About 45 minutes.</p><p class="mini">Day</p>${chips('agDay', days, 0)}<p class="mini mt">Time</p>${chips('agTime', ['10:00', '12:30', '16:00', '18:30'], 0)}<button class="btn btn-primary" id="agGo">Book meeting</button>`);
+  const m = $('#modal'); m.onclick = e => {
+    const c = e.target.closest('.chipset .chip'); if (c) { $$('.chip', c.parentNode).forEach(x => x.setAttribute('aria-pressed', String(x === c))); }
+    const a = e.target.closest('[data-agent]'); if (a) openAgent(a.dataset.agent);
+  };
+  const ph = $('#agPhone'); if (ph) ph.oninput = () => { $('#agGo').disabled = ph.value.replace(/\D/g, '').length < 7; };
+  const go = $('#agGo'); if (go) go.onclick = () => {
+    const sel = id => ($('#' + id + ' .chip[aria-pressed=true]') || {}).dataset.v;
+    const when = mode === 'call' ? sel('agWhen') : sel('agDay') + ' at ' + sel('agTime');
+    const sheet = $('#modal .sheet');
+    sheet.innerHTML = `<button class="x" data-close aria-label="Close">${ICON.x}</button><div class="conn"><span></span><span></span><span></span></div><h2>${mode === 'call' ? 'Connecting you…' : 'Booking…'}</h2>`;
+    setTimeout(() => {
+      S.agent = { mode, when }; setAdvSt();
+      sheet.innerHTML = `<button class="x" data-close aria-label="Close">${ICON.x}</button><div class="okc">${ICON.check}</div><h2>${mode === 'call' ? 'Call requested' : 'Meeting booked'}</h2><p class="sub">${mode === 'call' ? 'A specialist will call you: ' + when + '.' : when + ', ARKO lounge, Business Bay.'} You can keep browsing. We will show this in your purchase tracker.</p><button class="btn btn-primary" data-close>Done</button>`;
+      toast(mode === 'call' ? 'Call requested' : 'Meeting booked');
+    }, RM ? 100 : 1600);
+  };
 }
 
 /* ---------- reserve flow ---------- */
-const STEPS = ['Your home', 'Verify you', 'Source of funds', 'Pay to escrow', 'Sign'];
+const STEPS = ['EOI details', 'Verify you', 'Source of funds', 'Pay to escrow', 'Sign'];
 const RS = { id: false, fund: '', method: 'bank', paid: false, sig: false };
 let sigCleanup = null;
 
@@ -1259,12 +1368,12 @@ function openReserve() {
 function renderReserve() {
   const p = byId(S.pid), u = S.unit, el = V.reserve, k = S.step;
   const price = u.price, f = FEES(price);
-  const side = `<aside class="rs-side"><div class="rs-img"><img alt="" src="${imgFor(p)}"></div><h3>${p.name}</h3><p>${u.type} · ${u.size} sqft · unit ${u.no}</p><div class="ln"><span>Price</span>${px(price)}</div><div class="ln"><span>Plan</span><b>${S.planKey}</b></div><div class="ln"><span>Reserve now</span>${px(DEP)}</div><p class="mini">${ICON.lock} Paid straight into the project escrow account.</p></aside>`;
+  const side = `<aside class="rs-side"><div class="rs-img"><img alt="" src="${imgFor(p)}"></div><h3>${p.name}</h3><p>${u.type} · ${u.size} sqft · unit ${u.no}</p><div class="ln"><span>Price</span>${px(price)}</div><div class="ln"><span>Plan</span><b>${S.planKey}</b></div><div class="ln"><span>EOI amount</span>${px(DEP)}</div><p class="mini">${ICON.lock} Paid straight into the project escrow account.</p></aside>`;
   const bar = `<ol class="stepper">${STEPS.map((s, i) => `<li class="${i < k ? 'done' : i === k ? 'cur' : ''}"><i>${i < k ? ICON.check : i + 1}</i><span>${s}</span></li>`).join('')}</ol>`;
   const panels = [
-    `<h2>Check your choice</h2><p class="sub">You are reserving this home. Nothing is final until you sign the sale agreement.</p>
+    `<h2>Express your interest</h2><p class="sub">An EOI (expression of interest) holds this home while you do the paperwork. Nothing is final until the deal closes with the sale agreement.</p>
      <div class="card-s"><div class="ln"><span>Home</span><b>${p.name}, ${u.type}, unit ${u.no}</b></div><div class="ln"><span>Price</span>${px(price)}</div><div class="ln"><span>Cash to start (booking + fees)</span>${px(price * .1 + f.dld + f.trustee + f.admin)}</div><div class="ln"><span>Handover</span><b>${p.ho}</b></div></div>
-     <label class="chk"><input type="checkbox" id="c1"><span>I understand that this is a reservation and the full contract (SPA) follows.</span></label>`,
+     <label class="chk"><input type="checkbox" id="c1"><span>I understand that this is an EOI and the sale agreement (SPA) follows.</span></label>`,
     `<h2>Verify who you are</h2><p class="sub">Required by law for every property buyer. Takes about a minute in the real product.</p>
      <div class="vf" id="vf"><button class="btn btn-ghost" id="vUae">Continue with UAE Pass (demo)</button><button class="btn btn-ghost" id="vPass">Scan passport and take a selfie (demo)</button></div>
      <div class="vf-res" id="vfRes" hidden></div>`,
@@ -1272,13 +1381,13 @@ function renderReserve() {
      <div class="opts two" id="fund">${['Salary and savings', 'Business income', 'Sale of another property', 'Gift or inheritance'].map(o => `<button class="opt" data-v="${o}"><b>${o}</b></button>`).join('')}</div>
      <h4 class="mt">How will you pay?</h4><div class="seg" id="mseg"><button aria-selected="true" data-v="bank">Bank transfer</button><button aria-selected="false" data-v="card">Card</button><span class="thumb"></span></div>
      <p class="mini">Funds must come from an account in your own name.</p>`,
-    `<h2>Pay the reservation</h2><p class="sub">Your money goes to the regulated escrow account for ${p.name}, not to us.</p>
+    `<h2>Pay the EOI amount</h2><p class="sub">Your money goes to the regulated escrow account for ${p.name}, not to us.</p>
      <div class="pay-box"><div class="big">${px(DEP, true)}</div><div class="ln"><span>Pay to</span><b>${p.name} Escrow A/C ••••4821</b></div><div class="ln"><span>Bank</span><b>Regulated UAE escrow bank (demo)</b></div><div class="ln"><span>Refund</span><b>Full refund until the agreement is signed</b></div>
      <button class="btn btn-primary" id="payGo" data-magnetic>${RS.method === 'card' ? 'Pay by card' : 'Confirm transfer'} ${ICON.arrow}</button><div class="spin" id="spin" hidden></div></div>`,
-    `<h2>Sign the reservation form</h2><p class="sub">Draw your signature. In the real product this is a legally binding e-signature.</p>
-     <div class="sig"><canvas id="sig" height="170"></canvas><button class="btn btn-ghost sm" id="sigClr">Clear</button></div><p class="mini">By signing you agree to the reservation terms (demo text).</p>`
+    `<h2>Sign the EOI form</h2><p class="sub">Draw your signature. In the real product this is a legally binding e-signature.</p>
+     <div class="sig"><canvas id="sig" height="170"></canvas><button class="btn btn-ghost sm" id="sigClr">Clear</button></div><p class="mini">By signing you agree to the EOI terms (demo text).</p>`
   ];
-  const nextLbl = k === 4 ? 'Complete reservation' : 'Continue';
+  const nextLbl = k === 4 ? 'Submit EOI' : 'Continue';
   const foot = k === 3 ? '' : `<div class="rs-foot"><button class="btn btn-ghost" id="rsBack">${ICON.back} Back</button><button class="btn btn-primary" id="rsNext" disabled>${nextLbl} ${ICON.arrow}</button></div>`;
   el.innerHTML = `<div class="wrap rs"><div class="rs-main">${bar}<div class="rs-panel" id="rsP">${panels[k]}${foot}</div></div>${side}</div>`;
   refreshPrices(el);
@@ -1315,119 +1424,269 @@ function renderReserve() {
   scrollTo(0, 0);
 }
 function finishReserve() {
-  const p = byId(S.pid), u = S.unit, ref = 'MZL-' + (hash(p.id + u.no) % 900000 + 100000);
-  S.res = { pid: p.id, unit: u, planKey: S.planKey, ref };
+  const p = byId(S.pid), u = S.unit, ref = 'ARK-' + (hash(p.id + u.no) % 900000 + 100000);
+  S.res = { kind: 'off', pid: p.id, unit: u, planKey: S.planKey, ref };
   const el = V.reserve;
-  el.innerHTML = `<div class="wrap fin"><canvas id="cf"></canvas><div class="okc big">${ICON.check}</div><h1>You have reserved ${p.name}</h1><p class="lead">${u.type}, unit ${u.no} is held for you. Reference <b>${ref}</b>.</p>
-    <ol class="next"><li><b>Today</b><span>Reservation money sits in the project escrow account.</span></li><li><b>Within days</b><span>Sign the sale agreement (SPA) and pay the rest of the 10% booking.</span></li><li><b>Within 60 days</b><span>Your purchase is registered at DLD through Oqood.</span></li></ol>
-    <div class="row"><button class="btn btn-primary" id="toTrack" data-magnetic>Track my purchase ${ICON.arrow}</button><button class="btn btn-ghost" id="toHome">Keep browsing</button></div></div>`;
+  el.innerHTML = `<div class="wrap fin"><canvas id="cf"></canvas><div class="okc big">${ICON.check}</div><h1>Your EOI for ${p.name} is in</h1><p class="lead">${u.type}, unit ${u.no} is held for you. Reference <b>${ref}</b>.</p>
+    <ol class="next"><li><b>Today</b><span>Reservation money sits in the project escrow account.</span></li><li><b>Deal closed</b><span>Sign the sale agreement (SPA) and pay the rest of the 10% initial payment.</span></li><li><b>DLD registration</b><span>Your purchase is registered at DLD through Oqood, then instalment reminders begin.</span></li></ol>
+    ${feedbackHTML()}<div class="row"><button class="btn btn-primary" id="toTrack" data-magnetic>Track my purchase ${ICON.arrow}</button><button class="btn btn-ghost" id="toHome">Keep browsing</button></div></div>`;
   $('#toTrack').onclick = () => goTracker(); $('#toHome').onclick = () => go('home');
-  confetti($('#cf')); toast('Reservation complete');
+  confetti($('#cf')); bindFeedback(el); toast('EOI submitted');
 }
 
-/* ---------- status tracker ---------- */
-let trk = null, trkTimer = null;
+/* ----- test: quick feedback on a flow ----- */
+function feedbackHTML() { return `<div class="fb"><span>Was this flow clear?</span><button class="btn btn-ghost sm" data-fb="clear">Clear</button><button class="btn btn-ghost sm" data-fb="confusing">Confusing</button></div>`; }
+function bindFeedback(root) { const f = $('.fb', root); if (f) f.onclick = e => { const b = e.target.closest('[data-fb]'); if (!b) return; f.innerHTML = '<span>Thanks. That helps us improve the next version.</span>'; toast('Feedback noted', 'info'); }; }
+
+/* ---------- status tracker (off-plan and ready) ---------- */
+let trkTimer = null;
+const pmt = (L, r, n) => L * r / 12 / (1 - Math.pow(1 + r / 12, -n * 12));
 function goTracker() {
-  if (!S.res) {  /* demo reservation so the tracker can always be explored */
+  if (!S.res) {  /* sample purchase so the tracker can always be explored */
     const p = PROJ[0], us = unitsFor(p, 22), u = us.find(x => x.st === 'avail') || us[0];
-    S.res = { pid: p.id, unit: u, planKey: p.plan, ref: 'MZL-' + (hash(p.id + u.no) % 900000 + 100000), demo: true };
+    S.res = { kind: 'off', pid: p.id, unit: u, planKey: p.plan, ref: 'ARK-' + (hash(p.id + u.no) % 900000 + 100000), demo: true };
   }
   go('tracker', buildTracker);
 }
+function trackerCfg(r) {
+  const p = byId(r.pid);
+  if (r.kind === 'res') {
+    const price = r.price, loan = r.loan ? r.loan.amount : 0, f = feesOf(p, price), fees = f.dld + f.trustee + f.admin + f.agency + (loan ? loan * .0025 + 290 : 0);
+    const stages = [['Viewing', 'You saw the home', 0], ['Deal closed', 'Offer accepted, contract signed', 0]];
+    if (loan) stages.push(['Mortgage approved', 'The bank issued the final offer', 1]);
+    stages.push(['Initial payment and charges', '10% deposit plus government fees', 2], ['Registered at DLD', 'Title transferred to you', 3], ['You are the owner', 'Title deed in your name', 4], ['Payments and follow-ups', loan ? 'Mortgage instalment reminders' : 'Service charge reminders', 5]);
+    const pays = [{ n: 'Initial payment (10% deposit)', m: 2, amt: price * .1 }, { n: 'Charges: DLD, trustee, agency', m: 2, amt: fees }];
+    if (loan) pays.push({ n: 'Bank pays loan amount', m: 3, amt: loan });
+    pays.push({ n: 'Your balance at transfer', m: 3, amt: price * .9 - loan });
+    if (loan) for (let k = 1; k <= 6; k++) pays.push({ n: 'Mortgage instalment ' + k, m: 5 + k, amt: r.loan.pmt });
+    else [6, 9].forEach((m, k) => pays.push({ n: 'Service charge, quarter ' + (k + 1), m, amt: p.svc * p.size / 4 }));
+    const docs = [['Viewing confirmation', 0], ['Accepted offer and contract (Form F)', 0]];
+    if (loan) docs.push(['Mortgage pre-approval letter', 1], ['Final bank offer letter', 1]);
+    docs.push(['Payment receipts', 2], ['Transfer forms signed at trustee', 3], ['Title deed', 4]); if (loan) docs.push(['Mortgage contract', 4]);
+    const ev = [[0, 'Viewing done'], [0, 'Offer accepted, deal closed'], ...(loan ? [[1, 'Mortgage approved by ' + r.loan.bank]] : []), [2, 'Initial payment received'], [3, 'Transfer registered at DLD'], [4, 'Title deed issued'], [5, 'Utilities and keys handed over'], ...pays.filter(x => x.m >= 5).map(x => [x.m, x.n + ' due'])];
+    return { p, res: true, price, ref: r.ref, maxM: 10, dm: 3, stages, pays, docs, ev, loan: r.loan, ownAt: 4, dldSteps: ['Initial payment', 'Forms signed at trustee', 'DLD review', 'Title transferred'], dldNo: 'Transfer reference', sub: p.unit + ' · ' + p.area, handover: 'Ready now', feeLabel: 'DLD transfer fee (4%)' };
+  }
+  const u = r.unit, price = u.price, sch = schedule(p, r.planKey);
+  const stages = [['EOI submitted', 'Home held, EOI money in escrow', 0], ['Deal closed', 'Sale agreement signed, initial payment made', 1], ['Registered at DLD', 'Oqood certificate issued for your unit', 2], ['Under construction', 'Progress checked by RERA inspectors', 3], ['Handover and snagging', 'Inspect the unit, list any defects', p.hm], ['Title deed', 'Ownership recorded in your name', p.hm + 2]];
+  const docs = [['EOI form', 0], ['EOI payment receipt', 0], ['Sale agreement (SPA)', 1], ['Oqood certificate', 2], ['Floor plan and unit specification', 1], ['Construction progress report', 6], ['Handover notice', p.hm], ['Title deed', p.hm + 2]];
+  const pays = sch.map(x => ({ n: x.n, m: x.m, amt: price * x.pc / 100 }));
+  const ev = [[0, 'EOI received in escrow'], [1, 'Sale agreement signed, deal closed'], [1, 'Initial payment made'], [2, 'Oqood registered at DLD'], [3, 'Construction started'], ...sch.filter(x => x.m > 1 && x.m <= p.hm).map(x => [x.m, x.n + ' due']), [Math.round(p.hm * .5), 'Mid-build inspection'], [p.hm, 'Handover invitation'], [p.hm + 2, 'Title deed issued']];
+  return { p, res: false, price, ref: r.ref, maxM: p.hm + 3, dm: 2, stages, pays, docs, ev, ownAt: p.hm + 2, dldSteps: ['Booking paid', 'Sent to trustee', 'DLD review', 'Registered'], dldNo: 'Oqood number', sub: u.type + ' · unit ' + u.no + ' · ' + p.area, handover: p.ho, feeLabel: 'DLD fee (4%)' };
+}
 function buildTracker() {
   clearInterval(trkTimer); S.playing = false;
-  const r = S.res, p = byId(r.pid), u = r.unit, price = u.price, sch = schedule(p, r.planKey), maxM = p.hm + 3;
-  S.month = Math.min(S.month, maxM); if (S.month > 12 || S.month < 0) S.month = 0; S.month = 1;
-  const ST = [
-    ['Reserved', 'Home held, reservation money in escrow', 0], ['Booking paid, SPA signed', 'Sale agreement signed with the developer', 1],
-    ['Registered at DLD', 'Oqood certificate issued for your unit', 2], ['Under construction', 'Progress checked by RERA inspectors', 3],
-    ['Handover and snagging', 'Inspect the unit, list any defects', p.hm], ['Title deed', 'Ownership recorded in your name', p.hm + 2]];
-  const DOCS = [['Reservation form', 0], ['Payment receipt, reservation', 0], ['Sale agreement (SPA)', 1], ['Oqood certificate', 2], ['Floor plan and unit specification', 1], ['Construction progress report', 6], ['Handover notice', p.hm], ['Title deed', p.hm + 2]];
-  const oq = 'OQ-' + (hash(r.ref) % 9000000 + 1000000);
+  const r = S.res, c = trackerCfg(r), p = c.p, price = c.price, maxM = c.maxM, dm = c.dm;
+  const oq = (c.res ? 'TR-' : 'OQ-') + (hash(r.ref) % 9000000 + 1000000);
+  const ag = S.agent ? `<span class="pill ok">${S.agent.mode === 'call' ? 'Call requested' : 'Meeting booked'}: ${S.agent.when}</span>` : '';
+  const side = c.res ? `<section class="tc"><h3>Your home</h3><ul class="docs" id="home">${[['Funds confirmed', 3], ['Title transferred', 4], ['Utilities connected (DEWA)', 5], ['Keys received', 5]].map(d => `<li data-at="${d[1]}">${ICON.check}<span>${d[0]}</span><em></em></li>`).join('')}</ul></section>` :
+    `<section class="tc"><h3>Project progress</h3><div class="prj"><canvas id="bld" width="220" height="200" aria-label="Building under construction"></canvas><div><div class="big" id="prog">0%</div><span class="mini">complete</span></div></div><div class="ln"><span>RERA project</span><b>${p.rera}</b></div><div class="ln"><span>Next inspection</span><b id="insp"></b></div></section>`;
+  const money2 = c.res ? (c.loan ? `<section class="tc"><h3>Mortgage</h3><div class="ln"><span>Bank</span><b>${c.loan.bank}</b></div><div class="ln"><span>Loan</span><b>${px(c.loan.amount)}</b></div><div class="ln"><span>Rate and term</span><b>${(c.loan.rate * 100).toFixed(1)}% · ${c.loan.term} years</b></div><div class="ln"><span>Monthly instalment</span><b>${px(c.loan.pmt)}</b></div><div class="ln"><span>Balance left</span><b id="lnBal"></b></div><p class="mini">Demo rate and terms.</p></section>` : `<section class="tc"><h3>Payment summary</h3><div class="ln"><span>Price plus fees</span><b>${px(price + c.pays[1].amt)}</b></div><div class="ln"><span>Paid so far</span><b id="sPaid"></b></div><div class="ln"><span>Still to pay</span><b id="sLeft"></b></div></section>`)
+    : `<section class="tc"><h3>Escrow</h3><div class="esc"><div class="esc-b"><i id="eRel"></i><i id="eHeld"></i></div></div><div class="ln"><span class="d d1"></span>Held for you<b id="eH"></b></div><div class="ln"><span class="d d2"></span>Released to developer<b id="eR"></b></div><p class="mini">Released only as certified construction milestones are reached. Illustrative split.</p></section>`;
   V.tracker.innerHTML = `<div class="wrap tk">
-   <header class="tk-h"><div class="tk-id"><img alt="" src="${imgFor(p)}"><div><p class="eyebrow">Reference ${r.ref}${r.demo ? ' · sample purchase' : ''}</p><h1>${p.name}</h1><p>${u.type} · unit ${u.no} · ${p.area}</p></div></div>
-    <div class="tk-sum"><div><small>Price</small><b>${px(price)}</b></div><div><small>Paid so far</small><b id="kPaid"></b></div><div><small>Handover</small><b>${p.ho}</b></div></div></header>
+   <header class="tk-h"><div class="tk-id"><img alt="" src="${imgFor(p)}"><div><p class="eyebrow">Reference ${r.ref}${r.demo ? ' · sample purchase' : ''}</p><h1>${p.name}</h1><p>${c.sub}</p>${ag}</div></div>
+    <div class="tk-sum"><div><small>Price</small><b>${px(price)}</b></div><div><small>Paid so far</small><b id="kPaid"></b></div><div><small>${c.res ? 'Status' : 'Handover'}</small><b>${c.handover}</b></div></div></header>
    <div class="tm"><button class="btn btn-ghost sm" id="tmPlay" aria-label="Play time machine">▶ Play</button><div class="tm-r"><label for="tm">Demo time machine: ${monthLabel(0)} to ${monthLabel(maxM)}</label><input id="tm" type="range" min="0" max="${maxM}" step="1" value="1"></div><b id="tmNow"></b></div>
+   <div class="next-st" id="nextSt" aria-live="polite"></div>
    <div class="tk-grid">
-    <section class="tc stg"><h3>Your journey</h3><ol id="stg">${ST.map((s, i) => `<li data-at="${s[2]}"><i></i><div><b>${s[0]}</b><span>${s[1]}</span><em>${monthLabel(s[2])}</em></div></li>`).join('')}</ol></section>
-    <section class="tc"><h3>DLD registration</h3><div class="pillrow"><span class="pill" id="dldPill"></span></div><div class="ln"><span>Oqood number</span><b id="oqN">–</b></div><ol class="mini-st" id="dldSt">${['Booking paid', 'Sent to trustee', 'DLD review', 'Registered'].map(s => `<li><i></i>${s}</li>`).join('')}</ol><div class="ln"><span>DLD fee (4%)</span><b id="dldFee"></b></div><p class="mini">Off-plan sales must be registered within 60 days of the agreement.</p></section>
-    <section class="tc"><h3>Project progress</h3><div class="prj"><canvas id="bld" width="220" height="200" aria-label="Building under construction"></canvas><div><div class="big" id="prog">0%</div><span class="mini">complete</span></div></div><div class="ln"><span>RERA project</span><b>${p.rera}</b></div><div class="ln"><span>Next inspection</span><b id="insp"></b></div></section>
-    <section class="tc"><h3>Escrow</h3><div class="esc"><div class="esc-b"><i id="eRel"></i><i id="eHeld"></i></div></div><div class="ln"><span class="d d1"></span>Held for you<b id="eH"></b></div><div class="ln"><span class="d d2"></span>Released to developer<b id="eR"></b></div><p class="mini">Money is released only as certified construction milestones are reached. Illustrative split.</p></section>
-    <section class="tc wide"><div class="tc-h"><h3>Payments</h3><button class="bell" id="bell" aria-pressed="true">${ICON.bell}<span>Reminders on</span></button></div><div id="pays"></div></section>
-    <section class="tc"><h3>Documents</h3><ul class="docs" id="docs">${DOCS.map(d => `<li data-at="${d[1]}">${ICON.doc}<span>${d[0]}</span><em></em></li>`).join('')}</ul></section>
-    <section class="tc"><h3>Latest activity</h3><ul class="act" id="act"></ul></section>
+    <section class="tc stg"><h3>Your journey</h3><ol id="stg">${c.stages.map(s => `<li data-at="${s[2]}"><i></i><div><b>${s[0]}</b><span>${s[1]}</span><em>${monthLabel(s[2])}</em></div></li>`).join('')}</ol></section>
+    <section class="tc"><h3>DLD registration</h3><div class="pillrow"><span class="pill" id="dldPill"></span></div><div class="ln"><span>${c.dldNo}</span><b id="oqN">–</b></div><ol class="mini-st" id="dldSt">${c.dldSteps.map(s => `<li><i></i>${s}</li>`).join('')}</ol><div class="ln"><span>${c.feeLabel}</span><b id="dldFee"></b></div><p class="mini">${c.res ? 'The transfer is signed and paid at a DLD trustee office.' : 'Off-plan sales must be registered within 60 days of the agreement.'}</p></section>
+    ${side}${money2}
+    <section class="tc wide"><div class="tc-h"><h3>Payments and reminders</h3><button class="bell" id="bell" aria-pressed="true">${ICON.bell}<span>Reminders on</span></button></div><div id="pays">${c.pays.map(x => `<div class="py" data-m="${x.m}"><i></i><span>${x.n}<em>${monthLabel(x.m)}</em></span><b>${px(x.amt)}</b><u></u></div>`).join('')}</div></section>
+    <section class="tc"><h3>Documents</h3><ul class="docs" id="docs">${c.docs.map(d => `<li data-at="${d[1]}">${ICON.doc}<span>${d[0]}</span><em></em></li>`).join('')}</ul></section>
+    <section class="tc"><h3>Updates and follow-ups</h3><ul class="act" id="act"></ul></section>
    </div></div>`;
   const q = s => $(s, V.tracker), tm = q('#tm');
-  const paysEl = q('#pays');
-  paysEl.innerHTML = sch.map((x, i) => `<div class="py" data-m="${x.m}"><i></i><span>${x.n}<em>${x.m ? monthLabel(x.m) : monthLabel(0)}</em></span><b>${px(price * x.pc / 100)}</b><u></u></div>`).join('');
-  const bld = q('#bld'), bc = bld.getContext('2d'), dpr = Math.min(devicePixelRatio || 1, 2);
-  bld.width = 220 * dpr; bld.height = 200 * dpr; bc.scale(dpr, dpr);
-  const drawBld = pc => {
-    bc.clearRect(0, 0, 220, 200); const fl = Math.min(p.floors, 22), x0 = 60, w = 100, H0 = 175, fh = 150 / fl, done = Math.floor(fl * pc / 100);
-    bc.fillStyle = '#E4EFEC'; bc.fillRect(10, H0, 200, 6);
-    for (let i = 0; i < fl; i++) {
-      const y = H0 - (i + 1) * fh;
-      if (i < done) { bc.fillStyle = i % 2 ? '#6FB9B4' : '#0E7C79'; bc.fillRect(x0, y, w, fh - 1); bc.fillStyle = 'rgba(255,255,255,.35)'; for (let k = 0; k < 4; k++) bc.fillRect(x0 + 8 + k * 23, y + 3, 14, fh - 7); }
-      else { bc.strokeStyle = 'rgba(10,42,46,.25)'; bc.setLineDash([3, 3]); bc.strokeRect(x0 + .5, y + .5, w - 1, fh - 2); bc.setLineDash([]); }
-    }
-    if (pc < 100) { const ty = H0 - 160; bc.strokeStyle = '#FF7A59'; bc.lineWidth = 2; bc.beginPath(); bc.moveTo(175, H0); bc.lineTo(175, ty); bc.moveTo(120, ty); bc.lineTo(205, ty); bc.moveTo(130, ty); bc.lineTo(130, ty + 22); bc.stroke(); bc.lineWidth = 1; }
-  };
-  const act = [];
+  let drawBld = () => { };
+  if (!c.res) {
+    const bld = q('#bld'), bc = bld.getContext('2d'), dpr = Math.min(devicePixelRatio || 1, 2); bld.width = 220 * dpr; bld.height = 200 * dpr; bc.scale(dpr, dpr);
+    drawBld = pc => {
+      bc.clearRect(0, 0, 220, 200); const fl = Math.min(p.floors, 22), x0 = 60, w = 100, H0 = 175, fh = 150 / fl, done = Math.floor(fl * pc / 100);
+      bc.fillStyle = '#E4EFEC'; bc.fillRect(10, H0, 200, 6);
+      for (let i = 0; i < fl; i++) {
+        const y = H0 - (i + 1) * fh;
+        if (i < done) { bc.fillStyle = i % 2 ? '#6FB9B4' : '#0E7C79'; bc.fillRect(x0, y, w, fh - 1); bc.fillStyle = 'rgba(255,255,255,.35)'; for (let k = 0; k < 4; k++) bc.fillRect(x0 + 8 + k * 23, y + 3, 14, fh - 7); }
+        else { bc.strokeStyle = 'rgba(10,42,46,.25)'; bc.setLineDash([3, 3]); bc.strokeRect(x0 + .5, y + .5, w - 1, fh - 2); bc.setLineDash([]); }
+      }
+      if (pc < 100) { const ty = H0 - 160; bc.strokeStyle = '#FF7A59'; bc.lineWidth = 2; bc.beginPath(); bc.moveTo(175, H0); bc.lineTo(175, ty); bc.moveTo(120, ty); bc.lineTo(205, ty); bc.moveTo(130, ty); bc.lineTo(130, ty + 22); bc.stroke(); bc.lineWidth = 1; }
+    };
+  }
   const upd = m => {
-    S.month = m; q('#tmNow').textContent = monthLabel(m);
+    S.month = m; q('#tmNow').textContent = monthLabel(m); tm.value = m;
     $$('#stg li', V.tracker).forEach((li, i, all) => { const at = +li.dataset.at, nx = all[i + 1] ? +all[i + 1].dataset.at : 1e9; li.className = m >= nx ? 'done' : m >= at ? 'now' : ''; $('i', li).innerHTML = m >= nx ? ICON.check : ''; });
-    /* DLD */
-    const dl = m < 1 ? 0 : m < 2 ? 1 : m < 3 ? 2 : 3, labels = ['Waiting for booking', 'Sent to trustee office', 'Under DLD review', 'Registered'];
-    q('#dldPill').textContent = m >= 2 ? 'Registered' : labels[Math.min(dl, 2)]; q('#dldPill').className = 'pill ' + (m >= 2 ? 'ok' : 'wait');
-    $$('#dldSt li', V.tracker).forEach((li, i) => li.className = (m >= 2 ? 4 : dl + 1) > i ? 'on' : '');
-    q('#oqN').textContent = m >= 2 ? oq : 'Issued on registration'; q('#dldFee').textContent = m >= 1 ? 'Paid' : money(price * .04);
-    /* progress */
-    const pc = m < 3 ? 0 : Math.round(progressAt(p, m)); q('#prog').textContent = pc + '%'; drawBld(pc);
-    q('#insp').textContent = m < 3 ? 'After launch' : m >= p.hm ? 'Completed' : monthLabel(Math.min(p.hm, Math.ceil((m + 1) / 3) * 3));
-    /* payments */
-    let paid = 0; const nextIdx = sch.findIndex(x => x.m > m);
-    $$('.py', V.tracker).forEach((row, i) => { const x = sch[i], done = x.m <= m; if (done) paid += price * x.pc / 100; row.className = 'py ' + (done ? 'paid' : i === nextIdx ? 'next' : ''); const d = x.m - m; $('u', row).textContent = done ? 'Paid' : i === nextIdx ? (d <= 1 ? 'Due this month' : 'Due in ' + d + ' months') : 'Upcoming'; $('i', row).innerHTML = done ? ICON.check : ''; });
-    q('#kPaid').innerHTML = px(paid); refreshPrices(q('#kPaid'));
-    const rel = paid * (pc / 100) * .95, held = paid - rel;
-    q('#eRel').style.setProperty('--w', paid ? rel / paid * 100 : 0); q('#eHeld').style.setProperty('--w', paid ? held / paid * 100 : 0);
-    q('#eH').innerHTML = px(held); q('#eR').innerHTML = px(rel); refreshPrices(q('.esc').parentNode);
-    /* docs */
+    const left = dm - m, labels = ['Waiting for payment', 'Sent to trustee office', 'Under DLD review', 'Registered'];
+    q('#dldPill').textContent = m >= dm ? 'Registered' : labels[left >= 2 ? 0 : 1]; q('#dldPill').className = 'pill ' + (m >= dm ? 'ok' : 'wait');
+    $$('#dldSt li', V.tracker).forEach((li, i) => li.className = (m >= dm ? 4 : left >= 2 ? 1 : 2) > i ? 'on' : '');
+    q('#oqN').textContent = m >= dm ? oq : 'Issued on registration'; q('#dldFee').innerHTML = m >= (c.res ? 2 : 1) ? 'Paid' : px(price * .04); refreshPrices(q('#dldFee'));
+    let paid = 0, nextI = -1, cnt = 0; c.pays.forEach((x, i) => { if (x.m <= m) { paid += x.amt; if (/instalment/i.test(x.n)) cnt++; } else if (nextI < 0) nextI = i; });
+    $$('.py', V.tracker).forEach((row, i) => { const x = c.pays[i], done = x.m <= m, d = x.m - m; row.className = 'py ' + (done ? 'paid' : i === nextI ? 'next' : ''); $('u', row).textContent = done ? 'Paid' : i === nextI ? (d <= 1 ? 'Due this month' : 'Due in ' + d + ' months') : 'Upcoming'; $('i', row).innerHTML = done ? ICON.check : ''; });
+    q('#kPaid').innerHTML = px(paid);
+    if (!c.res) {
+      const pc = m < 3 ? 0 : Math.round(progressAt(p, m)); q('#prog').textContent = pc + '%'; drawBld(pc);
+      q('#insp').textContent = m < 3 ? 'After launch' : m >= p.hm ? 'Completed' : monthLabel(Math.min(p.hm, Math.ceil((m + 1) / 3) * 3));
+      const rel = paid * (pc / 100) * .95, held = paid - rel;
+      q('#eRel').style.setProperty('--w', paid ? rel / paid * 100 : 0); q('#eHeld').style.setProperty('--w', paid ? held / paid * 100 : 0); q('#eH').innerHTML = px(held); q('#eR').innerHTML = px(rel);
+    } else {
+      $$('#home li', V.tracker).forEach(li => { const on = m >= +li.dataset.at; li.className = on ? 'on' : ''; $('em', li).textContent = on ? 'Done' : 'Pending'; });
+      if (c.loan) { const rr = c.loan.rate / 12, n = c.loan.term * 12, bal = cnt ? c.loan.amount * (Math.pow(1 + rr, n) - Math.pow(1 + rr, cnt)) / (Math.pow(1 + rr, n) - 1) : c.loan.amount; q('#lnBal').innerHTML = px(m >= 3 ? bal : 0); }
+      else { const core = c.pays.filter(x => !/Service/.test(x.n)), due = core.reduce((t, x) => t + x.amt, 0), pd = core.reduce((t, x) => t + (x.m <= m ? x.amt : 0), 0); q('#sPaid').innerHTML = px(pd); q('#sLeft').innerHTML = px(due - pd); }
+    }
     $$('#docs li', V.tracker).forEach(li => { const on = m >= +li.dataset.at; li.className = on ? 'on' : ''; $('em', li).innerHTML = on ? 'Ready' : ICON.lock; });
-    /* activity */
-    const ev = [[0, 'Reservation received in escrow'], [1, 'Sale agreement signed'], [1, 'Booking instalment paid'], [2, 'Oqood registered at DLD'], [3, 'Construction started'],
-      ...sch.filter(x => x.m > 1 && x.m <= p.hm).map(x => [x.m, x.n + ' paid']), [Math.round(p.hm * .5), 'Mid-build inspection passed'], [p.hm, 'Handover invitation sent'], [p.hm + 2, 'Title deed issued']].filter(e => e[0] <= m).sort((a, b) => b[0] - a[0]).slice(0, 5);
-    q('#act').innerHTML = ev.map(e => `<li><i></i><span>${e[1]}</span><em>${monthLabel(e[0])}</em></li>`).join('');
-    tm.value = m;
+    const past = c.ev.filter(e => e[0] <= m).sort((a, b) => b[0] - a[0]).slice(0, 4), up = c.ev.filter(e => e[0] > m).sort((a, b) => a[0] - b[0]).slice(0, 2);
+    q('#act').innerHTML = up.reverse().map(e => `<li class="up"><i></i><span>${e[1]}</span><em>${monthLabel(e[0])}</em></li>`).join('') + past.map(e => `<li><i></i><span>${e[1]}</span><em>${monthLabel(e[0])}</em></li>`).join('');
+    const nx = c.pays[nextI], ns = q('#nextSt');
+    ns.innerHTML = nx ? `<b>Next</b><span>${nx.n}: ${px(nx.amt)} in ${Math.max(0, nx.m - m) <= 1 ? 'about a month' : (nx.m - m) + ' months'} (${monthLabel(nx.m)}). ${q('#bell').getAttribute('aria-pressed') === 'true' ? 'A reminder is set.' : 'Reminders are off.'}</span>` : `<b>All set</b><span>Everything due has been paid. We will keep following up on documents and handover.</span>`;
+    refreshPrices(ns);
   };
-  trk = { upd };
   tm.oninput = () => upd(+tm.value);
-  q('#bell').onclick = e => { const b = e.currentTarget, on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', String(on)); $('span', b).textContent = on ? 'Reminders on' : 'Reminders off'; toast(on ? 'You will get a reminder a week before each payment' : 'Reminders turned off', 'info'); };
+  q('#bell').onclick = e => { const b = e.currentTarget, on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', String(on)); $('span', b).textContent = on ? 'Reminders on' : 'Reminders off'; toast(on ? 'You will get a reminder a week before each payment' : 'Reminders turned off', 'info'); upd(S.month); };
   q('#tmPlay').onclick = () => {
     const btn = q('#tmPlay'); if (S.playing) { clearInterval(trkTimer); S.playing = false; btn.textContent = '▶ Play'; return; }
     if (S.month >= maxM) upd(0);
     S.playing = true; btn.textContent = '❚❚ Pause';
     trkTimer = setInterval(() => { if (S.month >= maxM) { clearInterval(trkTimer); S.playing = false; btn.textContent = '▶ Play'; return; } upd(S.month + 1); }, 650);
   };
-  upd(1);
-  reveal(V.tracker);
+  upd(1); reveal(V.tracker);
 }
 
-/* ---------- boot ---------- */
+/* ---------- ready-home flow: viewing, bidding, cash or loan, payment, DLD ---------- */
+const RF0 = { step: 0, mode: 'In person', day: 0, time: 0, booked: false, bid: .97, round: 0, log: [], accepted: false, final: 0, counter: 0, pay: null, bank: null, docs: {}, ms: 0, valued: false, loanAmt: 0, loan: null, paid: false, sig: false };
+let RF = {};
+const BANKS = ['Gulfstream Bank', 'Falcon Commercial', 'Oasis Islamic Bank', 'Meridian National'];
+const LDOCS = ['Emirates ID and passport', 'Salary certificate', 'Last 6 months bank statements', 'Liability letter', 'Signed offer on the property'];
+const rkeys = () => ['view', 'bid', 'mode', ...(RF.pay === 'loan' ? ['loan'] : []), 'pay', 'sign'];
+const RNAME = { view: 'Viewing', bid: 'Bidding', mode: 'Cash or loan', loan: 'Mortgage', pay: 'Initial payment', sign: 'Sign and register' };
+const dayLabels = () => [...Array(5)].map((_, i) => new Date(Date.now() + (i + 1) * 864e5).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }));
+const TIMES = ['10:00', '12:30', '16:00', '18:30'];
+
+function openViewing() {
+  RF = JSON.parse(JSON.stringify(RF0)); RF.docs = {}; RF.log = [];
+  go('reserve', renderReady);
+}
+function renderReady() {
+  const p = byId(S.pid), keys = rkeys(), k = keys[RF.step], el = V.reserve, ask = p.price;
+  const fp = RF.final || ask, f = feesOf(p, fp);
+  const side = `<aside class="rs-side"><div class="rs-img"><img alt="" src="${imgFor(p)}"></div><h3>${p.name}</h3><p>${p.unit} · ${p.area}</p><div class="ln"><span>Asking price</span>${px(ask)}</div>${RF.accepted ? `<div class="ln"><span>Agreed price</span><b>${px(RF.final)}</b></div>` : ''}${RF.pay ? `<div class="ln"><span>Payment</span><b>${RF.pay === 'loan' ? 'Bank loan' : 'Cash'}</b></div>` : ''}<p class="mini">${ICON.lock} Deposit and transfer go through a DLD trustee office.</p></aside>`;
+  const bar = `<ol class="stepper">${keys.map((s, i) => `<li class="${i < RF.step ? 'done' : i === RF.step ? 'cur' : ''}"><i>${i < RF.step ? ICON.check : i + 1}</i><span>${RNAME[s]}</span></li>`).join('')}</ol>`;
+  const chips = (id, arr, sel) => `<div class="chipset" id="${id}">${arr.map((x, i) => `<button class="chip" aria-pressed="${i === sel}" data-i="${i}">${x}</button>`).join('')}</div>`;
+  let panel = '', nextLbl = 'Continue', ok = false, noNext = false;
+  if (k === 'view') {
+    ok = RF.booked; nextLbl = 'Continue to bidding';
+    panel = `<h2>Book a viewing</h2><p class="sub">See it in person or on a live video call. Free to cancel.</p>
+     <div class="seg" id="vmode"><button data-v="In person" aria-selected="${RF.mode === 'In person'}">In person</button><button data-v="Live video" aria-selected="${RF.mode === 'Live video'}">Live video</button><span class="thumb"></span></div>
+     <p class="mini mt">Day</p>${chips('vday', dayLabels(), RF.day)}<p class="mini mt">Time</p>${chips('vtime', TIMES, RF.time)}
+     ${RF.booked ? `<div class="vf-res"><div class="okc">${ICON.check}</div><b>Viewing booked</b><span>${RF.mode}, ${dayLabels()[RF.day]} at ${TIMES[RF.time]}. (Demo) Continue once you have viewed the home.</span></div>` : `<button class="btn btn-primary mt" id="vBook">Book viewing</button>`}`;
+  } else if (k === 'bid') {
+    ok = RF.accepted; nextLbl = 'Continue';
+    const bubbles = RF.log.map(l => `<div class="bub ${l[0]}">${l[1]}</div>`).join('');
+    panel = `<h2>Make your offer</h2><p class="sub">Asking price ${px(ask)}. Sellers often accept within 3% of asking (demo).</p>
+     <div class="bid"><div class="big" id="bidV"></div><input type="range" id="bid" min="90" max="100" step="0.5" value="${(RF.bid * 100).toFixed(1)}" ${RF.accepted ? 'disabled' : ''}></div>
+     <div class="bubs">${bubbles}</div>
+     ${RF.accepted ? `<div class="vf-res"><div class="okc">${ICON.check}</div><b>Deal closed at ${px(RF.final)}</b><span>Offer accepted by the seller.</span></div>` : RF.counter ? `<div class="row l"><button class="btn btn-primary" id="acc">Accept ${px(RF.counter)}</button><button class="btn btn-ghost" id="bidGo">Send a new offer</button></div>` : `<button class="btn btn-primary mt" id="bidGo">Send offer</button>`}`;
+  } else if (k === 'mode') {
+    ok = !!RF.pay;
+    panel = `<h2>How will you pay?</h2><p class="sub">Deal closed at ${px(RF.final)}. Choose cash or a bank loan.</p><div class="opts two" id="pm"><button class="opt ${RF.pay === 'cash' ? 'sel' : ''}" data-v="cash"><b>Cash</b><span>Go straight to the initial payment</span></button><button class="opt ${RF.pay === 'loan' ? 'sel' : ''}" data-v="loan"><b>Bank loan</b><span>Connect a bank, share documents, get approval</span></button></div>`;
+  } else if (k === 'loan') {
+    const rows = ['Connect your bank', 'Share your documents', 'Bank valuation', 'Pre-approval', 'Loan approval'], ms = RF.ms, ltv = fp <= 5e6 ? .8 : .7, maxL = Math.round(fp * ltv / 1e4) * 1e4;
+    ok = ms >= 5; nextLbl = 'Continue to initial payment';
+    let act = '';
+    if (ms === 0) act = `<p class="mini">Choose your bank (demo banks)</p><div class="opts two" id="bk">${BANKS.map(b => `<button class="opt" data-v="${b}"><b>${b}</b></button>`).join('')}</div>`;
+    else if (ms === 1) { const n = Object.keys(RF.docs).length; act = `<p class="mini">Upload each document (demo: one tap each)</p><ul class="docs" id="ld">${LDOCS.map((d, i) => `<li class="${RF.docs[i] ? 'on' : ''}" data-i="${i}">${ICON.doc}<span>${d}</span><em>${RF.docs[i] ? 'Uploaded' : 'Upload'}</em></li>`).join('')}</ul><button class="btn btn-primary mt" id="ldGo" ${n < LDOCS.length ? 'disabled' : ''}>Send to ${RF.bank}</button>`; }
+    else if (ms === 2) act = `<div class="vf-res"><div class="spin"></div><b>${RF.bank} is valuing the home…</b></div>`;
+    else if (ms === 3) { if (!RF.loanAmt) RF.loanAmt = maxL; act = `<div class="vf-res"><b>Valued at ${px(fp)}</b><span>Pre-approved up to ${px(maxL)} (${(ltv * 100).toFixed(0)}% of value, demo)</span></div><label class="fld">Loan amount <b id="laV">${px(RF.loanAmt)}</b><input type="range" id="la" min="${Math.round(fp * .4 / 1e4) * 1e4}" max="${maxL}" step="10000" value="${RF.loanAmt}"></label><button class="btn btn-primary mt" id="paGo">Accept pre-approval</button>`; }
+    else if (ms === 4) { const r = .048, t = 25, pm = pmt(RF.loanAmt, r, t); act = `<div class="card-s"><div class="ln"><span>Loan</span><b>${px(RF.loanAmt)}</b></div><div class="ln"><span>Rate (fixed 3 years, demo)</span><b>4.8%</b></div><div class="ln"><span>Term</span><b>${t} years</b></div><div class="ln"><span>Monthly instalment</span><b>${px(pm)}</b></div></div><button class="btn btn-primary mt" id="lnGo">Accept final offer</button>`; }
+    else act = `<div class="vf-res"><div class="okc">${ICON.check}</div><b>Loan approved</b><span>${RF.bank}: ${px(RF.loan.amount)} over ${RF.loan.term} years.</span></div>`;
+    panel = `<h2>Get your mortgage</h2><p class="sub">Five steps with your bank. Your progress is saved.</p><ol class="mini-st big-st">${rows.map((r, i) => `<li class="${i < ms ? 'on' : i === ms ? 'cur' : ''}"><i></i>${r}</li>`).join('')}</ol>${act}`;
+  } else if (k === 'pay') {
+    const loan = RF.loan ? RF.loan.amount : 0, fee2 = loan ? loan * .0025 + 290 : 0, dep = fp * .1, ch = f.dld + f.trustee + f.admin + f.agency + fee2;
+    ok = RF.paid; nextLbl = 'Continue';
+    panel = `<h2>Initial payment and charges</h2><p class="sub">Pay the 10% deposit now. The balance moves at the DLD trustee office on transfer day.</p>
+     <div class="card-s"><div class="ln"><span>Initial payment (10% deposit)</span><b>${px(dep)}</b></div><div class="ln"><span>DLD transfer fee (4%)</span>${px(f.dld)}</div><div class="ln"><span>Trustee fee + VAT</span>${px(f.trustee)}</div><div class="ln"><span>Agency fee (2% + VAT)</span>${px(f.agency)}</div>${loan ? `<div class="ln"><span>Mortgage registration (0.25% + AED 290)</span>${px(fee2)}</div>` : ''}<div class="ln"><span><b>Total payable on transfer day, besides the deposit</b></span><b>${px(ch)}</b></div></div>
+     <p class="mini">${loan ? `Bank pays ${money(loan)} at transfer. Your balance then is ${money(fp * .9 - loan)}.` : `Balance at transfer: ${money(fp * .9)}.`} Fee amounts are indicative.</p>
+     ${RF.paid ? `<div class="vf-res"><div class="okc">${ICON.check}</div><b>Deposit received</b><span>Held by the trustee office for the seller. (Demo)</span></div>` : `<button class="btn btn-primary mt" id="depGo">Pay ${money(dep, true)} deposit</button><div class="spin" id="spin" hidden></div>`}`;
+  } else {
+    ok = RF.sig; nextLbl = 'Complete and register at DLD';
+    panel = `<h2>Sign the sale contract</h2><p class="sub">Sign the contract (Form F). We then book the DLD transfer for you.</p><div class="sig"><canvas id="sig" height="170"></canvas><button class="btn btn-ghost sm" id="sigClr">Clear</button></div>`;
+  }
+  const foot = `<div class="rs-foot"><button class="btn btn-ghost" id="rsBack">${ICON.back} Back</button><button class="btn btn-primary" id="rsNext" ${ok ? '' : 'disabled'}>${nextLbl} ${ICON.arrow}</button></div>`;
+  el.innerHTML = `<div class="wrap rs"><div class="rs-main">${bar}<div class="rs-panel">${panel}${foot}</div></div>${side}</div>`;
+  refreshPrices(el); reveal(el);
+  const re = () => renderReady();
+  $('#rsBack').onclick = () => { if (RF.step === 0) go('project'); else { RF.step--; re(); } };
+  $('#rsNext').onclick = () => { if (k === 'sign') return finishReady(); RF.step++; re(); };
+  if (k === 'view') {
+    initSeg($('#vmode'), v => RF.mode = v);
+    ['vday', 'vtime'].forEach(id => { const b = $('#' + id); b.onclick = e => { const c = e.target.closest('.chip'); if (!c) return; $$('.chip', b).forEach(x => x.setAttribute('aria-pressed', String(x === c))); RF[id === 'vday' ? 'day' : 'time'] = +c.dataset.i; }; });
+    const bk = $('#vBook'); if (bk) bk.onclick = () => { RF.booked = true; toast('Viewing booked'); re(); };
+  }
+  if (k === 'bid') {
+    const sl = $('#bid'), show = () => { $('#bidV').innerHTML = px(ask * sl.value / 100, true); refreshPrices($('#bidV')); };
+    show(); sl.oninput = () => { RF.bid = sl.value / 100; show(); };
+    const send = $('#bidGo'); if (send) send.onclick = () => bidRound(ask, re);
+    const acc = $('#acc'); if (acc) acc.onclick = () => { RF.accepted = true; RF.final = RF.counter; RF.log.push(['me', 'I accept your price.'], ['seller', 'Great. Deal closed.']); re(); };
+  }
+  if (k === 'mode') $('#pm').onclick = e => { const b = e.target.closest('.opt'); if (!b) return; RF.pay = b.dataset.v; re(); };
+  if (k === 'loan') {
+    const ms = RF.ms;
+    if (ms === 0) $('#bk').onclick = e => { const b = e.target.closest('.opt'); if (!b) return; RF.bank = b.dataset.v; RF.ms = 1; toast('Connected to ' + RF.bank); re(); };
+    if (ms === 1) { $('#ld').onclick = e => { const li = e.target.closest('li'); if (!li) return; RF.docs[li.dataset.i] = 1; re(); }; $('#ldGo').onclick = () => { RF.ms = 2; re(); }; }
+    if (ms === 2) setTimeout(() => { if (curView === 'reserve' && RF.ms === 2) { RF.ms = 3; re(); } }, RM ? 100 : 2000);
+    if (ms === 3) { const la = $('#la'); la.oninput = () => { RF.loanAmt = +la.value; $('#laV').innerHTML = px(RF.loanAmt); refreshPrices($('#laV')); }; $('#paGo').onclick = () => { RF.ms = 4; re(); }; }
+    if (ms === 4) $('#lnGo').onclick = () => { RF.loan = { amount: RF.loanAmt, rate: .048, term: 25, bank: RF.bank, pmt: pmt(RF.loanAmt, .048, 25) }; RF.ms = 5; toast('Loan approved'); re(); };
+  }
+  if (k === 'pay') { const d = $('#depGo'); if (d) d.onclick = () => { d.hidden = true; $('#spin').hidden = false; setTimeout(() => { RF.paid = true; toast('Deposit received'); re(); }, RM ? 100 : 1500); }; }
+  if (k === 'sign') {
+    const cv = $('#sig'); cv.width = cv.clientWidth; const c = cv.getContext('2d'); c.lineWidth = 2.6; c.lineCap = 'round'; c.strokeStyle = '#0A2A2E'; let d = false;
+    const pt = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    cv.onpointerdown = e => { d = true; cv.setPointerCapture(e.pointerId); const [x, y] = pt(e); c.beginPath(); c.moveTo(x, y); };
+    cv.onpointermove = e => { if (!d) return; const [x, y] = pt(e); c.lineTo(x, y); c.stroke(); if (!RF.sig) { RF.sig = true; $('#rsNext').disabled = false; } };
+    cv.onpointerup = () => d = false;
+    $('#sigClr').onclick = () => { c.clearRect(0, 0, cv.width, cv.height); RF.sig = false; $('#rsNext').disabled = true; };
+  }
+  scrollTo(0, 0);
+}
+function bidRound(ask, re) {
+  RF.round++; RF.counter = 0; const bid = Math.round(ask * RF.bid / 5000) * 5000, ratio = bid / ask;
+  RF.log.push(['me', 'My offer: ' + money(bid, true)]);
+  if (ratio >= .97) { RF.accepted = true; RF.final = bid; RF.log.push(['seller', 'Accepted. Deal closed.']); }
+  else if (ratio >= .93 || RF.round >= 3) { RF.counter = RF.round >= 3 ? Math.round(ask * .985 / 5000) * 5000 : Math.round((bid + ask * .985) / 2 / 5000) * 5000; RF.log.push(['seller', (RF.round >= 3 ? 'My final price: ' : 'I can do ') + money(RF.counter, true)]); }
+  else { RF.counter = 0; RF.log.push(['seller', 'Too far below what I need. Please come closer to the asking price.']); }
+  re();
+}
+function finishReady() {
+  const p = byId(S.pid), ref = 'ARK-' + (hash(p.id + RF.final) % 900000 + 100000);
+  S.res = { kind: 'res', pid: p.id, price: RF.final, loan: RF.loan, ref };
+  const el = V.reserve;
+  el.innerHTML = `<div class="wrap fin"><canvas id="cf"></canvas><div class="okc big">${ICON.check}</div><h1>${p.name} is nearly yours</h1><p class="lead">Contract signed at ${px(RF.final)}. Reference <b>${ref}</b>.</p>
+   <ol class="next"><li><b>This week</b><span>We book your appointment at the DLD trustee office.</span></li><li><b>Transfer day</b><span>${RF.loan ? 'The bank pays the loan amount and you pay your balance. ' : 'You pay the balance. '}Fees are settled at the trustee office.</span></li><li><b>After transfer</b><span>Title deed in your name, then ${RF.loan ? 'mortgage instalment reminders' : 'service charge reminders'}.</span></li></ol>${feedbackHTML()}
+   <div class="row"><button class="btn btn-primary" id="toTrack" data-magnetic>Track my purchase ${ICON.arrow}</button><button class="btn btn-ghost" id="toHome">Keep browsing</button></div></div>`;
+  $('#toTrack').onclick = () => goTracker(); $('#toHome').onclick = () => go('home');
+  confetti($('#cf')); bindFeedback(el); toast('Contract signed');
+}
+
+/* ---------- journey map (design thinking) ---------- */
+function renderJourney() {
+  const J = [['Discover', 'What can I afford, and where?', 'Many portals, unclear total cost', 'Three questions, ranked matches'], ['Options', 'Off-plan or ready?', 'Mixed listings, old data', 'One toggle, same clear cards'], ['See in 3D', 'Is this my exact home?', 'Brochure renders only', 'Pick floor and unit, look around'], ['Analyse', 'Is it a good deal?', 'No cost or return view', 'Area returns, yield, total cost, model'], ['Advice', 'Do I need an agent?', 'Pushy or absent', 'Call or meet, only if you want'], ['Deal', 'How do I secure it?', 'Unclear EOI, bids by phone', 'EOI online, or viewing and bidding'], ['Pay and register', 'Where does my money go?', 'Bank paperwork, hidden fees', 'Escrow, loan steps, DLD status'], ['Own', 'What happens next?', 'Missed instalments, lost files', 'Reminders, vault, follow-ups']];
+  const W = 1600, pts = a => a.map((v, i) => [((i + .5) / 8 * W).toFixed(0), (110 - v * 100).toFixed(0)]), line = a => pts(a).map((p, i) => (i ? 'L' : 'M') + p.join(',')).join(' ');
+  const wo = [.55, .42, .5, .3, .26, .36, .2, .5], wi = [.62, .66, .8, .76, .8, .76, .72, .92];
+  $('#jm').innerHTML = `<svg viewBox="0 0 ${W} 120" preserveAspectRatio="none" class="curve" role="img" aria-label="Buyer confidence across stages, higher with ARKO"><path d="${line(wo)}" class="c0" pathLength="1"/><path d="${line(wi)}" class="c1" pathLength="1"/></svg>
+   <div class="legend2"><span><i class="l0"></i>Typical journey</span><span><i class="l1"></i>With ARKO</span><span class="mini">Buyer confidence, illustrative</span></div>
+   <div class="jm-cols">${J.map((s, i) => `<div class="jc"><h4>${s[0]}</h4><small>You ask</small><p>${s[1]}</p><small>Usual friction</small><p>${s[2]}</p><small>ARKO answer</small><p class="ans">${s[3]}</p></div>`).join('')}</div>`;
+  reveal($('#jm'));
+}
 (function () {
-  initHome();
-  const cs = $('#curSeg'); initSeg(cs, v => { S.cur = v; S.drawBud && S.drawBud(); refreshPrices(); renderQuiz(); if (S.compare.length >= 2 && !$('#modal').hidden) compareModal(); });
+  initHome(); renderJourney();
+  const cs = $('#curSeg'); initSeg(cs, v => { S.cur = v; S.drawBud && S.drawBud(); refreshPrices(); S.renderIntent(); if (S.compare.length >= 2 && !$('#modal').hidden) compareModal(); });
   document.addEventListener('click', e => {
     const n = e.target.closest('[data-nav]'); if (n) { if (n.dataset.nav === 'tracker') goTracker(); else goHome(); return; }
     const s = e.target.closest('[data-scroll]'); if (s) { e.preventDefault(); goHome(s.dataset.scroll); return; }
+    if (e.target.closest('#talkBtn,#talkBtn2')) { openAgent(); return; }
     if (e.target.closest('[data-close]')) closeModal();
   });
   addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#modal').hidden) closeModal(); });
   initCursor(); initTrail(); initHeroGL();
   initRotator(); split($('#l1')); $('#l1').classList.add('in'); weightField($('#l1'));
   initMarquee(); initMicro(); reveal(V.home);
-  /* header shadow on scroll */
   const hd = $('.hd'); addEventListener('scroll', () => hd.classList.toggle('sc', scrollY > 20), { passive: true });
-  document.body.dataset.view="home";document.body.classList.add('ready');
-  if (/[?&]go=tracker/.test(location.search)) goTracker();
+  document.body.dataset.view = 'home'; document.body.classList.add('ready');
 })();
 </script>
