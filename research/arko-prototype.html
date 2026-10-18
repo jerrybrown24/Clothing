@@ -167,6 +167,9 @@ select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='htt
 .ins{grid-template-columns:repeat(3,1fr)}.two-big .big{font-size:30px}.card-s .big{font-size:34px}
 @media(max-width:960px){.ins{grid-template-columns:1fr}}
 .src{font:600 11px var(--body);letter-spacing:.04em;color:var(--teal2);background:var(--mint);padding:3px 8px;border-radius:99px;margin-left:6px;text-transform:none}.src.demo{background:var(--line);color:var(--ink2)}
+.callcard{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;background:var(--mint);border-radius:20px;padding:16px 18px;margin:14px 0}.callcard small{display:block;font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--teal2)}.callcard b{display:block;font:700 20px var(--disp)}.callcard .tel{font:500 15px var(--mono);color:var(--ink2)}.callcard .btn{margin:0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}.err{color:#C2432B;font-weight:600;font-size:14px;margin-top:10px}.supp{margin-top:6px;color:var(--ink)}.supp a{color:var(--teal2);font-weight:700}
+.sheet a.btn{text-decoration:none}
 </style>
 
 <canvas id="trail" aria-hidden="true"></canvas>
@@ -210,7 +213,7 @@ select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='htt
   <ul class="princ"><li><b>Show the total cost early</b><span>No surprise fees at the end.</span></li><li><b>A person when you want one</b><span>Call or meet, never forced.</span></li><li><b>Always know where you are</b><span>One tracker for DLD, payments and documents.</span></li></ul>
 </div></section>
 
- <footer class="ft wrap"><b>ARKO</b><p>Prototype for demonstration only. Not an offer to sell property, and not a licensed brokerage. Figures are illustrative. Fee amounts and timelines must be confirmed with DLD, RERA and the developer before any real purchase.</p></footer>
+ <footer class="ft wrap"><b>ARKO</b><p class="supp">Call support: <b>Ajinkya</b> <a id="supNum" href="tel:+971586352359">+971 58 635 2359</a></p><p>Prototype for demonstration only. Not an offer to sell property, and not a licensed brokerage. Figures are illustrative. Fee amounts and timelines must be confirmed with DLD, RERA and the developer before any real purchase.</p></footer>
 </div>
 <div id="v-project" hidden></div>
 <div id="v-reserve" hidden></div>
@@ -221,100 +224,7 @@ select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='htt
 <nav class="tabbar"><button data-nav="home">Explore</button><button id="talkBtn2">Talk to us</button><button data-nav="tracker">My purchase</button></nav>
 <div id="modal" hidden></div><div id="toasts" aria-live="polite"></div>
 </div>
-<script type="application/json" id="dld">{
- "source": "Dubai Land Department open data",
- "from": "2026-01-01",
- "asOf": "2026-10-16",
- "rows": 100781,
- "areas": {
-  "Dubai Marina": {
-   "dldArea": "DUBAI MARINA",
-   "n": 1410,
-   "medPpsf": 1912,
-   "offMed": 2643,
-   "readyMed": 1851,
-   "offShare": 8
-  },
-  "Downtown Dubai": {
-   "dldArea": "BURJ KHALIFA",
-   "n": 1451,
-   "medPpsf": 2719,
-   "offMed": 3440,
-   "readyMed": 2461,
-   "offShare": 29
-  },
-  "Palm Jumeirah": {
-   "dldArea": "PALM JUMEIRAH",
-   "n": 755,
-   "medPpsf": 3558,
-   "offMed": 5823,
-   "readyMed": 2677,
-   "offShare": 35
-  },
-  "Dubai Hills Estate": {
-   "dldArea": "DUBAI HILLS",
-   "n": 758,
-   "medPpsf": 2290,
-   "offMed": 2265,
-   "readyMed": 2301,
-   "offShare": 21
-  },
-  "Business Bay": {
-   "dldArea": "BUSINESS BAY",
-   "n": 3708,
-   "medPpsf": 2402,
-   "offMed": 2693,
-   "readyMed": 1845,
-   "offShare": 53
-  },
-  "Jumeirah Village Circle": {
-   "dldArea": "JUMEIRAH VILLAGE CIRCLE",
-   "n": 7587,
-   "medPpsf": 1452,
-   "offMed": 1559,
-   "readyMed": 1270,
-   "offShare": 58
-  },
-  "Dubai Creek Harbour": {
-   "dldArea": "DUBAI CREEK HARBOUR",
-   "n": 1012,
-   "medPpsf": 2317,
-   "offMed": 2330,
-   "readyMed": 2315,
-   "offShare": 11
-  },
-  "MBR City": {
-   "dldArea": "MEYDAN ONE",
-   "n": 999,
-   "medPpsf": 2071,
-   "offMed": 2274,
-   "readyMed": 1971,
-   "offShare": 35
-  },
-  "Al Furjan": {
-   "dldArea": "AL FURJAN",
-   "n": 1098,
-   "medPpsf": 1351,
-   "offMed": 1425,
-   "readyMed": 1265,
-   "offShare": 54
-  },
-  "Jumeirah Lake Towers": {
-   "dldArea": "JUMEIRAH LAKES TOWERS",
-   "n": 1048,
-   "medPpsf": 1578,
-   "offMed": 2217,
-   "readyMed": 1435,
-   "offShare": 41
-  }
- },
- "city": {
-  "asOf": "2024-05",
-  "flat12m": 13.5,
-  "flat3y": 65.9,
-  "note": "Dubai-wide flat price index, DLD"
- }
-}</script>
+<script type="application/json" id="dld">{"source":"Dubai Land Department open data","from":"2026-01-01","asOf":"2026-10-16","rows":100781,"areas":{"Dubai Marina":{"dldArea":"DUBAI MARINA","n":1410,"medPpsf":1912,"offMed":2643,"readyMed":1851,"offShare":8},"Downtown Dubai":{"dldArea":"BURJ KHALIFA","n":1451,"medPpsf":2719,"offMed":3440,"readyMed":2461,"offShare":29},"Palm Jumeirah":{"dldArea":"PALM JUMEIRAH","n":755,"medPpsf":3558,"offMed":5823,"readyMed":2677,"offShare":35},"Dubai Hills Estate":{"dldArea":"DUBAI HILLS","n":758,"medPpsf":2290,"offMed":2265,"readyMed":2301,"offShare":21},"Business Bay":{"dldArea":"BUSINESS BAY","n":3708,"medPpsf":2402,"offMed":2693,"readyMed":1845,"offShare":53},"Jumeirah Village Circle":{"dldArea":"JUMEIRAH VILLAGE CIRCLE","n":7587,"medPpsf":1452,"offMed":1559,"readyMed":1270,"offShare":58},"Dubai Creek Harbour":{"dldArea":"DUBAI CREEK HARBOUR","n":1012,"medPpsf":2317,"offMed":2330,"readyMed":2315,"offShare":11},"MBR City":{"dldArea":"MEYDAN ONE","n":999,"medPpsf":2071,"offMed":2274,"readyMed":1971,"offShare":35},"Al Furjan":{"dldArea":"AL FURJAN","n":1098,"medPpsf":1351,"offMed":1425,"readyMed":1265,"offShare":54},"Jumeirah Lake Towers":{"dldArea":"JUMEIRAH LAKES TOWERS","n":1048,"medPpsf":1578,"offMed":2217,"readyMed":1435,"offShare":41}},"city":{"asOf":"2024-05","flat12m":13.5,"flat3y":65.9,"note":"Dubai-wide flat price index, DLD"}}</script>
 <script>/* ---------- utilities and shared state ---------- */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -398,6 +308,9 @@ function toast(msg, kind = 'ok') {
   requestAnimationFrame(() => t.classList.add('in'));
   setTimeout(() => { t.classList.remove('in'); setTimeout(() => t.remove(), 500); }, 3600);
 }
+
+/* call support; the server can override these through /api/config */
+const SUPPORT = { name: 'Ajinkya', phone: '+971586352359' };
 
 /* ---------- DUMMY DATA: fictional projects and developers; real Dubai communities only ---------- */
 const PROJ = [
@@ -1427,27 +1340,43 @@ function setAdvSt() {
   const s = $('#advSt'); if (!s) return;
   s.textContent = S.agent ? (S.agent.mode === 'call' ? 'Call requested: ' : 'Meeting booked: ') + S.agent.when : '';
 }
+const fmtPhone = p => p.replace(/^\+971(\d{2})(\d{3})(\d{4})$/, '+971 $1 $2 $3');
+async function sendLead(payload) {
+  const r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  if (!r.ok) throw new Error('lead ' + r.status);
+  return r.json();
+}
 function openAgent(mode) {
+  const sup = SUPPORT, tel = fmtPhone(sup.phone);
   const days = [...Array(5)].map((_, i) => new Date(Date.now() + (i + 1) * 864e5).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }));
-  const chips = (id, arr, sel) => `<div class="chipset" id="${id}">${arr.map((x, i) => `<button class="chip" aria-pressed="${i === sel}" data-v="${x}">${x}</button>`).join('')}</div>`;
-  if (!mode) { openModal(`<h2>Talk to a specialist</h2><p class="sub">Choose how you would like to speak.</p><div class="opts"><button class="opt" data-agent="call"><b>Call me</b><span>Our call centre rings you</span></button><button class="opt" data-agent="meet"><b>Meet in person</b><span>At the ARKO lounge</span></button></div>`); $('#modal').onclick = e => { const a = e.target.closest('[data-agent]'); if (a) openAgent(a.dataset.agent); }; return; }
-  if (mode === 'call') openModal(`<h2>Connect me to the call centre</h2><p class="sub">A specialist will ring you. Demo only: no call is placed.</p><label class="fld">Mobile number<input id="agPhone" type="tel" placeholder="+971 50 000 0000" autocomplete="off"></label><p class="mini mt">When should we call?</p>${chips('agWhen', ['As soon as possible', 'This evening', 'Tomorrow morning'], 0)}<button class="btn btn-primary" id="agGo" disabled>Connect me</button>`);
-  else openModal(`<h2>Meet a specialist</h2><p class="sub">ARKO lounge, Business Bay (demo address). About 45 minutes.</p><p class="mini">Day</p>${chips('agDay', days, 0)}<p class="mini mt">Time</p>${chips('agTime', ['10:00', '12:30', '16:00', '18:30'], 0)}<button class="btn btn-primary" id="agGo">Book meeting</button>`);
-  const m = $('#modal'); m.onclick = e => {
-    const c = e.target.closest('.chipset .chip'); if (c) { $$('.chip', c.parentNode).forEach(x => x.setAttribute('aria-pressed', String(x === c))); }
+  const chips = (id, arr, sel) => `<div class="chipset" id="${id}">${arr.map((x, i) => `<button type="button" class="chip" aria-pressed="${i === sel}" data-v="${x}">${x}</button>`).join('')}</div>`;
+  const form = (btn, extra = '') => `<label class="fld">Your name<input id="agName" autocomplete="name" maxlength="80"></label><label class="fld">Mobile number<input id="agPhone" type="tel" placeholder="+971 50 000 0000" autocomplete="tel" maxlength="20"></label><input id="agWeb" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">${extra}<label class="chk"><input type="checkbox" id="agOk"><span>I agree that ARKO may contact me about this enquiry and store my details for that purpose.</span></label><p class="err" id="agErr" role="alert" hidden></p><button class="btn btn-primary" id="agGo" disabled>${btn}</button>`;
+  const callCard = `<div class="callcard"><div><small>Call support</small><b>${sup.name}</b><span class="tel">${tel}</span></div><div class="row l"><a class="btn btn-primary" href="tel:${sup.phone}" data-magnetic>Call ${sup.name}</a><button class="btn btn-ghost" type="button" id="agCopy">Copy number</button></div></div>`;
+  const m = $('#modal');
+  if (!mode) { openModal(`<h2>Talk to a specialist</h2><p class="sub">Choose how you would like to speak.</p>${callCard}<div class="opts"><button class="opt" data-agent="call"><b>Request a call back</b><span>Leave your number</span></button><button class="opt" data-agent="meet"><b>Meet in person</b><span>At the ARKO lounge</span></button></div>`); }
+  else if (mode === 'call') openModal(`<h2>Talk to ${sup.name}</h2><p class="sub">Call now, or leave your number and we ring you back.</p>${callCard}<h4 class="mt">Or request a call back</h4>${form('Request call back', `<p class="mini mt">When should we call?</p>${chips('agWhen', ['As soon as possible', 'This evening', 'Tomorrow morning'], 0)}`)}`);
+  else openModal(`<h2>Meet a specialist</h2><p class="sub">ARKO lounge, Business Bay (demo address). About 45 minutes.</p><p class="mini">Day</p>${chips('agDay', days, 0)}<p class="mini mt">Time</p>${chips('agTime', ['10:00', '12:30', '16:00', '18:30'], 0)}${form('Book meeting')}`);
+  m.onclick = e => {
+    const c = e.target.closest('.chipset .chip'); if (c) $$('.chip', c.parentNode).forEach(x => x.setAttribute('aria-pressed', String(x === c)));
     const a = e.target.closest('[data-agent]'); if (a) openAgent(a.dataset.agent);
+    if (e.target.closest('#agCopy')) { const done = () => toast('Number copied'); (navigator.clipboard ? navigator.clipboard.writeText(sup.phone).then(done, () => toast(tel, 'info')) : toast(tel, 'info')); }
   };
-  const ph = $('#agPhone'); if (ph) ph.oninput = () => { $('#agGo').disabled = ph.value.replace(/\D/g, '').length < 7; };
-  const go = $('#agGo'); if (go) go.onclick = () => {
+  const go = $('#agGo'); if (!go) return;
+  const ok = () => { go.disabled = !($('#agName').value.trim().length >= 2 && $('#agPhone').value.replace(/\D/g, '').length >= 7 && $('#agOk').checked); };
+  ['agName', 'agPhone', 'agOk'].forEach(id => $('#' + id).addEventListener('input', ok));
+  go.onclick = async () => {
     const sel = id => ($('#' + id + ' .chip[aria-pressed=true]') || {}).dataset.v;
-    const when = mode === 'call' ? sel('agWhen') : sel('agDay') + ' at ' + sel('agTime');
-    const sheet = $('#modal .sheet');
-    sheet.innerHTML = `<button class="x" data-close aria-label="Close">${ICON.x}</button><div class="conn"><span></span><span></span><span></span></div><h2>${mode === 'call' ? 'Connecting you…' : 'Booking…'}</h2>`;
-    setTimeout(() => {
+    const when = mode === 'call' ? sel('agWhen') : sel('agDay') + ' at ' + sel('agTime'), item = byId(S.pid);
+    go.disabled = true; go.textContent = 'Sending…'; $('#agErr').hidden = true;
+    try {
+      await sendLead({ kind: mode, name: $('#agName').value.trim(), phone: $('#agPhone').value.trim(), when, home: item ? item.name : '', budget: S.bud || 0, goal: S.goal || '', consent: $('#agOk').checked, website: $('#agWeb').value });
       S.agent = { mode, when }; setAdvSt();
-      sheet.innerHTML = `<button class="x" data-close aria-label="Close">${ICON.x}</button><div class="okc">${ICON.check}</div><h2>${mode === 'call' ? 'Call requested' : 'Meeting booked'}</h2><p class="sub">${mode === 'call' ? 'A specialist will call you: ' + when + '.' : when + ', ARKO lounge, Business Bay.'} You can keep browsing. We will show this in your purchase tracker.</p><button class="btn btn-primary" data-close>Done</button>`;
-      toast(mode === 'call' ? 'Call requested' : 'Meeting booked');
-    }, RM ? 100 : 1600);
+      $('#modal .sheet').innerHTML = `<button class="x" data-close aria-label="Close">${ICON.close || ICON.x}</button><div class="okc">${ICON.check}</div><h2>${mode === 'call' ? 'Call back requested' : 'Meeting booked'}</h2><p class="sub">${mode === 'call' ? 'We will call you: ' + when + '.' : when + ', ARKO lounge, Business Bay.'} If it is urgent, call ${sup.name} on <b>${tel}</b>.</p><button class="btn btn-primary" data-close>Done</button>`;
+      toast(mode === 'call' ? 'Call back requested' : 'Meeting booked');
+    } catch (e) {
+      go.disabled = false; go.textContent = mode === 'call' ? 'Request call back' : 'Book meeting';
+      const er = $('#agErr'); er.textContent = `We could not send that. Please call ${sup.name} on ${tel}.`; er.hidden = false;
+    }
   };
 }
 
@@ -1770,8 +1699,9 @@ function renderJourney() {
    <div class="jm-cols">${J.map((s, i) => `<div class="jc"><h4>${s[0]}</h4><small>You ask</small><p>${s[1]}</p><small>Usual friction</small><p>${s[2]}</p><small>ARKO answer</small><p class="ans">${s[3]}</p></div>`).join('')}</div>`;
   reveal($('#jm'));
 }
+fetch('/api/config').then(r => r.ok ? r.json() : null).then(c => { if (c && c.supportPhone) { SUPPORT.name = c.supportName || SUPPORT.name; SUPPORT.phone = c.supportPhone; const f = $('#supNum'); if (f) f.textContent = fmtPhone(SUPPORT.phone); } }).catch(() => { });
 (function () {
-  initHome(); renderJourney();
+  initHome(); const fn = $('#supNum'); if (fn) fn.textContent = fmtPhone(SUPPORT.phone); renderJourney();
   const cs = $('#curSeg'); initSeg(cs, v => { S.cur = v; S.drawBud && S.drawBud(); refreshPrices(); S.renderIntent(); if (S.compare.length >= 2 && !$('#modal').hidden) compareModal(); });
   document.addEventListener('click', e => {
     const n = e.target.closest('[data-nav]'); if (n) { if (n.dataset.nav === 'tracker') goTracker(); else goHome(); return; }
