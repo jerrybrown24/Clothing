@@ -64,7 +64,10 @@ def city_index(path):
         return by.get(f'{yy}-{mm:02d}-01')
     now = float(last['flat_monthly_price_index'])
     g = lambda n: round((now / back(n) - 1) * 100, 1) if back(n) else None
-    return {'asOf': last['first_date_of_month'][:7], 'flat12m': g(12), 'flat3y': g(36), 'note': 'Dubai-wide flat price index, DLD'}
+    yearly = {}
+    for r in rows: yearly.setdefault(r['first_date_of_month'][:4], []).append(float(r['flat_monthly_price_index']))
+    series = [{'year': int(k), 'avg': round(sum(v) / len(v)), 'months': len(v)} for k, v in sorted(yearly.items())]
+    return {'asOf': last['first_date_of_month'][:7], 'flat12m': g(12), 'flat3y': g(36), 'note': 'Dubai-wide flat price index, DLD', 'series': series}
 
 if __name__ == '__main__':
     if len(sys.argv) < 3: raise SystemExit(__doc__)

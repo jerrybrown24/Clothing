@@ -89,6 +89,78 @@
   "asOf": "2024-05",
   "flat12m": 13.5,
   "flat3y": 65.9,
-  "note": "Dubai-wide flat price index, DLD"
+  "note": "Dubai-wide flat price index, DLD",
+  "series": [
+   {
+    "year": 2011,
+    "avg": 973704,
+    "months": 10
+   },
+   {
+    "year": 2012,
+    "avg": 920017,
+    "months": 12
+   },
+   {
+    "year": 2013,
+    "avg": 982950,
+    "months": 12
+   },
+   {
+    "year": 2014,
+    "avg": 1105146,
+    "months": 12
+   },
+   {
+    "year": 2015,
+    "avg": 1159805,
+    "months": 12
+   },
+   {
+    "year": 2016,
+    "avg": 1098862,
+    "months": 12
+   },
+   {
+    "year": 2017,
+    "avg": 1162529,
+    "months": 12
+   },
+   {
+    "year": 2018,
+    "avg": 1101113,
+    "months": 12
+   },
+   {
+    "year": 2019,
+    "avg": 1027390,
+    "months": 12
+   },
+   {
+    "year": 2020,
+    "avg": 1002013,
+    "months": 12
+   },
+   {
+    "year": 2021,
+    "avg": 947302,
+    "months": 12
+   },
+   {
+    "year": 2022,
+    "avg": 1185957,
+    "months": 12
+   },
+   {
+    "year": 2023,
+    "avg": 1356787,
+    "months": 12
+   },
+   {
+    "year": 2024,
+    "avg": 1472256,
+    "months": 5
+   }
+  ]
  }
 }

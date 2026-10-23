@@ -21,10 +21,11 @@ function track(type, name = '', props) {
 function trackReady(on) { LIVE = on; if (on) TQ.splice(0).forEach(sendEvent); else TQ.length = 0; }
 function clickName(el) {
   if (el.dataset.track) return el.dataset.track;
-  if (el.classList.contains('card')) return 'card:' + el.dataset.id;
+  if (el.classList.contains('heart')) return 'heart:' + (el.closest('.card') || {dataset: {}}).dataset.id;
+  if (el.getAttribute('href')) return 'link:' + el.getAttribute('href').slice(0, 40);
   if (el.id) return '#' + el.id;
-  for (const k of ['goal', 'bud', 'kind', 'agent', 'nav', 'scroll', 'a', 'f', 'v', 'open', 'rm']) if (el.dataset[k] != null) return k + ':' + el.dataset[k];
+  for (const k of ['m', 'drop', 'go', 't', 'kyc', 'beds', 'rm', 'v', 'w', 'fb', 'talk']) if (el.dataset[k] != null) return k + ':' + el.dataset[k];
   if (el.classList.contains('save')) return 'save';
   return (el.getAttribute('aria-label') || el.textContent || el.tagName).replace(/\s+/g, ' ').trim().slice(0, 40);
 }
-document.addEventListener('click', e => { const el = e.target.closest && e.target.closest('button,a,[role=button],.card,.opt,.chip,.u,.fc'); if (el && !el.closest('#toasts')) track('click', clickName(el)); }, true);
+document.addEventListener('click', e => { const el = e.target.closest && e.target.closest('button,a,[role=button],.opt,.chip'); if (el && !el.closest('#toasts')) track('click', clickName(el)); }, true);

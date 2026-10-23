@@ -77,7 +77,7 @@ export function validateBid(b) {
 const round5 = n => Math.round(n / 5000) * 5000;
 
 /* ---------- events ---------- */
-const EVT = new Set(['view', 'click', 'home', 'intent', 'lead', 'bid', 'eoi_step', 'ready_step', 'agent', 'market', 'currency']);
+const EVT = new Set(['view', 'click', 'home', 'intent', 'start', 'lead', 'bid', 'eoi_step', 'ready_step', 'agent', 'market', 'currency', 'shortlist', 'compare', 'view3d', 'walk', 'video', 'unit', 'book']);
 function saveEvent(b, ua) {
   const rec = { t: new Date().toISOString(), sid: b.sid, type: b.type, name: clean(b.name, 80), view: clean(b.view, 20), dev: /Mobi|Android|iPhone/i.test(ua || '') ? 'mobile' : 'desktop' };
   if (b.ref) rec.ref = clean(b.ref, 60);
@@ -88,13 +88,27 @@ export function summarize(events, days) {
   const since = now() - days * 864e5, ev = events.filter(e => Date.parse(e.t) >= since);
   const sids = s => new Set(ev.filter(s).map(e => e.sid));
   const all = sids(() => true);
-  const stage = [['Visited', all], ['Chose goal and budget', sids(e => e.type === 'intent')], ['Opened a home', sids(e => e.type === 'home')], ['Asked for a specialist', sids(e => e.type === 'agent')], ['Sent a lead or bid', sids(e => e.type === 'lead' || e.type === 'bid')], ['Started EOI or viewing', sids(e => e.type === 'eoi_step' || e.type === 'ready_step')]];
+  const stage = [['Visited', all], ['Answered the 3 questions', sids(e => e.type === 'start' || e.type === 'intent')], ['Opened a home', sids(e => e.type === 'home')], ['Shortlisted', sids(e => e.type === 'shortlist')], ['Compared', sids(e => e.type === 'compare')], ['Started booking', sids(e => e.type === 'book' || e.type === 'eoi_step')], ['Booked a call or sent a lead', sids(e => e.type === 'lead' || e.type === 'bid')], ['Reserved with EOI', sids(e => e.type === 'book' && e.props && e.props.mode === 'eoi_done')]];
   const count = (f, key) => { const m = new Map(); ev.filter(f).forEach(e => m.set(key(e), (m.get(key(e)) || 0) + 1)); return [...m].sort((a, b) => b[1] - a[1]); };
   const homes = new Map(); ev.filter(e => e.type === 'home').forEach(e => { const h = homes.get(e.name) || { name: (e.props && e.props.n) || e.name, views: 0, sids: new Set() }; h.views++; h.sids.add(e.sid); homes.set(e.name, h); });
   const perDay = {}; ev.forEach(e => { const d = e.t.slice(0, 10); (perDay[d] ||= new Set()).add(e.sid); });
   const series = []; for (let i = days - 1; i >= 0; i--) { const d = new Date(now() - i * 864e5).toISOString().slice(0, 10); series.push({ day: d, visitors: perDay[d] ? perDay[d].size : 0 }); }
   const dev = { mobile: 0, desktop: 0 }; const seenDev = new Set(); ev.forEach(e => { if (!seenDev.has(e.sid)) { seenDev.add(e.sid); dev[e.dev] = (dev[e.dev] || 0) + 1; } });
-  return { days, visitors: all.size, events: ev.length, pageviews: ev.filter(e => e.type === 'view').length, funnel: stage.map(([label, s]) => ({ label, visitors: s.size })), topClicks: count(e => e.type === 'click', e => e.name).slice(0, 15).map(([name, n]) => ({ name, n })), topHomes: [...homes.values()].sort((a, b) => b.views - a.views).slice(0, 10).map(h => ({ name: h.name, views: h.views, visitors: h.sids.size })), referrers: count(e => e.ref, e => e.ref).slice(0, 8).map(([name, n]) => ({ name, n })), devices: dev, series };
+  const L = new Map(), get = id => { if (!L.has(id)) L.set(id, { id, name: id, conv: new Set(), opens: 0, people: new Set(), shortlisted: 0, unshortlisted: 0, compared: 0, model3d: 0, walks: 0, films: 0, units: 0, bookStarts: 0, calls: 0, eois: 0 }); return L.get(id); };
+  ev.forEach(e => {
+    if (e.props && e.props.n && ['home', 'shortlist'].includes(e.type)) get(e.name).name = e.props.n;
+    if (e.type === 'home') { const x = get(e.name); x.opens++; x.people.add(e.sid); if (e.props && e.props.n) x.name = e.props.n; }
+    else if (e.type === 'shortlist') { const x = get(e.name); e.props && e.props.on === false ? x.unshortlisted++ : x.shortlisted++; }
+    else if (e.type === 'compare') String(e.name).split(',').filter(Boolean).forEach(id => get(id).compared++);
+    else if (e.type === 'view3d' && e.props && e.props.mode === 'model') get(e.name).model3d++;
+    else if (e.type === 'walk') get(e.name).walks++;
+    else if (e.type === 'video') get(e.name).films++;
+    else if (e.type === 'unit') get(e.name).units++;
+    else if (e.type === 'book') { const x = get(e.name), m = e.props && e.props.mode; if (m === 'call') x.bookStarts++; else if (m === 'eoi') x.bookStarts++; else if (m === 'eoi_done') { x.eois++; x.conv.add(e.sid); } }
+    else if (e.type === 'eoi_step' && /:called$/.test(e.name)) { const x = get(e.name.split(':')[0]); x.calls++; x.conv.add(e.sid); }
+  });
+  const listings = [...L.values()].filter(x => x.opens || x.shortlisted).map(({ conv, ...x }) => ({ ...x, people: x.people.size, conversion: x.people.size ? Math.min(100, Math.round(conv.size / x.people.size * 100)) : 0 })).sort((a, b) => b.opens - a.opens);
+  return { listings, days, visitors: all.size, events: ev.length, pageviews: ev.filter(e => e.type === 'view').length, funnel: stage.map(([label, s]) => ({ label, visitors: s.size })), topClicks: count(e => e.type === 'click', e => e.name).slice(0, 15).map(([name, n]) => ({ name, n })), topHomes: [...homes.values()].sort((a, b) => b.views - a.views).slice(0, 10).map(h => ({ name: h.name, views: h.views, visitors: h.sids.size })), referrers: count(e => e.ref, e => e.ref).slice(0, 8).map(([name, n]) => ({ name, n })), devices: dev, series };
 }
 function prune() {
   const cut = (days) => now() - days * 864e5;
@@ -153,6 +167,7 @@ export const server = http.createServer(async (req, res) => {
     if (m === 'GET' && p === '/admin') return send(res, 200, fs.readFileSync(path.join(ROOT, 'public/admin.html')), 'text/html; charset=utf-8', { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' });
     if (m === 'GET' && p === '/robots.txt') return send(res, 200, 'User-agent: *\nDisallow: /admin\nDisallow: /api/\n', 'text/plain');
     if (m === 'GET' && p === '/favicon.ico') return send(res, 204);
+    if (m === 'GET' && p === '/vendor/three.min.js') return send(res, 200, fs.readFileSync(path.join(ROOT, 'public/vendor/three.min.js')), 'text/javascript; charset=utf-8', { 'Cache-Control': 'public, max-age=604800' });
     if (m === 'GET' && p === '/health') return send(res, 200, { ok: true });
     if (m === 'GET' && p === '/api/config') return send(res, 200, CFG, 'application/json', { 'Cache-Control': 'no-cache' });
     if (m === 'GET' && p === '/api/stats') { const f = F('dld-area-stats.json'); return fs.existsSync(f) ? send(res, 200, fs.readFileSync(f)) : send(res, 404, { error: 'no data' }); }

@@ -119,3 +119,10 @@ test('owner counter outside a sensible range is refused', async () => {
   const ad = c => fetch(`${base}/api/admin/bids/${b.id}`, { method: 'POST', headers: { ...H, 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'counter', counter: c }) });
   assert.equal((await ad(33500000)).status, 409); assert.equal((await ad(3300000)).status, 200);
 });
+test('per-listing analytics count opens, shortlists and conversions once per person', () => {
+  const t = new Date().toISOString(), e = (sid, type, name, props) => ({ t, sid, type, name, props, dev: 'desktop' });
+  const s = summarize([e('aaaaaaaa11', 'home', 'solace-marina', { n: 'Solace Marina' }), e('aaaaaaaa11', 'shortlist', 'solace-marina', { on: true, n: 'Solace Marina' }), e('aaaaaaaa11', 'eoi_step', 'solace-marina:called'), e('aaaaaaaa11', 'book', 'solace-marina', { mode: 'eoi_done' }),
+    e('bbbbbbbb22', 'home', 'solace-marina', { n: 'Solace Marina' }), e('bbbbbbbb22', 'shortlist', 'canal-crest', { on: true, n: 'Canal Crest' })], 7);
+  const sm = s.listings.find(x => x.id === 'solace-marina'), cc = s.listings.find(x => x.id === 'canal-crest');
+  assert.equal(sm.opens, 2); assert.equal(sm.people, 2); assert.equal(sm.calls, 1); assert.equal(sm.eois, 1); assert.equal(sm.conversion, 50); assert.equal(cc.name, 'Canal Crest'); assert.equal(cc.shortlisted, 1);
+});

@@ -3,23 +3,18 @@
 Self-hosted version of the ARKO prototype. Node 20+, no dependencies.
 
 Two views
-- **Customers** use `/`. Browsing, 3D view, analysis, call support, call-back and meeting requests, and offers on ready homes.
-- **You** use `/admin` (sign in with `ADMIN_TOKEN`). Tabs: Overview (visitors, funnel, what people click, homes opened), Bids (accept, counter or decline), Leads (status and CSV export), Live (activity feed), Backend (uptime, memory, disk, request timings, errors, DLD data date).
+- **Customers** use `/`. Journey: Start (3 questions) → Choose (ranked list, shortlist) → Explore (3D model, block plan, street walk, demo film, gallery, nearby places, DLD market data, unit and payment plan) → Compare (side by side, same-scale 3D) → Book (video call with Ajinkya, or EOI: KYC, escrow payment, signature) → Track (DLD/Oqood, construction, payments, documents).
+- **You** use `/admin` (sign in with `ADMIN_TOKEN`). Tabs: Overview, Listings (opens, shortlists, compares, 3D, walks, films, unit picks, bookings and conversion per listing), Bids, Leads, Live, Backend, Integrations (where each data point comes from now and what replaces it). With no traffic yet, Overview offers a clearly labelled sample-data preview.
 
-What is real here
-- **Call support**: Ajinkya, +971 58 635 2359, as a tap-to-call button and in the footer.
-- **Offers on ready homes** are sent to you. The buyer sees accepted, countered or declined on their screen within seconds. A buyer can accept your counter or send a new offer.
-- **Call-back and meeting requests** are saved (name, phone, preferred time, home, consent). Optional Slack-style alert for each lead and bid.
-- **Usage tracking** records page views and clicks with a random per-tab ID. No cookies, no names, no phone numbers, no IP addresses. Visitors who send "Do Not Track" are not tracked.
-- **DLD figures** come from `data/dld-area-stats.json`, injected into the page at request time.
-
-What is still demo: listings and photos (the offers go to you, but the homes are fictional), project prices, yields, EOI, escrow, mortgage and tracker steps. Without the server (for example in the Claude preview) the page falls back to a simulated seller and records nothing.
+What is real: call support (Ajinkya, +971 58 635 2359), call-back and booking requests, usage analytics (no cookies or personal data), DLD area figures and the Dubai price index, real landmark locations.
+What is demo: the 9 projects, developers, prices and units; renders and 3D models (generated in the browser); street walk surroundings; KYC, EOI payment, signature, Oqood status and reminders. The "Prototype notes" button on the site marks each integration point.
 
 ## Run
 ```
-npm test            # 18 tests
+npm test            # 19 tests
 npm start           # http://localhost:3000
-npm run build       # only if you edit src/ (needs python3)
+npm run build       # rebuild public/index.html after editing src/ (needs python3)
+python3 build.py artifact   # preview page for Claude artifacts (three.js from cdnjs)
 ```
 
 ## Settings (environment variables)
