@@ -11,6 +11,9 @@ const env = k => process.env[k];
 const PORT = +env('PORT') || 3000;
 const DATA_DIR = env('DATA_DIR') || path.join(ROOT, 'data');
 const F = n => path.join(DATA_DIR, n);
+/* content files (catalog, DLD data): DATA_DIR wins if it has a copy, otherwise the bundled ./data */
+const CONTENT_DIR = env('CONTENT_DIR') || path.join(ROOT, 'data');
+const C = n => fs.existsSync(F(n)) ? F(n) : path.join(CONTENT_DIR, n);
 const CFG = { supportName: env('SUPPORT_NAME') || 'Ajinkya', supportPhone: env('SUPPORT_PHONE') || '+971586352359' };
 const ADMIN_TOKEN = env('ADMIN_TOKEN') || '';
 const WEBHOOK = env('LEAD_WEBHOOK_URL') || '';
@@ -77,7 +80,7 @@ export function validateBid(b) {
 const round5 = n => Math.round(n / 5000) * 5000;
 
 /* ---------- events ---------- */
-const EVT = new Set(['view', 'click', 'home', 'intent', 'start', 'lead', 'bid', 'eoi_step', 'ready_step', 'agent', 'market', 'currency', 'shortlist', 'compare', 'view3d', 'walk', 'video', 'unit', 'book']);
+const EVT = new Set(['view', 'click', 'home', 'intent', 'start', 'lead', 'bid', 'eoi_step', 'ready_step', 'agent', 'market', 'currency', 'shortlist', 'compare', 'view3d', 'walk', 'video', 'unit', 'book', 'search']);
 function saveEvent(b, ua) {
   const rec = { t: new Date().toISOString(), sid: b.sid, type: b.type, name: clean(b.name, 80), view: clean(b.view, 20), dev: /Mobi|Android|iPhone/i.test(ua || '') ? 'mobile' : 'desktop' };
   if (b.ref) rec.ref = clean(b.ref, 60);
@@ -88,7 +91,7 @@ export function summarize(events, days) {
   const since = now() - days * 864e5, ev = events.filter(e => Date.parse(e.t) >= since);
   const sids = s => new Set(ev.filter(s).map(e => e.sid));
   const all = sids(() => true);
-  const stage = [['Visited', all], ['Answered the 3 questions', sids(e => e.type === 'start' || e.type === 'intent')], ['Opened a home', sids(e => e.type === 'home')], ['Shortlisted', sids(e => e.type === 'shortlist')], ['Compared', sids(e => e.type === 'compare')], ['Started booking', sids(e => e.type === 'book' || e.type === 'eoi_step')], ['Booked a call or sent a lead', sids(e => e.type === 'lead' || e.type === 'bid')], ['Reserved with EOI', sids(e => e.type === 'book' && e.props && e.props.mode === 'eoi_done')]];
+  const stage = [['Visited', all], ['Answered the 3 questions', sids(e => e.type === 'start' || e.type === 'intent')], ['Opened a home', sids(e => e.type === 'home')], ['Shortlisted', sids(e => e.type === 'shortlist')], ['Compared', sids(e => e.type === 'compare')], ['Started booking', sids(e => e.type === 'book' || e.type === 'eoi_step')], ['Booked a call or sent a lead', sids(e => e.type === 'lead' || e.type === 'bid')], ['Reserved with EOI', sids(e => e.type === 'book' && e.props && e.props.mode === 'eoi_done')], ['Bought ready (transfer booked)', sids(e => e.type === 'book' && e.props && e.props.mode === 'transfer_done')]];
   const count = (f, key) => { const m = new Map(); ev.filter(f).forEach(e => m.set(key(e), (m.get(key(e)) || 0) + 1)); return [...m].sort((a, b) => b[1] - a[1]); };
   const homes = new Map(); ev.filter(e => e.type === 'home').forEach(e => { const h = homes.get(e.name) || { name: (e.props && e.props.n) || e.name, views: 0, sids: new Set() }; h.views++; h.sids.add(e.sid); homes.set(e.name, h); });
   const perDay = {}; ev.forEach(e => { const d = e.t.slice(0, 10); (perDay[d] ||= new Set()).add(e.sid); });
@@ -104,7 +107,7 @@ export function summarize(events, days) {
     else if (e.type === 'walk') get(e.name).walks++;
     else if (e.type === 'video') get(e.name).films++;
     else if (e.type === 'unit') get(e.name).units++;
-    else if (e.type === 'book') { const x = get(e.name), m = e.props && e.props.mode; if (m === 'call') x.bookStarts++; else if (m === 'eoi') x.bookStarts++; else if (m === 'eoi_done') { x.eois++; x.conv.add(e.sid); } }
+    else if (e.type === 'book') { const x = get(e.name), m = e.props && e.props.mode; if (m === 'call') x.bookStarts++; else if (m === 'eoi') x.bookStarts++; else if (m === 'eoi_done' || m === 'transfer_done') { x.eois++; x.conv.add(e.sid); } else if (m === 'viewing') { x.calls++; x.conv.add(e.sid); } }
     else if (e.type === 'eoi_step' && /:called$/.test(e.name)) { const x = get(e.name.split(':')[0]); x.calls++; x.conv.add(e.sid); }
   });
   const listings = [...L.values()].filter(x => x.opens || x.shortlisted).map(({ conv, ...x }) => ({ ...x, people: x.people.size, conversion: x.people.size ? Math.min(100, Math.round(conv.size / x.people.size * 100)) : 0 })).sort((a, b) => b.opens - a.opens);
@@ -139,11 +142,14 @@ function admin(req, res, ip) {
 }
 let pageCache = { m: 0, d: 0, html: '' };
 function page() {
-  const pf = path.join(ROOT, 'public/index.html'), df = F('dld-area-stats.json');
-  const pm = fs.statSync(pf).mtimeMs, dm = fs.existsSync(df) ? fs.statSync(df).mtimeMs : 0;
+  const pf = path.join(ROOT, 'public/index.html'), df = C('dld-area-stats.json');
+  const mt = f => fs.existsSync(f) ? fs.statSync(f).mtimeMs : 0, pm = mt(pf), dm = mt(df) + mt(C('catalog.json')) + mt(C('dld-market.json'));
   if (pm !== pageCache.m || dm !== pageCache.d) {
     let html = fs.readFileSync(pf, 'utf8');
-    if (dm) { try { const j = JSON.stringify(JSON.parse(fs.readFileSync(df, 'utf8'))).replace(/</g, '\\u003c'); html = html.replace('id="dld">null<', 'id="dld">' + j + '<'); } catch { console.error('bad dld-area-stats.json, serving demo data'); } }
+    for (const [id, f] of [['dld', df], ['catalog', C('catalog.json')], ['market', C('dld-market.json')]]) {
+      if (!fs.existsSync(f)) continue;
+      try { const j = JSON.stringify(JSON.parse(fs.readFileSync(f, 'utf8'))).replace(/</g, '\\u003c'); html = html.replace('id="' + id + '">null<', 'id="' + id + '">' + j + '<'); } catch { console.error('bad ' + path.basename(f) + ', skipped'); }
+    }
     pageCache = { m: pm, d: dm, html };
   }
   return pageCache.html;
@@ -151,7 +157,7 @@ function page() {
 function health() {
   const files = {}; for (const n of ['events.jsonl', 'leads.jsonl', 'bids.json']) { try { const s = fs.statSync(F(n)); files[n] = { kb: Math.round(s.size / 1024), modified: s.mtime.toISOString() }; } catch { files[n] = null; } }
   let disk = null; try { const s = fs.statfsSync(DATA_DIR); disk = { freeMb: Math.round(s.bavail * s.bsize / 1048576), totalMb: Math.round(s.blocks * s.bsize / 1048576) }; } catch { /* older node */ }
-  let dld = null; try { const d = JSON.parse(fs.readFileSync(F('dld-area-stats.json'), 'utf8')); dld = { asOf: d.asOf, areas: Object.keys(d.areas || {}).length }; } catch { /* none */ }
+  let dld = null; try { const d = JSON.parse(fs.readFileSync(C('dld-area-stats.json'), 'utf8')); dld = { asOf: d.asOf, areas: Object.keys(d.areas || {}).length }; } catch { /* none */ }
   const routes = [...metrics.routes].map(([route, r]) => ({ route, n: r.n, errors: r.err, avgMs: +(r.ms / r.n).toFixed(1), maxMs: Math.round(r.max) })).sort((a, b) => b.n - a.n);
   const mem = process.memoryUsage();
   return { ok: true, node: process.version, uptimeMin: Math.round(process.uptime() / 60), since: new Date(metrics.since).toISOString(), memoryMb: Math.round(mem.rss / 1048576), files, disk, dld, webhook: !!WEBHOOK, retentionDays: RETENTION, routes, errors: metrics.errors.slice().reverse(), counts: { bids: bids.length, pending: bids.filter(b => b.status === 'pending').length } };
@@ -170,7 +176,8 @@ export const server = http.createServer(async (req, res) => {
     if (m === 'GET' && p === '/vendor/three.min.js') return send(res, 200, fs.readFileSync(path.join(ROOT, 'public/vendor/three.min.js')), 'text/javascript; charset=utf-8', { 'Cache-Control': 'public, max-age=604800' });
     if (m === 'GET' && p === '/health') return send(res, 200, { ok: true });
     if (m === 'GET' && p === '/api/config') return send(res, 200, CFG, 'application/json', { 'Cache-Control': 'no-cache' });
-    if (m === 'GET' && p === '/api/stats') { const f = F('dld-area-stats.json'); return fs.existsSync(f) ? send(res, 200, fs.readFileSync(f)) : send(res, 404, { error: 'no data' }); }
+    if (m === 'GET' && p === '/api/catalog') return send(res, 200, fs.readFileSync(C('catalog.json')), 'application/json', { 'Cache-Control': 'no-cache' });
+    if (m === 'GET' && p === '/api/stats') { const f = C('dld-area-stats.json'); return fs.existsSync(f) ? send(res, 200, fs.readFileSync(f)) : send(res, 404, { error: 'no data' }); }
 
     /* customer: events */
     if (m === 'POST' && p === '/api/event') {

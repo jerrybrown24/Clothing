@@ -2,3 +2,7 @@ data/leads.jsonl
 .env
 node_modules
 artifact.html
+data/events.jsonl
+data/bids.json
+data/lead-status.json
+data/*.tmp

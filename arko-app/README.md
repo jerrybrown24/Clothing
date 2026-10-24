@@ -1,21 +1,27 @@
 # ARKO web app
 
-Self-hosted version of the ARKO prototype. Node 20+, no dependencies.
+A Dubai property portal with the full buying journey. Node 20+, no dependencies.
 
-Two views
-- **Customers** use `/`. Journey: Start (3 questions) → Choose (ranked list, shortlist) → Explore (3D model, block plan, street walk, demo film, gallery, nearby places, DLD market data, unit and payment plan) → Compare (side by side, same-scale 3D) → Book (video call with Ajinkya, or EOI: KYC, escrow payment, signature) → Track (DLD/Oqood, construction, payments, documents).
-- **You** use `/admin` (sign in with `ADMIN_TOKEN`). Tabs: Overview, Listings (opens, shortlists, compares, 3D, walks, films, unit picks, bookings and conversion per listing), Bids, Leads, Live, Backend, Integrations (where each data point comes from now and what replaces it). With no traffic yet, Overview offers a clearly labelled sample-data preview.
+## Run it on your computer (localhost)
+1. Install Node.js 20 or newer from nodejs.org.
+2. Get the code: `git clone https://github.com/jerrybrown24/clothing.git && cd clothing && git checkout claude/inspiring-pasteur-6a0qsl && cd arko-app`
+3. Start it: `ADMIN_TOKEN=pick-a-long-secret npm start` (Windows PowerShell: `$env:ADMIN_TOKEN="pick-a-long-secret"; npm start`)
+4. Open http://localhost:3000 for the customer site and http://localhost:3000/admin for your dashboard (sign in with the token).
 
-What is real: call support (Ajinkya, +971 58 635 2359), call-back and booking requests, usage analytics (no cookies or personal data), DLD area figures and the Dubai price index, real landmark locations.
-What is demo: the 9 projects, developers, prices and units; renders and 3D models (generated in the browser); street walk surroundings; KYC, EOI payment, signature, Oqood status and reminders. The "Prototype notes" button on the site marks each integration point.
+## What customers can do (`/`)
+- **Home:** search by Off-plan / Ready, area or project, beds, price; new projects; popular areas with DLD prices; ready homes; the two buying paths.
+- **Search:** filters (location, type, beds, price, handover, payment plan, checked only), sort, list or map view (drawn Dubai map with price pins).
+- **Listing page:** gallery; price per sqft against the DLD area median; 3D model, block plan, street walk and demo film; property and validated information (permit, RERA, escrow); payment plan; total cost; mortgage calculator; return model; location map and travel times; DLD monthly prices and latest registered sales nearby; amenities; similar homes; call, WhatsApp or call-back with Ajinkya.
+- **New projects, Market data** (real DLD sales by area and month), **Saved and Compare** (up to 4, 3D at the same scale), **Find my match** (3 questions).
+- **Buying:** off-plan: video call, or EOI with identity check, escrow payment and signature. Ready: viewing, live offer to you, cash or mortgage steps, 10% deposit, Form F signature. Then **My purchase** tracks DLD, construction or transfer, payments and documents.
 
-## Run
-```
-npm test            # 19 tests
-npm start           # http://localhost:3000
-npm run build       # rebuild public/index.html after editing src/ (needs python3)
-python3 build.py artifact   # preview page for Claude artifacts (three.js from cdnjs)
-```
+## Your dashboard (`/admin`)
+Overview, Listings (per-listing opens, saves, compares, 3D, walks, films, bookings, conversion), Bids (accept, counter, decline), Leads, Live, Backend health, Integrations.
+
+## Data
+- `data/catalog.json`: projects and listings (demo). See `data/CATALOG.md` to add real ones. `npm run catalog` regenerates the demo set.
+- `data/dld-area-stats.json`, `data/dld-market.json`: real DLD figures. Rebuild from new DLD files with `research/dld-ingest.py` and `tools/dld-market.py`.
+- Runtime files (leads, events, bids) are written to `DATA_DIR` and are git-ignored.
 
 ## Settings (environment variables)
 | Name | Purpose | Default |

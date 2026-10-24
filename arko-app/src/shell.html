@@ -1,24 +1,25 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ARKO</title>
-<meta name="description" content="Find, explore in 3D, compare and book off-plan homes in Dubai.">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="Dubai off-plan and ready homes, priced against DLD sales, explored in 3D, booked and tracked online.">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>/*CSS*/</style>
 <!--THREE-->
-</head><body data-view="start">
+</head><body data-view="home">
 <a class="skip" href="#view">Skip to content</a>
 <header class="hd"><div class="wrap hd-in">
-  <a class="brand" href="#start" aria-label="ARKO home"><svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#0A2A2E"/><path d="M8 24V16a8 8 0 0 1 16 0v8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><circle cx="16" cy="18" r="2.6" fill="#FF7A59"/></svg><span>ARKO</span></a>
-  <nav aria-label="Main"><a href="#list" data-k="list">Homes</a><a href="#compare" data-k="compare">Shortlist<span id="shortCount" class="cnt" hidden>0</span></a><a href="#track" data-k="track">My purchase</a></nav>
-  <div class="hd-r"><label class="sr" for="cur">Currency</label><select id="cur"><option>AED</option><option>USD</option><option>GBP</option><option>INR</option></select><button class="btn btn-primary sm" id="talkBtn">Talk to us</button></div>
-</div>
-<ol id="steps" class="steps wrap" aria-label="Your journey"><li data-s="start"><span>1</span>Start</li><li data-s="list"><span>2</span>Choose</li><li data-s="p"><span>3</span>Explore</li><li data-s="compare"><span>4</span>Compare</li><li data-s="book"><span>5</span>Book</li><li data-s="track"><span>6</span>Track</li></ol>
-</header>
+  <a class="brand" href="#home" aria-label="ARKO home"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#FF6B4A"/><path d="M8 24V16a8 8 0 0 1 16 0v8" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/><circle cx="16" cy="18" r="2.6" fill="#0B1F24"/></svg><span>ARKO</span></a>
+  <nav aria-label="Main"><a href="#search" data-k="search" data-s="ready">Buy</a><a href="#search" data-k="search" data-s="off">Off-plan</a><a href="#projects" data-k="projects">New projects</a><a href="#market" data-k="market">Market data</a></nav>
+  <div class="hd-r"><a class="hd-icon" href="#saved" aria-label="Saved homes"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg><span id="savedCount" class="cnt" hidden>0</span></a><a class="hd-link" href="#track">My purchase</a><label class="sr" for="cur">Currency</label><select id="cur"><option>AED</option><option>USD</option><option>GBP</option><option>INR</option></select><button class="btn btn-coral sm" id="talkBtn">Talk to us</button></div>
+</div></header>
 <main id="view" tabindex="-1"></main>
-<footer class="ft wrap"><div><b>ARKO</b> · Call support: Ajinkya <a class="sup-num" href="tel:+971586352359">+971 58 635 2359</a></div><p>Prototype. Projects, developers, prices and units are demo data. Area market figures come from DLD open data. Images and 3D models are illustrations. Not an offer to sell property.</p></footer>
-<div id="shortbar" class="shortbar" hidden></div>
+<footer class="ft"><div class="wrap ft-in"><div><a class="brand light" href="#home"><span>ARKO</span></a><p>Dubai property, end to end. Call support: Ajinkya <a class="sup-num" href="tel:+971586352359">+971 58 635 2359</a></p></div>
+  <div class="ft-cols"><div><b>Browse</b><a href="#search" data-s="ready">Ready homes</a><a href="#search" data-s="off">Off-plan</a><a href="#projects">New projects</a></div><div><b>Tools</b><a href="#start">Find my match</a><a href="#market">Market data</a><a href="#saved">Compare</a></div><div><b>Account</b><a href="#saved">Saved homes</a><a href="#track">My purchase</a></div></div>
+  <p class="ft-note">Prototype. Projects, developers, buildings, prices, permit and RERA numbers are demo data. Area prices and sales come from Dubai Land Department open data. Images and 3D models are illustrations. Not an offer to sell property.</p></div></footer>
 <button id="notesBtn" class="notes-btn" aria-pressed="false">Prototype notes</button>
 <div id="modal" hidden></div><div id="toasts" aria-live="polite"></div>
+<script type="application/json" id="catalog">null</script>
 <script type="application/json" id="dld">null</script>
+<script type="application/json" id="market">null</script>
 <script>/*JS*/</script>
 </body></html>

@@ -8,11 +8,12 @@ art = len(sys.argv) > 1 and sys.argv[1] == 'artifact'
 three = ('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>' if art else '<script src="/vendor/three.min.js"></script>')
 page = sh.replace('/*CSS*/', css).replace('/*JS*/', js).replace('<!--THREE-->', three)
 if art:
-    d = json.dumps(json.load(open('data/dld-area-stats.json')), separators=(',', ':')).replace('<', '\\u003c')
-    page = page.replace('id="dld">null<', 'id="dld">' + d + '<')
+    for k, f in (('dld', 'dld-area-stats.json'), ('catalog', 'catalog.json'), ('market', 'dld-market.json')):
+        d = json.dumps(json.load(open('data/' + f)), separators=(',', ':')).replace('<', '\\u003c')
+        page = page.replace('id="' + k + '">null<', 'id="' + k + '">' + d + '<')
     head = page[page.index('<title>'):page.index('</head>')]
-    body = page[page.index('<body data-view="start">') + len('<body data-view="start">'):page.index('</body>')]
-    page = head + '\n<script>document.body.dataset.view="start"</script>' + body
+    body = page[page.index('<body data-view="home">') + len('<body data-view="home">'):page.index('</body>')]
+    page = head + body
     open('artifact.html', 'w').write(page)
 else:
     open('public/index.html', 'w').write(page)

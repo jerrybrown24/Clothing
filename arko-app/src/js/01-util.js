@@ -20,7 +20,7 @@ const S = {
   short: store.get('short', []),                 /* shortlisted listing ids */
   pick: {},                                      /* listing id -> {type, plan} */
   booking: store.get('booking', null),           /* confirmed booking */
-  filters: { area: '', beds: '', sort: 'match' }
+  q: { status: 'all', loc: '', beds: '', type: '', min: 0, max: 0, ho: '', plan: '', verified: false, sort: 'new', view: 'list' }
 };
 function money(aed, full) {
   const v = aed * RATES[S.cur];
@@ -49,7 +49,14 @@ const ICON = {
   city: I('<path d="M4 21V9l5-3v15M9 21V3l6 3v15M15 21v-9l5 2v7M2 21h20"/>', 18), cube: I('<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12L4 7.5M12 12v9"/>', 18),
   grid: I('<rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/>', 18),
   walk: I('<circle cx="13" cy="4" r="2"/><path d="M10 21l2-6 3 3v3M8 12l2-4 4 1 2 3M12 15l-1-6"/>', 18), film: I('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/>', 18),
-  img: I('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 8"/>', 18)
+  img: I('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 8"/>', 18),
+  bed: I('<path d="M3 18v-7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v7M3 14h18M7 9V7h4v2"/>', 16), bath: I('<path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4zM6 12V6a2 2 0 0 1 4 0M7 19l-1 2M17 19l1 2"/>', 16),
+  size: I('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>', 16), pin: I('<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>', 16),
+  map: I('<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>', 18), list: I('<path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1"/>', 18),
+  filter: I('<path d="M3 5h18l-7 8v6l-4 2v-8z"/>', 18), search: I('<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>', 20), mail: I('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>', 18),
+  chat: I('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>', 18), verified: I('<path d="M12 2l2.4 2.3 3.3-.4.6 3.3 2.9 1.6-1.4 3 1.4 3-2.9 1.6-.6 3.3-3.3-.4L12 22l-2.4-2.3-3.3.4-.6-3.3L2.8 15.2l1.4-3-1.4-3 2.9-1.6.6-3.3 3.3.4z"/><path d="M8.5 12.2l2.3 2.3 4.7-4.8"/>', 16),
+  share: I('<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>', 18), scale: I('<path d="M12 3v18M5 7h14M5 7l-3 7a4 4 0 0 0 6 0zM19 7l-3 7a4 4 0 0 0 6 0z"/>', 18),
+  calc: I('<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M8 18h8"/>', 18)
 };
 function toast(msg, kind = 'ok') {
   const t = document.createElement('div'); t.className = 'toast ' + kind; t.setAttribute('role', 'status');
