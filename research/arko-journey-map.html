@@ -1,0 +1,953 @@
+<title>ARKO Journey Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: an infinite dotted canvas of stage blocks (like a planning wall), a details drawer on the right. ARKO brand tokens. */
+:root{
+  --bg:#EEF0EC; --dot:#CFD5CF; --panel:#FFFFFF; --card:#FFFFFF; --border:#D6DBD5;
+  --text:#0B1F24; --muted:#56666A; --accent:#0E7C79; --edge:#7F8C8C; --shadow:0 1px 3px rgba(11,31,36,.10);
+  --c-disc:#0E7C79; --c-expl:#2F6FD6; --c-vis:#7A55D9; --c-ana:#B07D00; --c-dec:#C2409F;
+  --c-off:#E2553A; --c-rdy:#1F7FA8; --c-own:#2E8B57; --c-team:#5B4FBF; --c-data:#6B7378;
+  --ok:#1F8A4C; --warn:#B26B00; --bad:#C0392B;
+  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Figtree",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101719; --dot:#263133; --panel:#172124; --card:#1B2629; --border:#2E3B3E;
+    --text:#E4ECEA; --muted:#9AAAA9; --accent:#3FC1BA; --edge:#7D8E8E; --shadow:0 1px 3px rgba(0,0,0,.45);
+    --c-disc:#3FC1BA; --c-expl:#6EA8FF; --c-vis:#A78BFA; --c-ana:#E2BC4A; --c-dec:#EC6FCF;
+    --c-off:#FF7A5C; --c-rdy:#53B7E0; --c-own:#5CCB8A; --c-team:#9D92FF; --c-data:#A3ADB1;
+    --ok:#5CCB8A; --warn:#E9A23B; --bad:#FF7A70; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101719; --dot:#263133; --panel:#172124; --card:#1B2629; --border:#2E3B3E;
+  --text:#E4ECEA; --muted:#9AAAA9; --accent:#3FC1BA; --edge:#7D8E8E; --shadow:0 1px 3px rgba(0,0,0,.45);
+  --c-disc:#3FC1BA; --c-expl:#6EA8FF; --c-vis:#A78BFA; --c-ana:#E2BC4A; --c-dec:#EC6FCF;
+  --c-off:#FF7A5C; --c-rdy:#53B7E0; --c-own:#5CCB8A; --c-team:#9D92FF; --c-data:#A3ADB1;
+  --ok:#5CCB8A; --warn:#E9A23B; --bad:#FF7A70; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 var(--f-body);display:flex;flex-direction:column;overflow:hidden}
+header{padding-block:12px 8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--border);background:var(--panel);display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+header .ttl{flex:1;min-width:0}
+header h1{font:700 19px/1.2 var(--f-display);margin:0 0 2px;letter-spacing:-.01em;text-wrap:balance}
+header p{margin:0;color:var(--muted);font-size:12.5px}
+#sync{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap}
+#sync i{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
+#sync.live i{background:var(--ok)} #sync.local i{background:var(--warn)}
+.toolbar{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--border);background:var(--panel)}
+.toolbar .grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+button,select,input,textarea{font:inherit;font-size:12.5px;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:7px;padding:5px 9px}
+button,select{cursor:pointer}
+button:hover:not(:disabled),select:hover{border-color:var(--accent)}
+button:disabled{opacity:.45;cursor:default}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--panel);font-weight:600}
+.chip{display:inline-flex;align-items:center;gap:6px}
+.chip i{width:14px;height:0;border-top:2px solid var(--k);display:inline-block}
+.chip i.dash{border-top-style:dashed}
+.chip[aria-pressed="false"]{opacity:.5}
+.chip[aria-pressed="true"]{border-color:var(--k)}
+main{position:relative;flex:1;min-height:0;display:flex}
+#viewport{position:relative;flex:1;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;background-image:radial-gradient(var(--dot) 1.2px,transparent 1.3px)}
+#viewport.panning{cursor:grabbing}
+#world{position:absolute;left:0;top:0;transform-origin:0 0}
+#edges{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none}
+.e path.line{fill:none;stroke-width:2}
+.e.flow path.line{stroke:var(--c-disc)}
+.e.off path.line{stroke:var(--c-off)}
+.e.rdy path.line{stroke:var(--c-rdy)}
+.e.support path.line{stroke:var(--c-team);stroke-dasharray:7 5}
+.e.data path.line{stroke:var(--c-data);stroke-dasharray:2 5;stroke-linecap:round}
+.e{transition:opacity .15s}
+.e.dim{opacity:.08}
+.e.hot path.line{stroke-width:3}
+.e.hot.flow path.line,.e.hot.off path.line,.e.hot.rdy path.line{stroke-dasharray:9 6;animation:flow 1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-15}}
+@media (prefers-reduced-motion: reduce){.e.hot path.line{animation:none}}
+.e text{font:600 11px var(--f-body);fill:var(--text);paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
+.mk-flow{fill:var(--c-disc)} .mk-off{fill:var(--c-off)} .mk-rdy{fill:var(--c-rdy)} .mk-support{fill:var(--c-team)} .mk-data{fill:var(--c-data)}
+.node{position:absolute;transition:opacity .15s}
+.node.dim{opacity:.16}
+.group{border:2px solid color-mix(in srgb,var(--c) 70%,transparent);background:color-mix(in srgb,var(--c) 7%,transparent);border-radius:14px}
+.group.drop{background:color-mix(in srgb,var(--c) 18%,transparent);border-style:dashed}
+.ghead{height:40px;display:flex;align-items:center;gap:8px;padding:0 12px;font:700 13.5px var(--f-display);cursor:grab;white-space:nowrap;overflow:hidden}
+.ghead .cnt{margin-left:auto;font:500 11.5px var(--f-body);color:var(--muted)}
+.badge{min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--c);color:var(--panel);font:700 11px/22px var(--f-body);text-align:center;flex:none}
+.card{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--c);border-radius:8px;padding:7px 10px;cursor:pointer;box-shadow:var(--shadow);overflow:hidden;touch-action:none}
+.card .nm{font:600 13px/1.3 var(--f-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:46px}
+.card .sb{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.card.custom{border-style:dashed;border-left-style:solid}
+.card.dragging{box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:50;opacity:.95;cursor:grabbing;transition:none}
+.ph{position:absolute;border:2px dashed var(--accent);border-radius:8px;pointer-events:none}
+.tags{position:absolute;top:7px;right:7px;display:flex;gap:3px}
+.tags b{font:700 10px/16px var(--f-body);min-width:16px;height:16px;padding:0 4px;text-align:center;border-radius:4px;background:color-mix(in srgb,var(--c) 20%,transparent);color:var(--text)}
+.tags b.n{background:var(--accent);color:var(--panel)}
+.tags b.s-agreed{background:var(--ok);color:var(--panel)}
+.tags b.s-discuss{background:var(--warn);color:var(--panel)}
+.tags b.s-change{background:var(--bad);color:var(--panel)}
+.solo{background:var(--card);border:2px solid var(--c);border-radius:14px;padding:12px 14px;cursor:pointer;box-shadow:var(--shadow)}
+.solo h3{margin:0 0 4px;font:700 14px var(--f-display);display:flex;align-items:center;gap:8px}
+.solo p{margin:0;font-size:12px;color:var(--muted)}
+.node.sel{outline:2.5px solid var(--accent);outline-offset:3px}
+#panel{width:390px;flex:none;border-left:1px solid var(--border);background:var(--panel);overflow:auto;padding:16px;display:none}
+#panel.open{display:block}
+#panel h2{margin:0 0 6px;font:700 18px/1.25 var(--f-display);display:flex;align-items:center;gap:8px;text-wrap:balance}
+#panel .kick{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+#panel .close{float:right;padding:2px 8px}
+#panel p{margin:6px 0}
+#panel dl{margin:10px 0 0;display:grid;grid-template-columns:96px minmax(0,1fr);gap:7px 10px;font-size:13px}
+#panel dt{color:var(--muted)}
+#panel dd{margin:0}
+#panel ol,#panel ul{padding-left:18px;margin:6px 0;font-size:13px}
+#panel li{margin:3px 0}
+#panel h4{margin:18px 0 6px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.sw{width:10px;height:10px;border-radius:3px;background:var(--c);display:inline-block;flex:none}
+.linkish{background:none;border:none;padding:0;color:var(--accent);cursor:pointer;font-size:13px;text-decoration:underline;text-align:left}
+.seg{display:flex;gap:4px;flex-wrap:wrap}
+.seg button[aria-pressed="true"]{color:var(--panel);font-weight:600}
+.seg button.s-none[aria-pressed="true"]{background:var(--muted);border-color:var(--muted)}
+.seg button.s-agreed[aria-pressed="true"]{background:var(--ok);border-color:var(--ok)}
+.seg button.s-discuss[aria-pressed="true"]{background:var(--warn);border-color:var(--warn)}
+.seg button.s-change[aria-pressed="true"]{background:var(--bad);border-color:var(--bad)}
+.who{font-size:11.5px;color:var(--muted)}
+.note{border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin:6px 0;background:var(--card)}
+.note .meta{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--muted);margin-bottom:3px}
+.note .meta b{color:var(--text);font-weight:600}
+.note .meta button{margin-left:auto;padding:1px 6px;font-size:11px}
+.note .body{white-space:pre-wrap;word-break:break-word;font-size:13px}
+.note .step{font-size:11.5px}
+textarea{width:100%;min-height:74px;resize:vertical;display:block}
+input[type=text]{width:100%}
+.form{display:grid;gap:6px;margin-top:6px}
+.row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.hint{font-size:12px;color:var(--muted)}
+#caption{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));width:min(740px,calc(100% - 32px));background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 14px;box-shadow:0 6px 24px rgba(0,0,0,.18);display:none;gap:10px;align-items:flex-start;z-index:6}
+#caption.show{display:flex}
+#caption .txt{flex:1;font-size:13px;min-width:0}
+#caption .txt b{display:block;font:700 14px var(--f-display);margin-bottom:2px}
+#caption .btns{display:flex;gap:6px;flex:none}
+#zoom{position:absolute;right:calc(12px + env(safe-area-inset-right,0px));top:12px;display:flex;flex-direction:column;gap:4px;z-index:4}
+#zoom button{width:34px;height:32px;padding:0}
+#hint{position:absolute;left:calc(12px + env(safe-area-inset-left,0px));top:12px;font-size:11.5px;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:5px 9px;max-width:calc(100% - 80px);z-index:4}
+#toast{position:absolute;left:50%;top:52px;transform:translateX(-50%);background:var(--text);color:var(--panel);padding:6px 12px;border-radius:8px;font-size:12.5px;z-index:9}
+@media (max-width:760px){
+  header h1{font-size:16px}
+  #panel{position:absolute;left:0;right:0;bottom:0;width:auto;max-height:62%;border-left:none;border-top:1px solid var(--border);border-radius:14px 14px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.2);z-index:7;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  .toolbar .grp{width:100%}
+  #hint{display:none}
+}
+</style>
+
+<header>
+  <div class="ttl">
+    <h1>ARKO customer journey: from budget to keys</h1>
+    <p>10 stages, 2 paths (off-plan and ready), 60+ steps. Click any block for its options and details, add notes, mark it agreed or to discuss, and drag blocks to reshuffle the journey.</p>
+  </div>
+  <div id="sync" aria-live="polite"><i></i><span>Connecting…</span></div>
+</header>
+<div class="toolbar">
+  <div class="grp" role="group" aria-label="Arrow layers">
+    <span class="lbl">Show</span>
+    <button class="chip" data-layer="flow" aria-pressed="true" style="--k:var(--c-disc)"><i></i>Shared path</button>
+    <button class="chip" data-layer="off" aria-pressed="true" style="--k:var(--c-off)"><i></i>Off-plan</button>
+    <button class="chip" data-layer="rdy" aria-pressed="true" style="--k:var(--c-rdy)"><i></i>Ready</button>
+    <button class="chip" data-layer="support" aria-pressed="false" style="--k:var(--c-team)"><i class="dash"></i>ARKO team</button>
+    <button class="chip" data-layer="data" aria-pressed="false" style="--k:var(--c-data)"><i class="dash"></i>Data feeds</button>
+  </div>
+  <div class="grp">
+    <span class="lbl">Highlight</span>
+    <select id="pathSel" aria-label="Highlight a path">
+      <option value="">Path: all</option>
+      <option value="off">Off-plan buyer</option>
+      <option value="rdy">Ready buyer with a mortgage</option>
+      <option value="cash">Ready buyer paying cash</option>
+      <option value="money">Where ARKO earns</option>
+    </select>
+    <select id="statusSel" aria-label="Highlight by status">
+      <option value="">Status: all</option>
+      <option value="discuss">To discuss</option>
+      <option value="change">Needs change</option>
+      <option value="agreed">Agreed</option>
+      <option value="notes">Has notes</option>
+    </select>
+    <button id="runBtn">▶ Walk through</button>
+    <button id="notesBtn">All notes <span id="noteCount">0</span></button>
+    <button id="resetBtn" title="Put every block back where it started">Reset layout</button>
+  </div>
+</div>
+<main>
+  <div id="viewport" aria-label="Journey canvas. Drag empty space to pan, scroll or pinch to zoom, click a block for details.">
+    <div id="world"><svg id="edges"><defs></defs><g id="edgeLayer"></g></svg></div>
+    <div id="hint">Drag the canvas to pan · scroll or pinch to zoom · drag a stage title to move a stage · drag a step into another place or stage to reshuffle</div>
+    <div id="zoom">
+      <button id="zin" aria-label="Zoom in">+</button>
+      <button id="zfit" aria-label="Fit to screen">⤢</button>
+      <button id="zout" aria-label="Zoom out">−</button>
+    </div>
+    <div id="caption" role="status" aria-live="polite"><div class="txt" id="capTxt"></div><div class="btns" id="capBtns"></div></div>
+    <div id="toast" hidden></div>
+  </div>
+  <aside id="panel" aria-label="Details"></aside>
+</main>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ================= Journey content =================
+   Step fields: t title, s short line, d what happens, opt options/branches, who, sys screens & systems,
+   money, docs, time, risk open questions, kpi what we measure */
+const STAGES = [
+ {id:'g1', n:'1', title:'Discover', c:'--c-disc', x:0, y:0, path:'all',
+  about:'The buyer lands on ARKO and tells us two things: how much they can spend and why they are buying. Everything after this is filtered by those two answers.',
+  steps:[
+  {id:'land', t:'Landing page', s:'Hero search, trust signals, live DLD numbers',
+   d:'First screen. One search box (area, project or developer), a "Start in 3 questions" button, and proof we are real: RERA licence number, DLD-verified data, call support.',
+   opt:['Search straight away','Start the 3-question guide','Browse new launches','Open market data'],
+   who:'Buyer', sys:'Home page, hero search, DLD market strip', kpi:'Visitors, bounce rate, guide start rate',
+   risk:'Do we lead with search (Bayut habit) or the guide (our difference)?'},
+  {id:'budget', t:'Budget', s:'Total budget or monthly comfort',
+   d:'Buyer sets a budget either as a total price or as a monthly amount they are comfortable with. Monthly is turned into a price using mortgage assumptions.',
+   opt:['Under AED 1M','AED 1–2M','AED 2–5M','AED 5M+','"I know my monthly"'],
+   who:'Buyer', sys:'Guide question 1, mortgage calculator', money:'Assumes 80% LTV for residents under AED 5M, 25-year term', kpi:'Budget band mix'},
+  {id:'reason', t:'Reason: own or invest', s:'Live in it, rent it out, or both',
+   d:'Owning puts handover, schools and community first. Investing puts yield, capital growth and resale liquidity first. The answer changes sorting and the analysis screen.',
+   opt:['To live in','To invest (rental yield)','To invest (capital growth)','Golden Visa (AED 2M+)'],
+   who:'Buyer', sys:'Guide question 2', kpi:'Own vs invest split'},
+  {id:'type', t:'Off-plan or ready', s:'The fork in the journey',
+   d:'Off-plan: buy from the developer, pay over a plan, wait for handover. Ready: move in or rent out now, usually needs a mortgage or cash. Buyers can say "show me both".',
+   opt:['Off-plan (new launch)','Ready (move in now)','Show me both'],
+   who:'Buyer', sys:'Guide question 3, header nav (Buy / Off-plan)', kpi:'Path split',
+   risk:'Launch off-plan only first, ready later?'},
+  {id:'signin', t:'Sign in (optional)', s:'Phone + OTP, only when saving',
+   d:'Browsing is open. We ask for a phone number only when the buyer saves, books or pays, so the first visit stays friction-free.',
+   opt:['Continue as guest','Phone + OTP','Google / Apple'],
+   who:'Buyer', sys:'Auth, consent capture (UAE PDPL)', kpi:'Sign-up rate at save'},
+ ]},
+ {id:'g2', n:'2', title:'Explore options', c:'--c-expl', x:300, y:0, path:'all',
+  about:'Bayut-style browsing, filtered by the buyer\'s budget and reason. The buyer builds a shortlist.',
+  steps:[
+  {id:'search', t:'Search: list or map', s:'Area, price, beds, handover',
+   d:'List and map views side by side. Map shows community clusters when zoomed out and price pins when zoomed in. "Search as I move the map".',
+   opt:['List view','Map view','Draw an area','Sort: best match, price, yield, handover'],
+   who:'Buyer', sys:'Search page, map tiles, catalogue', kpi:'Searches per visitor, filter use'},
+  {id:'filters', t:'Smart filters', s:'Budget-aware, payment-plan aware',
+   d:'Standard filters (price, beds, size) plus ARKO ones: post-handover plan, % paid before handover, Golden Visa eligible, yield above area median.',
+   opt:['Payment plan 60/40, 50/50, post-handover','Handover year','Developer','Golden Visa'],
+   who:'Buyer', sys:'Search filters'},
+  {id:'project', t:'Project page', s:'Developer, plan, amenities, handover',
+   d:'Everything about one project: developer track record, handover date, payment plan, unit types and prices, amenities, location, brochure and floor plans.',
+   opt:['See units','Download brochure','View floor plans','Talk to us about this project'],
+   who:'Buyer', sys:'Project page, developer data', docs:'Brochure, floor plans (developer)', kpi:'Project page opens'},
+  {id:'unitpg', t:'Unit page', s:'One apartment: price, size, view, floor',
+   d:'One unit with its real floor plan, view direction, floor, price per sqft compared with the area median, and the payment schedule in AED.',
+   opt:['Shortlist','Compare','Open in 3D','Reserve / book viewing'],
+   who:'Buyer', sys:'Listing page', kpi:'Unit views, shortlist rate'},
+  {id:'short', t:'Shortlist', s:'Heart to save, synced to phone',
+   d:'Saved homes in one place. Price-drop and new-launch alerts on saved areas.',
+   opt:['Save','Get alerts (WhatsApp / email)','Share with partner or family'],
+   who:'Buyer', sys:'Saved page, alerts', kpi:'Saves per user, alert opt-in'},
+  {id:'compare', t:'Compare', s:'Up to 4 side by side',
+   d:'Compare price, price per sqft vs area, yield, total cost, payment plan, handover, and the 3D models next to each other.',
+   opt:['Table compare','3D side by side','Cost compare','Location compare'],
+   who:'Buyer', sys:'Compare page', kpi:'Compare usage'},
+ ]},
+ {id:'g3', n:'3', title:'Visualise in 3D', c:'--c-vis', x:600, y:0, path:'all',
+  about:'Our biggest difference from Bayut: the buyer can see and walk the home before it exists.',
+  steps:[
+  {id:'maquette', t:'3D maquette', s:'The tower and its surroundings',
+   d:'A 3D model of the building in its community: height, neighbours, water, roads. Rotate, zoom and see sun and shadow through the day.',
+   opt:['Orbit','Time of day','Show neighbours'], who:'Buyer', sys:'3D engine (three.js)', kpi:'3D opens per listing'},
+  {id:'block', t:'Block plan & unit picker', s:'Click a floor, see what is free',
+   d:'Stacked floors coloured by availability and price. Click a unit to see its plan, view and price.',
+   opt:['Filter by beds','Filter by view','Only available'], who:'Buyer', sys:'Block plan, developer inventory', risk:'Needs live inventory from each developer'},
+  {id:'street', t:'Street walk', s:'Drop in at street level',
+   d:'First-person walk around the building, like map street view but generated: entrances, retail, landscaping, nearby places.',
+   opt:['Walk','Jump to amenity'], who:'Buyer', sys:'Street-walk mode'},
+  {id:'interior', t:'Walk inside the apartment', s:'Built from the real floor plan',
+   d:'The developer floor plan becomes a walkable 3D apartment with real-scale furniture. Buyers can restyle it, change finishes and see daylight from the real window positions.',
+   opt:['Walk mode','Design mode (dollhouse)','Styles: modern, warm, loft, Arabesque','Shopping list'],
+   who:'Buyer', sys:'Interior viewer (arko-offplan app)', money:'Leads into furniture and design revenue later', kpi:'Interior sessions, styles applied'},
+  {id:'film', t:'Demo film', s:'A 60-second fly-through',
+   d:'A scripted camera tour: arrival, lobby, amenities, the unit, the view. Shareable with family.',
+   opt:['Play','Share link'], who:'Buyer', sys:'Scripted 3D camera'},
+ ]},
+ {id:'g4', n:'4', title:'Analyse', c:'--c-ana', x:900, y:0, path:'all',
+  about:'Real numbers before any sales call: what the area does, what this home really costs and what it earns.',
+  steps:[
+  {id:'area', t:'Area returns', s:'DLD median price, trend, volume',
+   d:'Median AED per sqft for the area from DLD sales, the month-by-month trend, sales volume and off-plan share. Shows whether this unit is priced above or below the area.',
+   opt:['12-month trend','Off-plan vs ready prices','Recent nearby sales'],
+   who:'Buyer', sys:'DLD open data, ARKO price index', kpi:'Analysis opens', risk:'Live feed waits for the Data.Dubai API key'},
+  {id:'yield', t:'Rental yield', s:'Gross and net, after service charge',
+   d:'Expected rent from comparable rentals, minus service charge, maintenance and vacancy, as a gross and a net yield.',
+   opt:['Long-term rent','Holiday home','Compare with area median'], who:'Buyer', sys:'Rental comparables, service charge index', risk:'Need a rental data source (DLD Ejari / RERA index)'},
+  {id:'cost', t:'Total cost', s:'Price + DLD 4% + every fee',
+   d:'One line per cost: price, DLD 4%, trustee fee (AED 4,000+VAT), agent fee, mortgage registration 0.25% + AED 290, valuation, service charge per year.',
+   opt:['Cash buyer','With mortgage','Off-plan (Oqood fees)'], who:'Buyer', sys:'Cost calculator', money:'DLD 4% of price is the biggest extra', kpi:'Calculator use'},
+  {id:'model', t:'Financial model', s:'Cash flow year by year',
+   d:'Payment plan or mortgage repayments against rent, with break-even year, equity at handover and return on cash invested.',
+   opt:['Payment plan view','Mortgage view','Exit after handover','Hold 10 years'], who:'Buyer', sys:'Model calculator'},
+  {id:'finalise', t:'Finalise options', s:'Down to 1–3 homes',
+   d:'Buyer marks their final picks. This is the moment we offer human help.',
+   opt:['Mark as final','Remove from shortlist','Ask ARKO for an opinion'], who:'Buyer', kpi:'Finalised shortlists'},
+ ]},
+ {id:'g5', n:'5', title:'Need an agent?', c:'--c-dec', x:1200, y:0, path:'all',
+  about:'The buyer chooses how much help they want. Self-serve buyers go straight on, others get a call or a meeting.',
+  steps:[
+  {id:'needagent', t:'Do you want help?', s:'Self-serve, call or meeting',
+   d:'A simple choice, never forced. Self-serve buyers go straight to reserve or book a viewing.',
+   opt:['No, I\'ll continue myself','Call me','Book a meeting','WhatsApp'], who:'Buyer', kpi:'Assisted vs self-serve'},
+  {id:'callc', t:'Call centre', s:'Ajinkya, +971 58 635 2359',
+   d:'A RERA-registered agent calls back within the hour in working hours. They see the buyer\'s shortlist, answers and analysis, so the buyer never repeats themselves.',
+   opt:['Call now','Request a callback','WhatsApp chat'], who:'Buyer, ARKO agent', sys:'Lead inbox (team view), call log', kpi:'Time to first call, call-to-booking rate'},
+  {id:'meeting', t:'Meeting', s:'Office, site or video',
+   d:'Booked meeting at our office, at the developer sales centre, or on video.',
+   opt:['ARKO office','Developer sales centre','Video call'], who:'Buyer, ARKO agent', sys:'Calendar booking'},
+  {id:'agentform', t:'Agent agreement', s:'RERA Form A / B',
+   d:'Before acting for a buyer, RERA requires a signed brokerage agreement (Form B for buyers). Signed digitally.',
+   opt:['Sign digitally','Sign in person'], who:'Buyer, ARKO', docs:'RERA Form B', risk:'Needed for ready deals; off-plan direct-from-developer may not need it'},
+ ]},
+ /* ---------- Off-plan path ---------- */
+ {id:'o1', n:'6A', title:'Off-plan: reserve', c:'--c-off', x:300, y:560, path:'off',
+  about:'The buyer picks an apartment from the developer\'s live inventory and holds it. No viewing and no bidding: off-plan is sold at list price.',
+  steps:[
+  {id:'pickunit', t:'Pick the unit', s:'From live developer inventory',
+   d:'The buyer picks the exact unit (floor, view, layout). If the project is pre-launch with no units released, they register an expression of interest instead.',
+   opt:['Available unit: reserve now','Pre-launch: register EOI','Join waitlist for a sold-out type'], who:'Buyer', sys:'Developer inventory feed', risk:'Inventory goes stale fast at launches'},
+  {id:'eoi', t:'EOI payment', s:'Refundable hold, paid to developer',
+   d:'An expression-of-interest amount (shown as AED 40,000 in the demo) holds the buyer\'s place. Paid to the developer\'s account, never to ARKO.',
+   opt:['Card','Bank transfer','Cheque at sales centre'], who:'Buyer, developer', money:'Goes to developer; refundable if no unit is allocated', kpi:'EOIs per launch'},
+  {id:'kyc', t:'KYC', s:'Emirates ID or passport',
+   d:'Identity and anti-money-laundering checks: ID, proof of address, source of funds for larger amounts.',
+   opt:['UAE Pass','Upload documents'], who:'Buyer, developer, ARKO', docs:'Emirates ID / passport, visa, proof of address', sys:'UAE Pass, AML screening'},
+  {id:'resform', t:'Reservation form', s:'Developer issues the booking form',
+   d:'The developer confirms the unit, price and payment plan on a reservation form for signature.',
+   opt:['Sign digitally','Sign at sales centre'], who:'Buyer, developer', docs:'Reservation form'},
+ ]},
+ {id:'o2', n:'7A', title:'Off-plan: close & register', c:'--c-off', x:600, y:560, path:'off',
+  about:'The deal becomes real: booking payment into escrow, contract signed, and the sale registered with DLD (Oqood).',
+  steps:[
+  {id:'downpay', t:'Booking payment', s:'Usually 10–20% into escrow',
+   d:'The first instalment, paid into the project\'s escrow account (required by Law 8/2007). The EOI is deducted.',
+   opt:['Bank transfer to escrow','Cheque'], who:'Buyer, developer, escrow bank', money:'Into the project escrow account, never to ARKO', docs:'Payment receipt'},
+  {id:'spa', t:'Sign SPA', s:'Sale and purchase agreement',
+   d:'The developer\'s SPA sets the unit, price, payment plan, handover date and penalties. ARKO highlights the key clauses in plain words.',
+   opt:['Digital signing','Sign at sales centre'], who:'Buyer, developer', docs:'SPA', risk:'Should ARKO offer a lawyer review add-on?'},
+  {id:'oqood', t:'DLD Oqood registration', s:'4% DLD fee + admin fees',
+   d:'The developer registers the sale on DLD\'s Oqood system. The buyer pays the 4% DLD fee and admin charges, often at the same time as the booking payment.',
+   opt:['Pay through developer','Some launches waive or split the fee'], who:'Developer, DLD, buyer', money:'4% of price to DLD', sys:'DLD Oqood'},
+  {id:'oqcert', t:'Oqood certificate', s:'Proof of off-plan ownership',
+   d:'The interim registration certificate. Stored in the buyer\'s ARKO vault.',
+   who:'DLD, buyer', docs:'Oqood certificate', sys:'Document vault'},
+  {id:'offcomm', t:'Commission to ARKO', s:'Paid by the developer',
+   d:'On off-plan, the developer pays ARKO\'s commission after the booking payment clears. The buyer pays no agent fee.',
+   who:'Developer, ARKO', money:'Developer-paid commission, rate set per developer agreement', kpi:'Commission per deal, days to payout'},
+ ]},
+ {id:'o3', n:'8A', title:'Off-plan: pay to handover', c:'--c-off', x:900, y:560, path:'off',
+  about:'Months or years of instalments while the building goes up. ARKO keeps the buyer informed and on time.',
+  steps:[
+  {id:'schedule', t:'Instalment schedule', s:'Every payment and due date',
+   d:'The payment plan as a calendar: amount, due date, construction milestone, and what is paid so far.',
+   opt:['Calendar view','Add to phone calendar'], who:'Buyer', sys:'Tracker (My purchase)'},
+  {id:'remind', t:'Payment reminders', s:'30, 7 and 1 day before',
+   d:'WhatsApp, email and app reminders before each instalment, with the escrow account details to pay into.',
+   opt:['WhatsApp','Email','Push'], who:'Buyer', sys:'Reminder service', kpi:'On-time payment rate', risk:'Late payments carry developer penalties'},
+  {id:'progress', t:'Construction updates', s:'Photos, % complete, handover date',
+   d:'Progress reports from the developer and DLD project status, with any change to the handover date flagged.',
+   who:'Buyer, developer', sys:'DLD project status, developer updates'},
+  {id:'resale', t:'Resell before handover', s:'Assignment, if allowed',
+   d:'Some buyers sell their Oqood before handover. Developers usually require a % paid first and charge a transfer fee.',
+   opt:['List for resale','Get a valuation'], who:'Buyer, ARKO', money:'New commission opportunity'},
+  {id:'handover', t:'Handover', s:'Snagging, final payment, keys',
+   d:'Inspection and snag list, final payment, service charge setup, Oqood converted to a title deed, keys.',
+   opt:['ARKO snagging inspection (paid add-on)','Self inspection'], who:'Buyer, developer, DLD', docs:'Title deed, handover pack', money:'Snagging add-on'},
+ ]},
+ /* ---------- Ready path ---------- */
+ {id:'r1', n:'6B', title:'Ready: viewing', c:'--c-rdy', x:300, y:1040, path:'rdy',
+  about:'The buyer sees the actual home before making an offer.',
+  steps:[
+  {id:'bookview', t:'Book a viewing', s:'Pick a slot',
+   d:'Choose a time. ARKO confirms with the seller or tenant and sends directions.',
+   opt:['In person','Video viewing','Several homes in one trip'], who:'Buyer, ARKO agent, seller', sys:'Booking calendar', kpi:'Viewing bookings'},
+  {id:'viewing', t:'Viewing', s:'With an ARKO agent',
+   d:'Agent walks the buyer through the home, checks condition and answers questions.',
+   who:'Buyer, ARKO agent', docs:'Trakheesi permit for the advert'},
+  {id:'vfeed', t:'After the viewing', s:'Rate it, decide next step',
+   d:'Buyer rates the home and chooses: make an offer, see another, or stop.',
+   opt:['Make an offer','See similar','Not for me'], who:'Buyer', kpi:'Viewing-to-offer rate'},
+ ]},
+ {id:'r2', n:'7B', title:'Ready: offer & deal', c:'--c-rdy', x:600, y:1040, path:'rdy',
+  about:'Bidding happens inside ARKO. The team accepts, counters or rejects from the owner dashboard.',
+  steps:[
+  {id:'bid', t:'Make an offer', s:'Amount + cash or mortgage',
+   d:'The buyer enters an offer and says how they will pay. The screen updates live when the seller answers.',
+   opt:['Offer at asking','Offer below','Cash','Mortgage'], who:'Buyer', sys:'Bids API', kpi:'Offers per listing'},
+  {id:'counter', t:'Seller response', s:'Accept, counter or reject',
+   d:'The ARKO team (on the seller\'s instructions) accepts, counters (between 50% and 120% of asking) or rejects. The buyer can accept a counter or make a new offer.',
+   opt:['Accept','Counter','Reject'], who:'Seller, ARKO team', sys:'Team view: Offers tab'},
+  {id:'mou', t:'MOU (Form F)', s:'Agreement signed by both sides',
+   d:'The RERA Form F memorandum of understanding sets price, dates and conditions. Buyer gives a 10% security deposit cheque, held by the agent.',
+   who:'Buyer, seller, ARKO', docs:'Form F, 10% deposit cheque', money:'Deposit held, not cashed'},
+  {id:'closed', t:'Deal closed', s:'Price agreed, both signed',
+   d:'Milestone: the deal is agreed. Now finance and transfer start.', who:'Everyone', kpi:'Deals closed'},
+ ]},
+ {id:'r3', n:'8B', title:'Ready: finance', c:'--c-rdy', x:900, y:1040, path:'rdy',
+  about:'Cash buyers skip to transfer. Mortgage buyers go through the bank steps, which ARKO coordinates.',
+  steps:[
+  {id:'cashloan', t:'Cash or bank loan', s:'The second fork',
+   d:'Cash buyers go straight to transfer. Mortgage buyers continue through the bank steps.',
+   opt:['Cash','Mortgage'], who:'Buyer'},
+  {id:'bankc', t:'Bank connect', s:'Compare offers from several banks',
+   d:'ARKO shows rates and fees from partner banks or a mortgage broker and sends one application.',
+   opt:['Fixed rate','Variable rate','Islamic finance'], who:'Buyer, banks', money:'Mortgage referral fee to ARKO', sys:'Bank partner API or broker'},
+  {id:'mdocs', t:'Documents', s:'Salary, bank statements, ID',
+   d:'One upload, shared with the chosen bank: ID, visa, salary certificate, 6 months of statements.',
+   who:'Buyer, bank', docs:'Salary certificate, bank statements, ID', sys:'Document vault'},
+  {id:'preapp', t:'Pre-approval', s:'How much the bank will lend',
+   d:'The bank confirms an amount, usually valid for 60 days.', who:'Bank', docs:'Pre-approval letter'},
+  {id:'valuation', t:'Valuation', s:'Bank values the home',
+   d:'A bank-appointed valuer inspects. If the value is below the price, the buyer covers the gap.', who:'Bank valuer', money:'Valuation fee, usually paid by buyer', risk:'Valuation gap can kill deals'},
+  {id:'loanok', t:'Loan approval', s:'Final offer letter',
+   d:'Final offer letter and the bank\'s manager\'s cheque for transfer day.', who:'Bank, buyer', docs:'Final offer letter'},
+ ]},
+ {id:'r4', n:'9B', title:'Ready: transfer', c:'--c-rdy', x:1200, y:1040, path:'rdy',
+  about:'Ownership moves at a DLD trustee office.',
+  steps:[
+  {id:'noc', t:'Developer NOC', s:'No dues on the property',
+   d:'The seller gets a no-objection certificate from the developer confirming service charges are paid.', who:'Seller, developer', docs:'NOC'},
+  {id:'charges', t:'Charges', s:'DLD 4%, trustee, mortgage reg',
+   d:'Buyer pays DLD 4%, trustee fee, mortgage registration (0.25% + AED 290) and the agent fee.',
+   who:'Buyer', money:'DLD 4%, trustee AED 4,000+VAT, ARKO fee (usually 2% + VAT)'},
+  {id:'initpay', t:'Initial payment', s:'Manager\'s cheques to seller',
+   d:'Payment to the seller (and to the seller\'s bank if they still have a mortgage) by manager\'s cheques.', who:'Buyer, bank, seller'},
+  {id:'dldtrans', t:'DLD transfer', s:'At a trustee office',
+   d:'Buyer, seller (or their representatives) and the bank meet at a registration trustee. DLD issues the new title deed.', who:'Buyer, seller, trustee, DLD', sys:'DLD'},
+  {id:'deed', t:'Ownership', s:'Title deed in the buyer\'s name',
+   d:'Keys handed over, title deed stored in the ARKO vault, utilities (DEWA) and Ejari set up.', who:'Buyer', docs:'Title deed'},
+ ]},
+ /* ---------- After purchase ---------- */
+ {id:'g10', n:'10', title:'Owner', c:'--c-own', x:1530, y:780, path:'all',
+  about:'Both paths end here. This is where ARKO keeps the customer for years and earns repeat revenue.',
+  steps:[
+  {id:'ownerdash', t:'Owner dashboard', s:'Value, payments, documents',
+   d:'Current estimated value from DLD sales, payments made and due, documents, service charges.', who:'Owner', sys:'My purchase / owner view'},
+  {id:'design', t:'Design & furniture', s:'From the 3D design they made',
+   d:'The apartment the buyer designed in 3D becomes a shopping list and a fit-out quote from partners.', opt:['Furniture package','Interior designer','Kitchen and wardrobes'], who:'Owner, partners', money:'Referral or margin on furniture and design'},
+  {id:'rent', t:'Rent it out', s:'Tenant finding, management',
+   d:'For investors: list for rent, find a tenant, Ejari, property management or holiday home.', opt:['Long-term let','Holiday home','Full management'], who:'Owner, ARKO', money:'Leasing commission, management fee'},
+  {id:'refer', t:'Refer & earn', s:'Friends, family, colleagues',
+   d:'Owners refer buyers and get a reward when the referral completes.', who:'Owner', money:'Referral cost, new deals', kpi:'Referral share of deals'},
+  {id:'sell', t:'Sell later', s:'Resale with ARKO',
+   d:'When the owner wants to sell, ARKO values, lists and runs the ready path for the next buyer.', who:'Owner, ARKO', money:'Listing commission'},
+ ]},
+ /* ---------- Side blocks ---------- */
+ {id:'team', n:'T', title:'ARKO team (back office)', c:'--c-team', x:1530, y:0, path:'side',
+  about:'What the ARKO team sees and does behind the customer journey, in the owner dashboard (/admin).',
+  steps:[
+  {id:'leads', t:'Lead inbox', s:'Every call request and booking',
+   d:'New, contacted, qualified, won, lost. Each lead shows the buyer\'s answers and shortlist.', who:'ARKO agents', sys:'Team view: Leads', kpi:'Response time'},
+  {id:'offers', t:'Offers desk', s:'Accept, counter, reject bids',
+   d:'Ready-home offers with ask price, offer and buyer finance. One click to accept or counter.', who:'ARKO team', sys:'Team view: Offers'},
+  {id:'analytics', t:'Traffic & clicks', s:'What buyers look at',
+   d:'Visitors, funnel, most-opened homes, 3D use, calls and EOIs per listing. No cookies or personal data.', who:'Founders', sys:'Team view: Overview, Listings'},
+  {id:'compliance', t:'Compliance', s:'RERA, Trakheesi, AML',
+   d:'Brokerage licence, agent cards, an advert permit (Trakheesi) for every listing, AML records.', who:'ARKO', docs:'RERA licence, Trakheesi permits'},
+ ]},
+ {id:'data', n:'D', title:'Data & integrations', c:'--c-data', x:1830, y:0, path:'side',
+  about:'Where the numbers and inventory come from.',
+  steps:[
+  {id:'dld', t:'DLD open data', s:'Sales, prices, index',
+   d:'Transactions and price index. Today: CSV uploads. Next: nightly feed from the Data.Dubai API (key requested).', sys:'Data.Dubai API', risk:'Waiting for API approval'},
+  {id:'devfeed', t:'Developer inventory', s:'Units, prices, plans',
+   d:'Emaar, DAMAC, Danube, Arada and others: availability, prices and payment plans through broker portals or feeds.', risk:'Each developer has a different portal'},
+  {id:'banks', t:'Banks & brokers', s:'Rates, applications', d:'Mortgage rates and applications through partner banks or a licensed mortgage broker.'},
+  {id:'pay', t:'Payments & escrow', s:'EOI and instalments', d:'Payment links that pay the developer or escrow account directly. ARKO never holds client money.'},
+  {id:'gov', t:'UAE Pass & DLD services', s:'ID, Oqood, Trakheesi', d:'Identity, off-plan registration, advert permits. DLD API Gateway access needs a licensed broker.'},
+ ]},
+];
+
+const SOLOS = [
+ {id:'money', c:'--c-own', x:1830, y:520, w:270, h:200, title:'💰 Where ARKO earns',
+  html:'<p>• Off-plan: developer-paid commission<br>• Ready: buyer/seller agent fee<br>• Mortgage referral fees<br>• Snagging and lawyer add-ons<br>• Furniture & design partners<br>• Leasing and management<br>• Resale listings</p>',
+  body:'<p>Money never flows through ARKO for the property itself: EOIs and instalments go to the developer or escrow, and ready-home payments go seller to buyer through the bank and trustee.</p><h4>Revenue lines on this map</h4><ul><li><b>Off-plan commission</b> paid by the developer after the booking clears (step 7A).</li><li><b>Ready agent fee</b>, usually 2% + VAT (step 9B).</li><li><b>Mortgage referral</b> from the partner bank or broker (step 8B).</li><li><b>Add-ons:</b> snagging inspection at handover, SPA review.</li><li><b>Owner stage:</b> furniture and design, leasing, management, resale.</li></ul>'},
+];
+
+const EDGES = [
+ {from:'g1',to:'g2',type:'flow'},{from:'g2',to:'g3',type:'flow'},{from:'g3',to:'g4',type:'flow'},{from:'g4',to:'g5',type:'flow'},
+ {from:'g5',to:'o1',type:'off',label:'off-plan'},{from:'o1',to:'o2',type:'off'},{from:'o2',to:'o3',type:'off'},{from:'o3',to:'g10',type:'off',label:'handover'},
+ {from:'g5',to:'r1',type:'rdy',label:'ready'},{from:'r1',to:'r2',type:'rdy'},{from:'r2',to:'r3',type:'rdy'},{from:'r3',to:'r4',type:'rdy'},{from:'r4',to:'g10',type:'rdy',label:'keys'},
+ {from:'g5',to:'team',type:'support',label:'call / meeting'},{from:'team',to:'r2',type:'support',label:'offers'},{from:'team',to:'o1',type:'support'},
+ {from:'data',to:'g4',type:'data',label:'DLD prices'},{from:'data',to:'g3',type:'data'},{from:'data',to:'o2',type:'data',label:'Oqood'},{from:'data',to:'r3',type:'data',label:'banks'},
+ {from:'g10',to:'money',type:'support'},{from:'o2',to:'money',type:'support'},{from:'r4',to:'money',type:'support'},
+];
+
+const PATHS = {
+ off:{ids:['g1','g2','g3','g4','g5','o1','o2','o3','g10'], txt:'<b>Off-plan buyer</b>Discover → explore → 3D → analyse → (optional agent) → pick unit and pay EOI → booking payment, SPA and Oqood → instalments to handover → owner. No viewing, no bidding.'},
+ rdy:{ids:['g1','g2','g3','g4','g5','r1','r2','r3','r4','g10','team'], txt:'<b>Ready buyer with a mortgage</b>Discover → explore → analyse → agent → viewing → offer and Form F → bank connect, documents, pre-approval, valuation, approval → NOC, charges, DLD transfer → owner.'},
+ cash:{ids:['g1','g2','g4','g5','r1','r2','cashloan','r4','g10'], txt:'<b>Ready buyer paying cash</b>Same as the mortgage path but skips the bank steps: from "Cash or bank loan" straight to transfer. Fastest route, often 2–4 weeks.'},
+ money:{ids:['offcomm','charges','bankc','handover','design','rent','sell','refer','money'], txt:'<b>Where ARKO earns</b>Commission at 7A and 9B, mortgage referral at 8B, add-ons at handover, and repeat revenue in the owner stage.'},
+};
+
+const RUN = [
+ {t:'1 · Discover', x:'The buyer lands, sets a budget and a reason (own or invest) and picks off-plan or ready. Three questions, under a minute.', ids:['g1']},
+ {t:'2 · Explore', x:'Bayut-style list and map, filtered by those answers. The buyer opens projects and units and builds a shortlist.', ids:['g2']},
+ {t:'3 · Visualise', x:'The difference: a 3D maquette, block plan, street walk, and a walk through the apartment built from the real floor plan.', ids:['g3','data']},
+ {t:'4 · Analyse', x:'DLD area prices and trend, rental yield, the full cost with DLD 4% and fees, and a year-by-year financial model.', ids:['g4','data']},
+ {t:'5 · Agent?', x:'Self-serve buyers carry on. Others call Ajinkya or book a meeting; the agent already sees their shortlist.', ids:['g5','team']},
+ {t:'6A–8A · Off-plan', x:'Pick the unit, pay the EOI to the developer, booking payment into escrow, SPA, Oqood, then instalments with reminders until handover.', ids:['o1','o2','o3']},
+ {t:'6B–9B · Ready', x:'Viewing, offer and counter through the offers desk, Form F, cash or mortgage, then NOC, charges and DLD transfer.', ids:['r1','r2','r3','r4','team']},
+ {t:'10 · Owner', x:'Both paths end here: dashboard, design and furniture, renting out, referrals and resale. This is where the customer stays with ARKO.', ids:['g10','money']},
+];
+
+/* ================= Model & layout ================= */
+const W = 230, H = 56, GAP = 10, PAD = 14, HEAD = 42;
+const DEF = {groups:{}, order:{}};
+STAGES.forEach(g => { DEF.groups[g.id] = {x:g.x, y:g.y}; DEF.order[g.id] = g.steps.map(s => s.id); });
+const STEP = {}; STAGES.forEach(g => g.steps.forEach(s => { STEP[s.id] = {...s, home:g.id}; }));
+const GROUP = {}; STAGES.forEach(g => GROUP[g.id] = g);
+let layout = JSON.parse(JSON.stringify(DEF));
+let custom = {};   // id -> {t,s,group,by,at}
+let notes = [];    // {id, card, text, by, at}
+let status = {};   // card -> {s, by, at}
+let myId = null, canWrite = true;
+const nodes = {};
+const stepOf = id => STEP[id] || (custom[id] && {id, t:custom[id].t, s:custom[id].s || 'Added by a partner', d:custom[id].d || '', custom:true});
+
+function normalise(){
+  // make sure every step sits in exactly one group (handles new steps, deleted custom steps, stale layouts)
+  const seen = new Set(), order = {};
+  STAGES.forEach(g => { order[g.id] = (layout.order[g.id] || []).filter(id => stepOf(id) && !seen.has(id) && seen.add(id)); });
+  Object.keys(STEP).forEach(id => { if (!seen.has(id)) { order[STEP[id].home].push(id); seen.add(id); } });
+  Object.entries(custom).forEach(([id, c]) => { if (!seen.has(id)) { (order[c.group] || order.g1).push(id); seen.add(id); } });
+  layout.order = order;
+  STAGES.forEach(g => { if (!layout.groups[g.id]) layout.groups[g.id] = {...DEF.groups[g.id]}; });
+}
+
+const world = $('#world'), layer = $('#edgeLayer'), defs = $('#edges defs');
+function build(){
+  normalise();
+  world.querySelectorAll('.node').forEach(el => el.remove());
+  for (const k in nodes) delete nodes[k];
+  STAGES.forEach(g => {
+    const ids = layout.order[g.id], n = ids.length, p = layout.groups[g.id];
+    const node = {id:g.id, kind:'group', c:g.c, x:p.x, y:p.y, w:PAD*2+W, h:HEAD + Math.max(n,1)*H + Math.max(n-1,0)*GAP + PAD, children:ids.slice()};
+    const el = document.createElement('div'); el.className = 'node group'; el.style.setProperty('--c', `var(${g.c})`);
+    el.innerHTML = `<div class="ghead" data-gdrag="${g.id}" data-id="${g.id}"><span class="badge">${esc(g.n)}</span>${esc(g.title)}<span class="cnt">${n} steps</span></div>`;
+    node.el = el; nodes[g.id] = node; world.appendChild(el);
+    ids.forEach((sid, i) => {
+      const s = stepOf(sid);
+      const c = {id:sid, kind:'card', group:g.id, c:g.c, w:W, h:H, x:p.x+PAD, y:p.y+HEAD+i*(H+GAP)};
+      const ce = document.createElement('div'); ce.className = 'node card' + (s.custom ? ' custom' : ''); ce.style.setProperty('--c', `var(${g.c})`);
+      ce.dataset.id = sid; ce.dataset.card = sid; ce.tabIndex = 0;
+      ce.innerHTML = `<div class="nm">${esc(s.t)}</div><div class="sb">${esc(s.s)}</div><div class="tags"></div>`;
+      ce.title = `${s.t}: ${s.s}`;
+      c.el = ce; nodes[sid] = c; world.appendChild(ce);
+    });
+  });
+  SOLOS.forEach(s => {
+    const n = {...s, kind:'solo'}; const el = document.createElement('div'); el.className = 'node solo'; el.style.setProperty('--c', `var(${s.c})`);
+    el.dataset.id = s.id; el.dataset.sdrag = s.id; el.innerHTML = `<h3>${esc(s.title)}</h3>${s.html}`;
+    if (layout.groups[s.id]) { n.x = layout.groups[s.id].x; n.y = layout.groups[s.id].y; }
+    n.el = el; nodes[s.id] = n; world.appendChild(el);
+  });
+  Object.values(nodes).forEach(place);
+  drawEdges(); paintTags(); refocus();
+  if (selected && nodes[selected]) nodes[selected].el.classList.add('sel');
+}
+function place(n){ Object.assign(n.el.style, {left:n.x+'px', top:n.y+'px', width:n.w+'px', height:n.h+'px'}); }
+
+function paintTags(){
+  const cnt = {}; notes.forEach(n => cnt[n.card] = (cnt[n.card]||0)+1);
+  Object.values(nodes).forEach(n => {
+    if (n.kind !== 'card') return;
+    const st = status[n.id]?.s, c = cnt[n.id];
+    const lab = {agreed:'✓', discuss:'?', change:'!'};
+    n.el.querySelector('.tags').innerHTML = (st && lab[st] ? `<b class="s-${st}" title="${st === 'agreed' ? 'Agreed' : st === 'discuss' ? 'To discuss' : 'Needs change'}">${lab[st]}</b>` : '') + (c ? `<b class="n" title="${c} note${c>1?'s':''}">${c}</b>` : '');
+  });
+  $('#noteCount').textContent = notes.length;
+}
+
+/* ================= Edges ================= */
+const NS = 'http://www.w3.org/2000/svg';
+['flow','off','rdy','support','data'].forEach(t => {
+  const m = document.createElementNS(NS, 'marker');
+  Object.entries({id:'m-'+t, viewBox:'0 0 10 10', refX:'9', refY:'5', markerWidth:'7', markerHeight:'7', orient:'auto-start-reverse'}).forEach(([k,v]) => m.setAttribute(k, v));
+  const p = document.createElementNS(NS, 'path'); p.setAttribute('d', 'M0,0 L10,5 L0,10 z'); p.setAttribute('class', 'mk-'+t);
+  m.appendChild(p); defs.appendChild(m);
+});
+EDGES.forEach(e => {
+  e.g = document.createElementNS(NS, 'g'); e.g.setAttribute('class', 'e ' + e.type);
+  e.p = document.createElementNS(NS, 'path'); e.p.setAttribute('class', 'line'); e.p.setAttribute('marker-end', `url(#m-${e.type})`);
+  e.g.appendChild(e.p);
+  if (e.label) { e.t = document.createElementNS(NS, 'text'); e.t.textContent = e.label; e.t.setAttribute('text-anchor', 'middle'); e.g.appendChild(e.t); }
+  layer.appendChild(e.g);
+});
+function geom(e){
+  const a = nodes[e.from], b = nodes[e.to];
+  const ac = {x:a.x+a.w/2, y:a.y+a.h/2}, bc = {x:b.x+b.w/2, y:b.y+b.h/2};
+  let p0, p1, p2, p3;
+  if ((a.x < b.x + b.w && b.x < a.x + a.w) || b.y >= a.y + a.h + 40 || a.y >= b.y + b.h + 40) {
+    const down = bc.y > ac.y;
+    p0 = {x:ac.x, y: down ? a.y+a.h : a.y}; p3 = {x:bc.x, y: down ? b.y-2 : b.y+b.h+2};
+    const c = Math.max(30, Math.abs(p3.y-p0.y)*0.45) * (down?1:-1);
+    p1 = {x:p0.x, y:p0.y+c}; p2 = {x:p3.x, y:p3.y-c};
+  } else {
+    const right = bc.x > ac.x;
+    p0 = {x: right ? a.x+a.w : a.x, y:Math.min(ac.y, a.y+90)}; p3 = {x: right ? b.x-2 : b.x+b.w+2, y:Math.min(bc.y, b.y+90)};
+    const c = Math.max(50, Math.abs(p3.x-p0.x)*0.45) * (right?1:-1);
+    p1 = {x:p0.x+c, y:p0.y}; p2 = {x:p3.x-c, y:p3.y};
+  }
+  return {p0,p1,p2,p3};
+}
+function drawEdges(){
+  EDGES.forEach(e => {
+    if (!nodes[e.from] || !nodes[e.to]) return;
+    const {p0,p1,p2,p3} = geom(e);
+    e.p.setAttribute('d', `M${p0.x},${p0.y} C${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}`);
+    if (e.t) { e.t.setAttribute('x', .125*p0.x+.375*p1.x+.375*p2.x+.125*p3.x); e.t.setAttribute('y', .125*p0.y+.375*p1.y+.375*p2.y+.125*p3.y - 6); }
+  });
+}
+
+/* ================= Highlight / focus ================= */
+const layers = {flow:true, off:true, rdy:true, support:false, data:false};
+function applyLayers(){ EDGES.forEach(e => e.g.style.display = layers[e.type] ? '' : 'none'); }
+document.querySelectorAll('[data-layer]').forEach(b => b.addEventListener('click', () => {
+  const k = b.dataset.layer; layers[k] = !layers[k]; b.setAttribute('aria-pressed', layers[k]); applyLayers(); refocus();
+}));
+applyLayers();
+function isLit(id, set){
+  if (set.has(id)) return true;
+  const n = nodes[id]; if (!n) return false;
+  if (n.kind === 'group') return n.children.some(c => set.has(c));
+  if (n.group && set.has(n.group)) return true;
+  return false;
+}
+function neighbors(id){
+  const set = new Set([id]), n = nodes[id];
+  const ends = new Set([id]); if (n.group) ends.add(n.group); if (n.children) n.children.forEach(c => ends.add(c));
+  EDGES.forEach(e => { if (!layers[e.type]) return; if (ends.has(e.from)) set.add(e.to); if (ends.has(e.to)) set.add(e.from); });
+  return set;
+}
+let pinned = null, hoverSet = null, selected = null;
+function paint(set){
+  Object.values(nodes).forEach(n => { const lit = set ? isLit(n.id, set) : false; n.el.classList.toggle('dim', !!set && !lit); });
+  EDGES.forEach(e => { const on = set && isLit(e.from, set) && isLit(e.to, set); e.g.classList.toggle('dim', !!set && !on); e.g.classList.toggle('hot', !!on); });
+}
+function refocus(){ paint(pinned || hoverSet); }
+world.addEventListener('pointerover', e => {
+  if (e.pointerType !== 'mouse' || drag) return;
+  const t = e.target.closest('[data-id]'); hoverSet = t && nodes[t.dataset.id] ? neighbors(t.dataset.id) : null; refocus();
+});
+world.addEventListener('pointerleave', () => { hoverSet = null; refocus(); });
+
+/* ================= Detail panel ================= */
+const panel = $('#panel');
+const STATUSES = [['none','No status'],['agreed','Agreed'],['discuss','To discuss'],['change','Needs change']];
+const people = {};
+async function names(ids){
+  if (!userApi) return;
+  const want = [...new Set(ids)].filter(Boolean);
+  if (!want.length) return;
+  try { const ps = await userApi.profiles(want); Object.assign(people, ps); } catch {}
+}
+const nameOf = id => (people[id] && people[id].name) || (id && id === myId ? 'You' : 'A partner');
+const when = t => { if (!t) return ''; const d = new Date(t); return d.toLocaleDateString(undefined,{day:'numeric',month:'short'}) + ' ' + d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'}); };
+function row(k, v){ return v ? `<dt>${esc(k)}</dt><dd>${v}</dd>` : ''; }
+
+function notesHtml(card){
+  const list = notes.filter(n => n.card === card).sort((a,b) => a.at - b.at);
+  return `<h4>Notes & remarks (${list.length})</h4>
+    <div id="noteList">${list.length ? list.map(n => `<div class="note"><div class="meta"><b>${esc(nameOf(n.by))}</b><span>${esc(when(n.at))}</span>${n.by && n.by === myId ? `<button data-delnote="${esc(n.id)}" aria-label="Delete this note">Delete</button>` : ''}</div><div class="body">${esc(n.text)}</div></div>`).join('') : '<p class="hint">No notes yet. Add the first remark for your partners.</p>'}</div>
+    ${canWrite ? `<div class="form"><label for="noteText" class="hint">Add a note</label><textarea id="noteText" maxlength="2000" placeholder="e.g. Should the EOI be refundable? Ask Emaar."></textarea><div class="row"><button class="primary" id="addNote">Add note</button><span class="hint" id="noteMsg"></span></div></div>` : '<p class="hint">You can read notes. Ask the owner for edit access to add your own.</p>'}`;
+}
+function statusHtml(card){
+  const cur = status[card]?.s || 'none';
+  return `<h4>Status</h4><div class="seg" role="group" aria-label="Status of this step">${STATUSES.map(([k,l]) => `<button class="s-${k}" data-status="${k}" aria-pressed="${cur===k}" ${canWrite?'':'disabled'}>${l}</button>`).join('')}</div>${status[card]?.by ? `<p class="who">Set by ${esc(nameOf(status[card].by))}, ${esc(when(status[card].at))}</p>` : ''}`;
+}
+function moveHtml(card){
+  const g = nodes[card].group, ids = layout.order[g], i = ids.indexOf(card);
+  return `<h4>Reshuffle</h4><div class="row"><button data-move="up" ${i===0||!canWrite?'disabled':''}>↑ Earlier</button><button data-move="down" ${i===ids.length-1||!canWrite?'disabled':''}>↓ Later</button>
+    <select id="moveTo" aria-label="Move to another stage" ${canWrite?'':'disabled'}>${STAGES.map(s => `<option value="${s.id}" ${s.id===g?'selected':''}>Stage ${esc(s.n)}: ${esc(s.title)}</option>`).join('')}</select></div>
+    <p class="hint">Or drag the block on the canvas. Changes are saved for everyone.</p>`;
+}
+function detail(id){
+  const n = nodes[id]; let h = '';
+  if (n.kind === 'card') {
+    const s = stepOf(id), g = GROUP[n.group];
+    const ids = [s.who, s.sys, s.money, s.docs].flat().filter(Boolean);
+    names([...notes.filter(x => x.card === id).map(x => x.by), status[id]?.by, custom[id]?.by]).then(() => { if (selected === id) { const box = $('#noteList'); if (box) { const tmp = document.createElement('div'); tmp.innerHTML = notesHtml(id); box.replaceWith(tmp.querySelector('#noteList')); } } });
+    h = `<div class="kick">Stage ${esc(g.n)} · ${esc(g.title)}${s.custom ? ' · added by a partner' : ''}</div>
+      <h2><span class="sw" style="--c:var(${g.c})"></span>${esc(s.t)}</h2>
+      <p>${esc(s.d || s.s)}</p>
+      ${s.opt ? `<h4>Options at this step</h4><ul>${s.opt.map(o => `<li>${esc(o)}</li>`).join('')}</ul>` : ''}
+      <dl>${row('Who', esc(s.who))}${row('Screens & systems', esc(s.sys))}${row('Money', esc(s.money))}${row('Documents', esc(s.docs))}${row('We measure', esc(s.kpi))}${row('Open question', s.risk ? `<b>${esc(s.risk)}</b>` : '')}</dl>
+      ${statusHtml(id)}${notesHtml(id)}${moveHtml(id)}
+      ${s.custom && canWrite ? `<h4>Remove</h4><button id="delStep">Delete this added step</button> <span class="hint" id="delMsg"></span>` : ''}`;
+  } else if (n.kind === 'group') {
+    const g = GROUP[id];
+    h = `<div class="kick">Stage ${esc(g.n)}${g.path==='off'?' · off-plan path':g.path==='rdy'?' · ready path':g.path==='side'?' · behind the scenes':''}</div>
+      <h2><span class="sw" style="--c:var(${g.c})"></span>${esc(g.title)}</h2><p>${esc(g.about)}</p>
+      <h4>Steps (${n.children.length})</h4><ol>${n.children.map(c => { const s = stepOf(c); return `<li><button class="linkish" data-goto="${esc(c)}">${esc(s.t)}</button>: ${esc(s.s)}</li>`; }).join('')}</ol>
+      ${canWrite ? `<h4>Add a step to this stage</h4><div class="form"><input type="text" id="newT" maxlength="80" placeholder="Step name, e.g. Lawyer review"><input type="text" id="newS" maxlength="120" placeholder="One line about it"><textarea id="newD" maxlength="1000" placeholder="What happens (optional)"></textarea><div class="row"><button class="primary" id="addStep">Add step</button><span class="hint" id="stepMsg"></span></div></div>` : ''}`;
+  } else {
+    h = `<div class="kick">Business model</div><h2>${esc(n.title)}</h2>${n.body}`;
+  }
+  panel.innerHTML = `<button class="close" aria-label="Close details">✕</button>` + h;
+  panel.classList.add('open');
+}
+function allNotes(){
+  select(null);
+  names(notes.map(n => n.by)).then(() => { if (panel.dataset.mode === 'all') allNotes(); });
+  const list = notes.slice().sort((a,b) => b.at - a.at);
+  panel.innerHTML = `<button class="close" aria-label="Close">✕</button><div class="kick">Discussion</div><h2>All notes (${list.length})</h2>
+    ${list.length ? list.map(n => { const s = stepOf(n.card); return `<div class="note"><div class="meta"><b>${esc(nameOf(n.by))}</b><span>${esc(when(n.at))}</span></div><div class="step"><button class="linkish" data-goto="${esc(n.card)}">${esc(s ? s.t : 'Removed step')}</button></div><div class="body">${esc(n.text)}</div></div>`; }).join('') : '<p class="hint">No notes yet. Click any step on the map to add one.</p>'}`;
+  panel.dataset.mode = 'all'; panel.classList.add('open');
+}
+$('#notesBtn').addEventListener('click', allNotes);
+
+panel.addEventListener('click', async e => {
+  if (e.target.closest('.close')) { panel.dataset.mode = ''; select(null); panel.classList.remove('open'); return; }
+  const g = e.target.closest('[data-goto]'); if (g) { panel.dataset.mode = ''; if (nodes[g.dataset.goto]) select(g.dataset.goto, true); return; }
+  const st = e.target.closest('[data-status]');
+  if (st && selected) { const k = st.dataset.status; await guard(() => store.setStatus(selected, k === 'none' ? null : k)); return; }
+  if (e.target.id === 'addNote' && selected) {
+    const ta = $('#noteText'), text = ta.value.trim(); if (!text) { $('#noteMsg').textContent = 'Write something first.'; return; }
+    e.target.disabled = true;
+    const ok = await guard(() => store.addNote(selected, text));
+    if (ok) { ta.value = ''; toast('Note added'); }
+    e.target.disabled = false; return;
+  }
+  const dn = e.target.closest('[data-delnote]'); if (dn) { if (dn.dataset.confirm) { await guard(() => store.delNote(dn.dataset.delnote)); } else { dn.dataset.confirm = '1'; dn.textContent = 'Click again to delete'; } return; }
+  const mv = e.target.closest('[data-move]');
+  if (mv && selected) { const gid = nodes[selected].group, ids = layout.order[gid], i = ids.indexOf(selected), j = i + (mv.dataset.move === 'up' ? -1 : 1);
+    if (j < 0 || j >= ids.length) return; [ids[i], ids[j]] = [ids[j], ids[i]]; build(); detail(selected); saveLayout(); return; }
+  if (e.target.id === 'addStep' && selected) {
+    const t = $('#newT').value.trim(), s = $('#newS').value.trim(), d = $('#newD').value.trim();
+    if (!t) { $('#stepMsg').textContent = 'Give the step a name.'; return; }
+    const gid = selected; e.target.disabled = true;
+    const ok = await guard(() => store.addStep({t, s, d, group:gid}));
+    e.target.disabled = false; if (ok) toast('Step added');
+    return;
+  }
+  if (e.target.id === 'delStep' && selected) {
+    if (!e.target.dataset.confirm) { e.target.dataset.confirm = '1'; e.target.textContent = 'Click again to delete'; return; }
+    const id = selected; select(null); await guard(() => store.delStep(id)); toast('Step deleted');
+  }
+});
+panel.addEventListener('change', e => {
+  if (e.target.id === 'moveTo' && selected) { const to = e.target.value, from = nodes[selected].group; if (to === from) return;
+    layout.order[from] = layout.order[from].filter(x => x !== selected); layout.order[to].push(selected); build(); detail(selected); saveLayout(); toast('Moved to ' + GROUP[to].title); }
+});
+function select(id, center){
+  if (selected && nodes[selected]) nodes[selected].el.classList.remove('sel');
+  selected = id;
+  if (!id) { panel.classList.remove('open'); pinned = null; refocus(); return; }
+  panel.dataset.mode = '';
+  const n = nodes[id]; n.el.classList.add('sel');
+  clearModes(); pinned = neighbors(id); refocus(); detail(id);
+  if (center) centerOn(n);
+}
+
+/* ================= Modes ================= */
+const cap = $('#caption'), capTxt = $('#capTxt'), capBtns = $('#capBtns');
+const pathSel = $('#pathSel'), statusSel = $('#statusSel');
+let runIdx = -1;
+function clearModes(){ pathSel.value = ''; statusSel.value = ''; runIdx = -1; cap.classList.remove('show'); }
+function showCaption(html, btns){ capTxt.innerHTML = html; capBtns.innerHTML = btns || '<button data-cap="close" aria-label="Close">✕</button>'; cap.classList.add('show'); }
+function pinIds(ids){ if (selected) { nodes[selected].el.classList.remove('sel'); selected = null; panel.classList.remove('open'); } pinned = new Set(ids); refocus(); }
+pathSel.addEventListener('change', () => { const v = pathSel.value; statusSel.value = ''; runIdx = -1;
+  if (!v) { pinned = null; cap.classList.remove('show'); refocus(); return; } pinIds(PATHS[v].ids); showCaption(PATHS[v].txt); });
+statusSel.addEventListener('change', () => { const v = statusSel.value; pathSel.value = ''; runIdx = -1;
+  if (!v) { pinned = null; cap.classList.remove('show'); refocus(); return; }
+  const ids = v === 'notes' ? [...new Set(notes.map(n => n.card))] : Object.keys(status).filter(k => status[k]?.s === v);
+  pinIds(ids.length ? ids : ['__none']);
+  showCaption(`<b>${statusSel.selectedOptions[0].textContent}: ${ids.length} step${ids.length===1?'':'s'}</b>${ids.length ? 'Highlighted on the map. Click one to open it.' : 'Nothing marked yet.'}`); });
+function showRun(){ const s = RUN[runIdx]; pinIds(s.ids);
+  showCaption(`<b>${esc(s.t)} <span style="color:var(--muted);font-weight:400">(${runIdx+1}/${RUN.length})</span></b>${esc(s.x)}`,
+    `<button data-cap="prev" ${runIdx===0?'disabled':''} aria-label="Previous">◀</button><button data-cap="next" ${runIdx===RUN.length-1?'disabled':''} aria-label="Next">▶</button><button data-cap="close" aria-label="Close">✕</button>`); }
+$('#runBtn').addEventListener('click', () => { pathSel.value=''; statusSel.value=''; runIdx = 0; showRun(); });
+capBtns.addEventListener('click', e => { const b = e.target.closest('[data-cap]'); if (!b) return;
+  if (b.dataset.cap === 'close') { clearModes(); pinned = null; refocus(); }
+  if (b.dataset.cap === 'prev' && runIdx > 0) { runIdx--; showRun(); }
+  if (b.dataset.cap === 'next' && runIdx < RUN.length-1) { runIdx++; showRun(); } });
+document.addEventListener('keydown', e => {
+  const typing = /SELECT|INPUT|TEXTAREA/.test(document.activeElement.tagName);
+  if (runIdx >= 0 && !typing && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { runIdx = Math.max(0, Math.min(RUN.length-1, runIdx + (e.key === 'ArrowRight' ? 1 : -1))); showRun(); }
+  if (e.key === 'Escape') { select(null); clearModes(); pinned = null; refocus(); }
+  if (e.key === 'Enter' && !typing && document.activeElement.dataset?.card) select(document.activeElement.dataset.card);
+});
+const resetBtn = $('#resetBtn');
+resetBtn.addEventListener('click', () => {
+  if (!resetBtn.dataset.confirm) { resetBtn.dataset.confirm = '1'; resetBtn.textContent = 'Click again: reset for everyone'; setTimeout(() => { delete resetBtn.dataset.confirm; resetBtn.textContent = 'Reset layout'; }, 4000); return; }
+  delete resetBtn.dataset.confirm; resetBtn.textContent = 'Reset layout';
+  layout = JSON.parse(JSON.stringify(DEF)); build(); fit(); saveLayout(); toast('Layout reset');
+});
+
+/* ================= Pan / zoom / drag ================= */
+const vp = $('#viewport');
+const view = {x:20, y:20, s:.5};
+function applyView(){ world.style.transform = `translate(${view.x}px,${view.y}px) scale(${view.s})`; const g = 24*view.s; vp.style.backgroundSize = `${g}px ${g}px`; vp.style.backgroundPosition = `${view.x}px ${view.y}px`; }
+function zoomAt(mx, my, k){ const s = Math.min(2.5, Math.max(.15, view.s*k)); k = s/view.s; view.x = mx-(mx-view.x)*k; view.y = my-(my-view.y)*k; view.s = s; applyView(); }
+function bbox(){ let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity; Object.values(nodes).forEach(n => { x0=Math.min(x0,n.x); y0=Math.min(y0,n.y); x1=Math.max(x1,n.x+n.w); y1=Math.max(y1,n.y+n.h); }); return {x0,y0,x1,y1}; }
+function fit(){ const r = vp.getBoundingClientRect(), b = bbox(), m = 28;
+  if (r.width < 760) { view.s = .42; view.x = 12 - b.x0*view.s; view.y = 50 - b.y0*view.s; applyView(); return; }
+  const s = Math.min((r.width-2*m)/(b.x1-b.x0), (r.height-2*m-40)/(b.y1-b.y0), 1.1);
+  view.s = Math.max(.15, s); view.x = (r.width-(b.x1-b.x0)*view.s)/2 - b.x0*view.s; view.y = 46 + (r.height-46-(b.y1-b.y0)*view.s)/2 - b.y0*view.s; applyView(); }
+function centerOn(n){ const r = vp.getBoundingClientRect(); const w = panel.classList.contains('open') && r.width > 760 ? r.width : r.width; view.x = w/2-(n.x+n.w/2)*view.s; view.y = r.height/2-(n.y+n.h/2)*view.s; applyView(); }
+vp.addEventListener('wheel', e => { e.preventDefault(); const r = vp.getBoundingClientRect(); zoomAt(e.clientX-r.left, e.clientY-r.top, Math.exp(-e.deltaY*0.0015)); }, {passive:false});
+$('#zin').onclick = () => { const r = vp.getBoundingClientRect(); zoomAt(r.width/2, r.height/2, 1.2); };
+$('#zout').onclick = () => { const r = vp.getBoundingClientRect(); zoomAt(r.width/2, r.height/2, 1/1.2); };
+$('#zfit').onclick = fit;
+const toWorld = (cx, cy) => { const r = vp.getBoundingClientRect(); return {x:(cx-r.left-view.x)/view.s, y:(cy-r.top-view.y)/view.s}; };
+
+const ptrs = new Map(); let drag = null, ph = null;
+vp.addEventListener('pointerdown', e => {
+  if (e.target.closest('#zoom,#caption,#hint,#toast')) return;
+  vp.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if (ptrs.size === 2) { const [a,b] = [...ptrs.values()]; drag = {type:'pinch', d:Math.hypot(a.x-b.x, a.y-b.y)}; return; }
+  const gh = e.target.closest('[data-gdrag]'), sh = e.target.closest('[data-sdrag]'), card = e.target.closest('[data-card]'), c = e.target.closest('[data-id]');
+  const base = {sx:e.clientX, sy:e.clientY, vx:view.x, vy:view.y, moved:false, click:c ? c.dataset.id : null};
+  if (gh || sh) { const gid = (gh||sh).dataset.gdrag || sh.dataset.sdrag; const ids = [gid, ...(nodes[gid].children||[])];
+    drag = {...base, type:'group', gid, orig:ids.map(id => ({n:nodes[id], x:nodes[id].x, y:nodes[id].y}))}; }
+  else if (card) drag = {...base, type:'card', id:card.dataset.card, ox:nodes[card.dataset.card].x, oy:nodes[card.dataset.card].y};
+  else drag = {...base, type:'pan'};
+});
+vp.addEventListener('pointermove', e => {
+  if (!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY}); if (!drag) return;
+  if (drag.type === 'pinch' && ptrs.size === 2) { const [a,b] = [...ptrs.values()], d = Math.hypot(a.x-b.x, a.y-b.y), r = vp.getBoundingClientRect(); zoomAt((a.x+b.x)/2-r.left, (a.y+b.y)/2-r.top, d/drag.d); drag.d = d; return; }
+  const dx = e.clientX-drag.sx, dy = e.clientY-drag.sy;
+  if (!drag.moved && Math.hypot(dx, dy) < 6) return;
+  if (!drag.moved && drag.type !== 'pan' && !canWrite) { drag.type = 'pan'; }
+  drag.moved = true;
+  if (drag.type === 'pan') { vp.classList.add('panning'); view.x = drag.vx+dx; view.y = drag.vy+dy; applyView(); }
+  else if (drag.type === 'group') { drag.orig.forEach(o => { o.n.x = o.x+dx/view.s; o.n.y = o.y+dy/view.s; place(o.n); }); drawEdges(); }
+  else if (drag.type === 'card') {
+    const n = nodes[drag.id]; n.el.classList.add('dragging'); n.x = drag.ox+dx/view.s; n.y = drag.oy+dy/view.s; place(n);
+    const t = dropTarget(e.clientX, e.clientY, drag.id);
+    document.querySelectorAll('.group.drop').forEach(g => g.classList.remove('drop'));
+    if (!ph) { ph = document.createElement('div'); ph.className = 'ph'; world.appendChild(ph); }
+    if (t) { nodes[t.gid].el.classList.add('drop'); const g = nodes[t.gid]; Object.assign(ph.style, {display:'block', left:(g.x+PAD)+'px', top:(g.y+HEAD+t.idx*(H+GAP)-GAP/2-2)+'px', width:W+'px', height:'4px'}); }
+    else ph.style.display = 'none';
+  }
+});
+function dropTarget(cx, cy, id){
+  const p = toWorld(cx, cy);
+  const g = STAGES.map(s => nodes[s.id]).find(n => p.x >= n.x && p.x <= n.x+n.w && p.y >= n.y && p.y <= n.y+n.h+H);
+  if (!g) return null;
+  const ids = layout.order[g.id].filter(x => x !== id);
+  const idx = Math.max(0, Math.min(ids.length, Math.round((p.y - g.y - HEAD - H/2) / (H+GAP) + .5)));
+  return {gid:g.id, idx};
+}
+function endPtr(e){
+  ptrs.delete(e.pointerId); if (!drag) return;
+  if (drag.type === 'pinch') { if (ptrs.size === 0) drag = null; return; }
+  const d = drag; drag = null; vp.classList.remove('panning');
+  if (!d.moved) { if (d.click) select(d.click); else if (selected) select(null); return; }
+  if (d.type === 'group') { layout.groups[d.gid] = {x:Math.round(nodes[d.gid].x), y:Math.round(nodes[d.gid].y)}; saveLayout(); }
+  if (d.type === 'card') {
+    const t = dropTarget(e.clientX, e.clientY, d.id);
+    document.querySelectorAll('.group.drop').forEach(g => g.classList.remove('drop')); if (ph) ph.style.display = 'none';
+    if (t) { const from = nodes[d.id].group; layout.order[from] = layout.order[from].filter(x => x !== d.id); layout.order[t.gid].splice(t.idx, 0, d.id);
+      build(); saveLayout(); if (from !== t.gid) toast('Moved to ' + GROUP[t.gid].title); if (selected === d.id) detail(d.id); }
+    else build();
+  }
+}
+vp.addEventListener('pointerup', endPtr); vp.addEventListener('pointercancel', endPtr);
+window.addEventListener('resize', fit);
+
+/* ================= Shared store ================= */
+let toastT;
+function toast(m){ const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2200); }
+async function guard(fn){
+  try { await fn(); return true; }
+  catch (err) { const c = err && err.code;
+    toast(c === 'not_granted' || c === 'permission_denied' ? 'You have view-only access. Ask the owner to give you edit access.' : c === 'resource_exhausted' ? 'Too many changes at once. Try again in a moment.' : 'Could not save. Check your connection and try again.');
+    return false; }
+}
+function setSync(kind, txt){ const s = $('#sync'); s.className = kind; s.querySelector('span').textContent = txt; }
+let saveT, lastSaved = '';
+function saveLayout(){ clearTimeout(saveT); saveT = setTimeout(() => { const body = {groups:layout.groups, order:layout.order}; const j = JSON.stringify(body); if (j === lastSaved) return; lastSaved = j; guard(() => store.saveLayout(body)); }, 500); }
+const rid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
+function localStore(){
+  const K = 'arko-journey-v1'; let st = {layout:null, notes:[], status:{}, steps:{}};
+  try { st = {...st, ...JSON.parse(localStorage.getItem(K) || '{}')}; } catch {}
+  const save = () => { try { localStorage.setItem(K, JSON.stringify(st)); } catch {} };
+  const subs = [];
+  const emit = () => subs.forEach(f => f(st));
+  return {
+    subscribe(f){ subs.push(f); f(st); },
+    async saveLayout(l){ st.layout = l; save(); },
+    async addNote(card, text){ st.notes.push({id:rid(), card, text, by:myId, at:Date.now()}); save(); emit(); },
+    async delNote(id){ st.notes = st.notes.filter(n => n.id !== id); save(); emit(); },
+    async setStatus(card, s){ if (s) st.status[card] = {s, by:myId, at:Date.now()}; else delete st.status[card]; save(); emit(); },
+    async addStep(c){ st.steps['x-'+rid()] = {...c, by:myId, at:Date.now()}; save(); emit(); },
+    async delStep(id){ delete st.steps[id]; save(); emit(); },
+  };
+}
+function dbStore(db){
+  return {
+    subscribe(f){
+      const st = {layout:undefined, notes:[], status:{}, steps:{}};
+      let got = 0; const ready = () => { if (++got >= 1) f(st); };
+      db.doc('layout/main').onSnapshot(s => { st.layout = s.exists ? s.data() : null; ready(); }, onErr);
+      db.collection('notes').limit(1000).onSnapshot(q => { st.notes = q.docs.map(d => ({id:d.id, ...d.data()})); ready(); }, onErr);
+      db.collection('status').limit(1000).onSnapshot(q => { st.status = {}; q.docs.forEach(d => st.status[d.id] = d.data()); ready(); }, onErr);
+      db.collection('steps').limit(500).onSnapshot(q => { st.steps = {}; q.docs.forEach(d => st.steps[d.id] = d.data()); ready(); }, onErr);
+    },
+    saveLayout: l => db.doc('layout/main').set({...l, by:myId, at:Date.now()}),
+    addNote: (card, text) => db.collection('notes').doc('n-'+rid()).set({card, text, by:myId, at:Date.now()}),
+    delNote: id => db.doc('notes/'+id).delete(),
+    setStatus: (card, s) => s ? db.doc('status/'+card).set({s, by:myId, at:Date.now()}) : db.doc('status/'+card).delete(),
+    addStep: c => db.collection('steps').doc('x-'+rid()).set({...c, by:myId, at:Date.now()}),
+    delStep: id => db.doc('steps/'+id).delete(),
+  };
+}
+function onErr(e){ setSync('local', 'Shared notes are unavailable right now'); }
+
+let store, userApi = null, loaded = false;
+function apply(st){
+  loaded = true;
+  if (st.layout !== undefined && !drag) {
+    const l = st.layout && st.layout.order ? {groups:{...DEF.groups, ...(st.layout.groups||{})}, order:st.layout.order} : JSON.parse(JSON.stringify(DEF));
+    lastSaved = JSON.stringify({groups:l.groups, order:l.order});
+    layout = l;
+  }
+  notes = (st.notes || []).filter(n => n && n.card && n.text).map(n => ({...n, text:String(n.text).slice(0,2000)}));
+  status = st.status || {}; custom = {};
+  Object.entries(st.steps || {}).forEach(([id, c]) => { if (c && c.t && GROUP[c.group]) custom[id] = {t:String(c.t).slice(0,80), s:String(c.s||'').slice(0,120), d:String(c.d||'').slice(0,1000), group:c.group, by:c.by}; });
+  if (drag) return;
+  build();
+  names([...notes.map(n => n.by), ...Object.values(status).map(s => s.by)]).then(() => { if (selected && nodes[selected]) detail(selected); else if (panel.dataset.mode === 'all') allNotes(); });
+  if (selected && nodes[selected]) { const ta = $('#noteText'), draft = ta && ta.value; detail(selected); if (draft && $('#noteText')) $('#noteText').value = draft; }
+  else if (selected) select(null);
+  else if (panel.dataset.mode === 'all') allNotes();
+}
+
+build(); fit();
+(async () => {
+  const timer = setTimeout(() => { if (!store) start(null); }, 10000);
+  let db = null;
+  try { db = window.claude && window.claude.use ? await window.claude.use('db') : null; } catch { db = null; }
+  try { userApi = window.claude && window.claude.use ? await window.claude.use('user') : null; } catch { userApi = null; }
+  clearTimeout(timer);
+  if (userApi) { try { myId = await userApi.id(); } catch {} try { const c = await userApi.can('data.write'); if (c === false) canWrite = false; } catch {} }
+  start(db);
+})();
+function start(db){
+  if (store) return;
+  if (db) { store = dbStore(db); setSync('live', canWrite ? 'Shared with your partners' : 'View only'); }
+  else { if (!myId) myId = 'me'; store = localStore(); setSync('local', 'Saved in this browser only'); }
+  const t = setTimeout(() => { if (!loaded) setSync('local', 'Still connecting to shared notes…'); }, 10000);
+  store.subscribe(st => { clearTimeout(t); apply(st); });
+}
+})();
+</script>
