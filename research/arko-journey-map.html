@@ -178,6 +178,8 @@ input[type=text]{width:100%}
     </select>
     <button id="runBtn">▶ Walk through</button>
     <button id="notesBtn">All notes <span id="noteCount">0</span></button>
+    <button id="undoBtn" disabled title="Undo your last change (Ctrl+Z)">↶ Undo</button>
+    <button id="redoBtn" disabled title="Redo (Ctrl+Shift+Z)">↷ Redo</button>
     <button id="resetBtn" title="Put every block back where it started">Reset layout</button>
   </div>
 </div>
@@ -717,34 +719,43 @@ panel.addEventListener('click', async e => {
   if (e.target.closest('.close')) { panel.dataset.mode = ''; select(null); panel.classList.remove('open'); return; }
   const g = e.target.closest('[data-goto]'); if (g) { panel.dataset.mode = ''; if (nodes[g.dataset.goto]) select(g.dataset.goto, true); return; }
   const st = e.target.closest('[data-status]');
-  if (st && selected) { const k = st.dataset.status; await guard(() => store.setStatus(selected, k === 'none' ? null : k)); return; }
+  if (st && selected) { const k = st.dataset.status, card = selected, before = status[card]?.s || null, after = k === 'none' ? null : k; if (before === after) return;
+    if (await guard(() => store.setStatus(card, after))) record('status change', () => store.setStatus(card, before), () => store.setStatus(card, after)); return; }
   if (e.target.id === 'addNote' && selected) {
     const ta = $('#noteText'), text = ta.value.trim(); if (!text) { $('#noteMsg').textContent = 'Write something first.'; return; }
     e.target.disabled = true;
-    const ok = await guard(() => store.addNote(selected, text));
+    const id = 'n-'+rid(), data = {card:selected, text, by:myId, at:Date.now()};
+    const ok = await guard(() => store.setNote(id, data));
+    if (ok) record('note', () => store.delNote(id), () => store.setNote(id, data));
     if (ok) { ta.value = ''; toast('Note added'); }
     e.target.disabled = false; return;
   }
-  const dn = e.target.closest('[data-delnote]'); if (dn) { if (dn.dataset.confirm) { await guard(() => store.delNote(dn.dataset.delnote)); } else { dn.dataset.confirm = '1'; dn.textContent = 'Click again to delete'; } return; }
+  const dn = e.target.closest('[data-delnote]'); if (dn) { if (dn.dataset.confirm) { const nt = notes.find(n => n.id === dn.dataset.delnote); if (!nt) return; const {id, ...data} = nt;
+    if (await guard(() => store.delNote(id))) { record('note deletion', () => store.setNote(id, data), () => store.delNote(id)); toast('Note deleted. Undo is in the toolbar.'); } } else { dn.dataset.confirm = '1'; dn.textContent = 'Click again to delete'; } return; }
   const mv = e.target.closest('[data-move]');
   if (mv && selected) { const gid = nodes[selected].group, ids = layout.order[gid], i = ids.indexOf(selected), j = i + (mv.dataset.move === 'up' ? -1 : 1);
-    if (j < 0 || j >= ids.length) return; [ids[i], ids[j]] = [ids[j], ids[i]]; build(); detail(selected); saveLayout(); return; }
+    if (j < 0 || j >= ids.length) return; changeLayout('reorder', () => { [ids[i], ids[j]] = [ids[j], ids[i]]; }); detail(selected); return; }
   if (e.target.id === 'addStep' && selected) {
     const t = $('#newT').value.trim(), s = $('#newS').value.trim(), d = $('#newD').value.trim();
     if (!t) { $('#stepMsg').textContent = 'Give the step a name.'; return; }
     const gid = selected; e.target.disabled = true;
-    const ok = await guard(() => store.addStep({t, s, d, group:gid}));
+    const id = 'x-'+rid(), data = {t, s, d, group:gid, by:myId, at:Date.now()};
+    const ok = await guard(() => store.setStep(id, data));
+    if (ok) record('added step', () => store.delStep(id), () => store.setStep(id, data));
     e.target.disabled = false; if (ok) toast('Step added');
     return;
   }
   if (e.target.id === 'delStep' && selected) {
     if (!e.target.dataset.confirm) { e.target.dataset.confirm = '1'; e.target.textContent = 'Click again to delete'; return; }
-    const id = selected; select(null); await guard(() => store.delStep(id)); toast('Step deleted');
+    const id = selected, g = nodes[id].group, pos = layout.order[g].indexOf(id), c = custom[id], data = {t:c.t, s:c.s, d:c.d, group:c.group, by:c.by || myId, at:Date.now()};
+    select(null);
+    if (await guard(() => store.delStep(id))) { toast('Step deleted. Undo is in the toolbar.');
+      record('step deletion', async () => { await store.setStep(id, data); custom[id] = data; layout.order[g] = layout.order[g].filter(x => x !== id); layout.order[g].splice(pos, 0, id); build(); saveLayout(); }, () => store.delStep(id)); }
   }
 });
 panel.addEventListener('change', e => {
   if (e.target.id === 'moveTo' && selected) { const to = e.target.value, from = nodes[selected].group; if (to === from) return;
-    layout.order[from] = layout.order[from].filter(x => x !== selected); layout.order[to].push(selected); build(); detail(selected); saveLayout(); toast('Moved to ' + GROUP[to].title); }
+    const id = selected; changeLayout('move to ' + GROUP[to].title, () => { layout.order[from] = layout.order[from].filter(x => x !== id); layout.order[to].push(id); }); detail(id); toast('Moved to ' + GROUP[to].title); }
 });
 function select(id, center){
   if (selected && nodes[selected]) nodes[selected].el.classList.remove('sel');
@@ -781,6 +792,8 @@ capBtns.addEventListener('click', e => { const b = e.target.closest('[data-cap]'
 document.addEventListener('keydown', e => {
   const typing = /SELECT|INPUT|TEXTAREA/.test(document.activeElement.tagName);
   if (runIdx >= 0 && !typing && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { runIdx = Math.max(0, Math.min(RUN.length-1, runIdx + (e.key === 'ArrowRight' ? 1 : -1))); showRun(); }
+  if ((e.ctrlKey || e.metaKey) && !typing && e.key.toLowerCase() === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
+  if ((e.ctrlKey || e.metaKey) && !typing && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); return; }
   if (e.key === 'Escape') { select(null); clearModes(); pinned = null; refocus(); }
   if (e.key === 'Enter' && !typing && document.activeElement.dataset?.card) select(document.activeElement.dataset.card);
 });
@@ -788,7 +801,7 @@ const resetBtn = $('#resetBtn');
 resetBtn.addEventListener('click', () => {
   if (!resetBtn.dataset.confirm) { resetBtn.dataset.confirm = '1'; resetBtn.textContent = 'Click again: reset for everyone'; setTimeout(() => { delete resetBtn.dataset.confirm; resetBtn.textContent = 'Reset layout'; }, 4000); return; }
   delete resetBtn.dataset.confirm; resetBtn.textContent = 'Reset layout';
-  layout = JSON.parse(JSON.stringify(DEF)); build(); fit(); saveLayout(); toast('Layout reset');
+  changeLayout('layout reset', () => { layout = JSON.parse(JSON.stringify(DEF)); }); fit(); toast('Layout reset. Undo is in the toolbar.');
 });
 
 /* ================= Pan / zoom / drag ================= */
@@ -851,12 +864,12 @@ function endPtr(e){
   if (drag.type === 'pinch') { if (ptrs.size === 0) drag = null; return; }
   const d = drag; drag = null; vp.classList.remove('panning');
   if (!d.moved) { if (d.click) select(d.click); else if (selected) select(null); return; }
-  if (d.type === 'group') { layout.groups[d.gid] = {x:Math.round(nodes[d.gid].x), y:Math.round(nodes[d.gid].y)}; saveLayout(); }
+  if (d.type === 'group') { const pos = {x:Math.round(nodes[d.gid].x), y:Math.round(nodes[d.gid].y)}; changeLayout('stage move', () => { layout.groups[d.gid] = pos; }); }
   if (d.type === 'card') {
     const t = dropTarget(e.clientX, e.clientY, d.id);
     document.querySelectorAll('.group.drop').forEach(g => g.classList.remove('drop')); if (ph) ph.style.display = 'none';
-    if (t) { const from = nodes[d.id].group; layout.order[from] = layout.order[from].filter(x => x !== d.id); layout.order[t.gid].splice(t.idx, 0, d.id);
-      build(); saveLayout(); if (from !== t.gid) toast('Moved to ' + GROUP[t.gid].title); if (selected === d.id) detail(d.id); }
+    if (t) { const from = nodes[d.id].group; changeLayout('step move', () => { layout.order[from] = layout.order[from].filter(x => x !== d.id); layout.order[t.gid].splice(t.idx, 0, d.id); });
+      if (from !== t.gid) toast('Moved to ' + GROUP[t.gid].title); if (selected === d.id) detail(d.id); }
     else build();
   }
 }
@@ -873,6 +886,28 @@ async function guard(fn){
     return false; }
 }
 function setSync(kind, txt){ const s = $('#sync'); s.className = kind; s.querySelector('span').textContent = txt; }
+/* ---------- Undo / redo (this viewer's own changes, newest first) ---------- */
+const undoStack = [], redoStack = [], undoBtn = $('#undoBtn'), redoBtn = $('#redoBtn');
+const snap = () => JSON.parse(JSON.stringify({groups:layout.groups, order:layout.order}));
+function record(label, undoFn, redoFn){ undoStack.push({label, undo:undoFn, redo:redoFn}); if (undoStack.length > 100) undoStack.shift(); redoStack.length = 0; syncUndo(); }
+function syncUndo(){
+  undoBtn.disabled = !undoStack.length || !canWrite; redoBtn.disabled = !redoStack.length || !canWrite;
+  undoBtn.title = undoStack.length ? `Undo ${undoStack[undoStack.length-1].label} (Ctrl+Z)` : 'Nothing to undo';
+  redoBtn.title = redoStack.length ? `Redo ${redoStack[redoStack.length-1].label} (Ctrl+Shift+Z)` : 'Nothing to redo';
+}
+function changeLayout(label, mutate){
+  const before = snap(); mutate(); const after = snap();
+  build(); saveLayout();
+  if (JSON.stringify(before) === JSON.stringify(after)) return;
+  const restore = l => () => { layout = JSON.parse(JSON.stringify(l)); normalise(); build(); saveLayout(); if (selected && nodes[selected]) detail(selected); };
+  record(label, restore(before), restore(after));
+}
+let busy = false;
+async function undo(){ if (busy || !undoStack.length || !canWrite) return; busy = true; const a = undoStack.pop();
+  if (await guard(a.undo)) { redoStack.push(a); toast('Undid ' + a.label); } else undoStack.push(a); busy = false; syncUndo(); }
+async function redo(){ if (busy || !redoStack.length || !canWrite) return; busy = true; const a = redoStack.pop();
+  if (await guard(a.redo)) { undoStack.push(a); toast('Redid ' + a.label); } else redoStack.push(a); busy = false; syncUndo(); }
+undoBtn.addEventListener('click', undo); redoBtn.addEventListener('click', redo);
 let saveT, lastSaved = '';
 function saveLayout(){ clearTimeout(saveT); saveT = setTimeout(() => { const body = {groups:layout.groups, order:layout.order}; const j = JSON.stringify(body); if (j === lastSaved) return; lastSaved = j; guard(() => store.saveLayout(body)); }, 500); }
 const rid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -886,10 +921,10 @@ function localStore(){
   return {
     subscribe(f){ subs.push(f); f(st); },
     async saveLayout(l){ st.layout = l; save(); },
-    async addNote(card, text){ st.notes.push({id:rid(), card, text, by:myId, at:Date.now()}); save(); emit(); },
+    async setNote(id, data){ st.notes = st.notes.filter(n => n.id !== id); st.notes.push({id, ...data}); save(); emit(); },
     async delNote(id){ st.notes = st.notes.filter(n => n.id !== id); save(); emit(); },
     async setStatus(card, s){ if (s) st.status[card] = {s, by:myId, at:Date.now()}; else delete st.status[card]; save(); emit(); },
-    async addStep(c){ st.steps['x-'+rid()] = {...c, by:myId, at:Date.now()}; save(); emit(); },
+    async setStep(id, c){ st.steps[id] = c; save(); emit(); },
     async delStep(id){ delete st.steps[id]; save(); emit(); },
   };
 }
@@ -904,10 +939,10 @@ function dbStore(db){
       db.collection('steps').limit(500).onSnapshot(q => { st.steps = {}; q.docs.forEach(d => st.steps[d.id] = d.data()); ready(); }, onErr);
     },
     saveLayout: l => db.doc('layout/main').set({...l, by:myId, at:Date.now()}),
-    addNote: (card, text) => db.collection('notes').doc('n-'+rid()).set({card, text, by:myId, at:Date.now()}),
+    setNote: (id, data) => db.doc('notes/'+id).set(data),
     delNote: id => db.doc('notes/'+id).delete(),
     setStatus: (card, s) => s ? db.doc('status/'+card).set({s, by:myId, at:Date.now()}) : db.doc('status/'+card).delete(),
-    addStep: c => db.collection('steps').doc('x-'+rid()).set({...c, by:myId, at:Date.now()}),
+    setStep: (id, c) => db.doc('steps/'+id).set(c),
     delStep: id => db.doc('steps/'+id).delete(),
   };
 }
